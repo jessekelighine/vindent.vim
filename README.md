@@ -10,8 +10,8 @@ This plugin was partially inspired by
 [vim-indentwise](https://github.com/jeetsukumaran/vim-indentwise)
 and
 [vim-indent-object](https://github.com/michaeljsmith/vim-indent-object).
-`vindent.vim` is basically a simplified version of the two combined,
-reimplemented very little vimscript.
+`vindent.vim` is basically a simplified version of the two plugins combined,
+reimplemented with very little vimscript (less than 200 lines!).
 
 ## Installation
 
