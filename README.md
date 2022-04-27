@@ -10,7 +10,8 @@ This plugin was partially inspired by
 [vim-indentwise](https://github.com/jeetsukumaran/vim-indentwise)
 and
 [vim-indent-object](https://github.com/michaeljsmith/vim-indent-object).
-`vindent.vim` is basically a simplified version of the two combined with minimal vimscript.
+`vindent.vim` is basically a simplified version of the two combined,
+reimplemented very little vimscript.
 
 ## Installation
 
@@ -28,10 +29,10 @@ git clone https://github.com/jessekelighine/vindent.vim
 Put this in your `.vimrc`
 ```vim
 " vindent.vim motion
-nnoremap <silent> [l <Plug>(VindentMove_prev_normal)
-xnoremap <silent> [l <Plug>(VindentMove_prev_visual)
-nnoremap <silent> ]l <Plug>(VindentMove_next_normal)
-xnoremap <silent> ]l <Plug>(VindentMove_next_visual)
+nnoremap <silent> [l <Plug>(VindentMove_N_prev)
+nnoremap <silent> ]l <Plug>(VindentMove_N_next)
+xnoremap <silent> [l <Plug>(VindentMove_X_prev)
+xnoremap <silent> ]l <Plug>(VindentMove_X_next)
 " vindent.vim test object
 xnoremap <silent> ii <PLug>(VindentObject_X_i)
 xnoremap <silent> ai <PLug>(VindentObject_X_a)
@@ -85,6 +86,7 @@ This also works in visual mode, so you can select text with this motion.
 
 **Notes**
 
+- The motions does nothing if the current line is empty.
 - The motion assumes that the indentation is consistent. E.g., 4 spaces would not be considered to be equal to a tab.
 - If no line with the same indentation is found, the cursor will not move.
 - The motion ignores empty lines. So if there is an empty line between line 2
@@ -116,7 +118,7 @@ In summary,
 - Similar to `[l` and `]l`, the text objects assumes that the indentation is consistent.
 - Similar to `[l` and `]l`, the text objects ignores empty lines.
 - The text objects would not select empty lines at the beginning or the end.
-- The text objects would select nothing if the current line is not indented.
+- The text objects would select nothing if the current line is empty or not indented.
 
 The notes can be summarized by the following example in LaTeX:
 ```
