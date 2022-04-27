@@ -1,4 +1,4 @@
-" vindnet.vim
+" autoload/vindent.vim
 
 " Returns the indentation of a given line.
 function! vindent#Get(line=line('.'))
@@ -36,8 +36,9 @@ function! vindent#Move(direct, mode)
 	if getline('.')=="" | return | endif " return if on empty line.
 	let l:moveto = vindent#Find(a:direct) | if l:moveto==0 | return | endif " special case
 	let l:move   = abs(l:moveto-line('.')) . ( a:direct=='prev' ? 'k' : 'j' )
-	if a:mode=='normal' | silent exec 'norm :'.l:moveto."\<CR>_" | endif
-	if a:mode=='visual' | silent exec "norm \<Esc>gv".l:move.'_' | endif
+	if a:mode=='N' | silent exec 'norm :'.l:moveto."\<CR>_" | endif
+	if a:mode=='X' | silent exec "norm \<Esc>gv".l:move.'_' | endif
+	if a:mode=='O' | silent exec "norm V".l:move."_"        | endif
 endfunction
 
 "### Text Object ##############################################################
@@ -50,8 +51,8 @@ endfunction
 function! vindent#Range(line=line('.'), skip=1, hanging=0)
 	let l:indent = vindent#Get(a:line) | if l:indent=='' | return [0,0] | endif
 	let [ l:line_s, l:line_e ] = [ a:line, a:line ]
-	while vindent#NoLess(l:indent,l:line_s) || ( a:skip ? getline(l:line_s)=="" : 0 ) | let l:line_s = l:line_s - 1 | endwhile
-	while vindent#NoLess(l:indent,l:line_e) || ( a:skip ? getline(l:line_e)=="" : 0 ) | let l:line_e = l:line_e + 1 | endwhile
+	while l:line_s<=line('$') && ( vindent#NoLess(l:indent,l:line_s) || (a:skip?getline(l:line_s)=="":0) ) | let l:line_s=l:line_s-1 | endwhile
+	while l:line_e<=line('$') && ( vindent#NoLess(l:indent,l:line_e) || (a:skip?getline(l:line_e)=="":0) ) | let l:line_e=l:line_e+1 | endwhile
 	let l:return = [ l:line_s+1, l:line_e-1 ]
 	if !a:hanging
 		while 1 | if getline(l:return[0])=="" | let l:return[0] = l:return[0]+1 | else | break | endif | endwhile
