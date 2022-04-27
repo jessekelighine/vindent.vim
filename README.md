@@ -132,7 +132,7 @@ The notes can be summarized in the following example in LaTeX:
 11
 12 \end{enumerate}
 ```
-If the cursor is on line 3 ad you press `dii`, lines 3 to 8 would be deleted;
+If the cursor is on line 3 ad you press `dii`, lines 3 to 10 would be deleted;
 if the cursor is on line 7 and you press `dai`, lines 3 to 7 would be deleted.
 
 ## Licence
