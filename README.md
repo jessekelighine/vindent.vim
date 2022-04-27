@@ -65,7 +65,7 @@ For detailed explanation see [here](#Explanation).
 
 ## Explanation
 
-The following explanation assumes that the default keybindings provided in [TL;DR](#TL;DR) is used.
+The following explanation assumes that the default keybindings provided in [TL;DR](#tldr) is used.
 
 ### Motion: move to line with same indentation.
 
