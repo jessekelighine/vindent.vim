@@ -1,16 +1,10 @@
----
-title:  "vindent.vim"
-author: "jessekelighine@gmail.com"
-date:   "2022-Apr-27"
----
-
 # vindent.vim
 
 `vindent.vim` is a simple plugin that provides two functionalities that have to
 do with indentations:
 
-1. Creates a *motion* that moves cursor to the previous or next line with the same indentation as the current line.
-2. Creates three *text object* that selects adjacent lines with the same indentation (with three slight variations).
+1. Creates a *vindent motion* that moves cursor to the previous or next line with the same indentation as the current line.
+2. Creates three *vindent text object* that selects adjacent lines with the same indentation (with three slight variations).
 
 This plugin was partially inspired by
 [vim-indentwise](https://github.com/jeetsukumaran/vim-indentwise)
@@ -82,8 +76,8 @@ Feel free to change the them directly.
 Consider the LaTeX code:
 ```tex
 \begin{enumerate}       % line 1
-	\item I am item 1.  % line 2
-	\item I am item 2.  % line 3
+    \item I am item 1.  % line 2
+    \item I am item 2.  % line 3
 \end{enumerate}         % line 4
 ```
 If the cursor is on line 1 and `]l` is pressed,
@@ -91,30 +85,30 @@ the cursor will move to the beginning of line 4.
 The similar is true for `[l`.
 If `]l` is pressed when the cursor is on line 2,
 the cursor will move to line 3.
-This also works in visual mode and as a text object,
+Vindent motion also works in visual mode and as a text object,
 i.e., you can `V]l` or `d]l` or do anything similar.
 
 **Notes**: Some quirks about vindent motion:
 
-- The motions does nothing (cursor will not move) if the current line is empty.
-- The motion assumes that the indentation is consistent.
+- Does nothing (cursor will not move) if the current line is empty.
+- Assumes that the indentation is consistent.
   E.g., pressing `]l` on a line indented with one tab would not move the cursor
   to a line indented with 4 spaces.
+- Ignores empty lines.  If there is an empty line between line 2 and 3
+  in the aforementioned code sample, the motion would still behave as expected.
 - If no line with the same indentation is found, the cursor will not move.
 - If being used as a text object, `d]l` deletes entire lines.  Similar for `c`.
-- The motion ignores empty lines.  So if there is an empty line between line 2
-  and 3 in the aforementioned code sample, the motion would still behave as expected.
 
 ### Vindent Text Objects: select lines of text with "same" indentation
 
 Consider the LaTeX code:
 ```tex
 \begin{enumerate}                            % line 1
-	\item                                    % line 2
-		I am an a sentence that was          % line 3
-		intentionally split into two lines.  % line 4
-	\item                                    % line 5
-		I am another sentence.               % line 6
+    \item                                    % line 2
+        I am an a sentence that was          % line 3
+        intentionally split into two lines.  % line 4
+    \item                                    % line 5
+        I am another sentence.               % line 6
 \end{enumerate}                              % line 7
 ```
 If the cursor is on line 3 and `vii` is pressed, lines 3 and 4 would be selected;
@@ -135,18 +129,18 @@ In summary,
 
 The last three points from **Notes** can be demonstrated by the following example in LaTeX:
 ```tex
-\begin{enumerate}                                   % line 1
-                                                    % line 2
-	\item                                           % line 3
-		I am an intentionally very very very long   % line 4
-		and meaningless sentence.                   % line 5
-                                                    % line 6
-		And something random here.                  % line 7
-                                                    % line 8
-	\item                                           % line 9
-		I am another sentence.                      % line 10
-                                                    % line 11
-\end{enumerate}                                     % line 12
+\begin{enumerate}                         % line 1
+                                          % line 2
+    \item                                 % line 3
+        I am an intentionally very long   % line 4
+        and meaningless sentence.         % line 5
+                                          % line 6
+        And something random here.        % line 7
+                                          % line 8
+    \item                                 % line 9
+        I am another sentence.            % line 10
+                                          % line 11
+\end{enumerate}                           % line 12
 ```
 If the cursor is on line 3 and `dii` is pressed, lines 3 to 10 would be deleted;
 if the cursor is on line 7 and `dai` is pressed, lines 3 to 7 would be deleted;
