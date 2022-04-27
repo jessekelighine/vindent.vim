@@ -83,7 +83,7 @@ If you press `]l` when the cursor is on line 2,
 then the cursor will move to line 3.
 This also works in visual mode, so you can select text with this motion.
 
-**Note**
+**Notes**
 
 - The motion assumes that the indentation is consistent. E.g., 4 spaces would not be considered to be equal to a tab.
 - If no line with the same indentation is found, the cursor will not move.
@@ -111,13 +111,14 @@ In summary,
 - Object `ai` (*a indent*): select adjacent lines with the same indentation and one extra line with less indentation at the beginning.
 - Object `aI` (*a Indent*): select adjacent lines with the same indentation and two extra line with less indentation: one at the beginning and one at the end.
 
-**Note**
+**Notes**
 
 - Similar to `[l` and `]l`, the text objects assumes that the indentation is consistent.
 - Similar to `[l` and `]l`, the text objects ignores empty lines.
-- The text object would not select empty lines at the beginning or the end.
+- The text objects would not select empty lines at the beginning or the end.
+- The text objects would select nothing if the current line is not indented.
 
-The notes can be summarized in the following example in LaTeX:
+The notes can be summarized by the following example in LaTeX:
 ```
 1 \begin{enumerate}
 2
@@ -133,7 +134,8 @@ The notes can be summarized in the following example in LaTeX:
 12 \end{enumerate}
 ```
 If the cursor is on line 3 ad you press `dii`, lines 3 to 10 would be deleted;
-if the cursor is on line 7 and you press `dai`, lines 3 to 7 would be deleted.
+if the cursor is on line 7 and you press `dai`, lines 3 to 7 would be deleted;
+if the cursor is on line 1 and you press `vii`, nothing would happen.
 
 ## Licence
 
