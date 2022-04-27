@@ -67,7 +67,7 @@ onoremap <silent> ii <PLug>(VindentObject_O_i)
 onoremap <silent> ai <PLug>(VindentObject_O_a)
 onoremap <silent> aI <PLug>(VindentObject_O_I)
 ```
-Feel free to change the them directly. 
+Feel free to change them directly. 
 
 ## Explanation
 
@@ -90,12 +90,12 @@ i.e., you can `V]l` or `d]l` or do anything similar.
 
 **Notes**: Some quirks about vindent motion:
 
-- Does nothing (cursor will not move) if the current line is empty.
-- Assumes that the indentation is consistent.
+- Vindent motion does nothing (cursor will not move) if the current line is empty.
+- Vindent motion assumes that the indentation is consistent.
   E.g., pressing `]l` on a line indented with one tab would not move the cursor
   to a line indented with 4 spaces.
-- Ignores empty lines.  If there is an empty line between line 2 and 3
-  in the aforementioned code sample, the motion would still behave as expected.
+- Vindent motion ignores empty lines.  If there is an empty line between line 2 and 3
+  in the aforementioned code sample, vindent motion would still behave as expected.
 - If no line with the same indentation is found, the cursor will not move.
 - If being used as a text object, `d]l` deletes entire lines.  Similar for `c`.
 
@@ -122,10 +122,10 @@ In summary,
 
 **Notes**: Some quirks about vindent text objects:
 
-- Similar to `[l` and `]l`, the text objects assumes that the indentation is consistent.
-- Similar to `[l` and `]l`, the text objects ignores empty lines.
-- The text objects would not select empty lines at the beginning or the end.
-- The text objects would select nothing if the current line is empty or not indented.
+- Similar to `[l` and `]l`, vindent text objects assumes that the indentation is consistent.
+- Similar to `[l` and `]l`, vindent text objects ignores empty lines.
+- Vindent text objects would not select empty lines at the beginning or the end.
+- Vindent text objects would select nothing if the current line is either *empty* or *not indented*.
 
 The last three points from **Notes** can be demonstrated by the following example in LaTeX:
 ```tex
