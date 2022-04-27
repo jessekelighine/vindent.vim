@@ -1,10 +1,16 @@
 # vindent.vim
 
-vindent.vim is a simple plugin that provides two functionalities that has to do
-with indents:
+`vindent.vim` is a simple plugin that provides two functionalities that has to
+do with indents:
 
 1. Create a *motion* that moves cursor to the previous or next line with the same indentation as the current line.
 2. Create three *text object* that selects adjacent lines with the same indentation (with three slight variations).
+
+This plugin is partially inspired by
+[jeetsukumaran/vim-indentwise](https://github.com/jeetsukumaran/vim-indentwise)
+and
+[michaeljsmith/vim-indent-object](https://github.com/michaeljsmith/vim-indent-object).
+`vindent.vim` is basically a simplified version of the two combined with minimal vimscript.
 
 ## Usage
 
@@ -21,9 +27,9 @@ with indents:
 	- `<PLug>(VindentObject_X_i)`: select text object *indent-i* in visual mode.
 	- `<PLug>(VindentObject_X_a)`: select text object *indent-a* in visual mode.
 	- `<PLug>(VindentObject_X_I)`: select text object *indent-I* in visual mode.
-	- `<PLug>(VindentObject_O_i)`: use *indent-i* as text object with other commands.
-	- `<PLug>(VindentObject_O_a)`: use *indent-a* as text object with other commands.
-	- `<PLug>(VindentObject_O_I)`: use *indent-I* as text object with other commands.
+	- `<PLug>(VindentObject_O_i)`: use *indent-i* as text object with other commands (verbs).
+	- `<PLug>(VindentObject_O_a)`: use *indent-a* as text object with other commands (verbs).
+	- `<PLug>(VindentObject_O_I)`: use *indent-I* as text object with other commands (verbs).
 
 However, `vindent.vim` provides no default keybindings.
 I use the following keybindings:
