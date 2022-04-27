@@ -44,9 +44,11 @@ and move to lines with the same indentation with `[l` and `]l`;
 select indentation text objects with `ii` (*in indent*), `ai` (*a indent*), and `aI` (*a Indent*).
 Feel free to use other keybindings.
 
+For detailed explanation see [here](#Explanation).
+
 ### Mappings
 
-`vindent.vim` provides the following `<Plug>`'s:
+`vindent.vim` provides the following `<Plug>`'s with no default keybindings:
 
 1. Motion:
 	- `<Plug>(VindentMove_prev_normal)`: move to previous line with same indent in normal mode.
@@ -54,16 +56,19 @@ Feel free to use other keybindings.
 	- `<Plug>(VindentMove_next_normal)`: move to next line with same indent in normal mode.
 	- `<Plug>(VindentMove_next_visual)`: move to next line with same indent in visual mode.
 2. Text Object:
-	- `<PLug>(VindentObject_X_i)`: select text object *in indent* in visual mode.
-	- `<PLug>(VindentObject_X_a)`: select text object *a indent* in visual mode.
-	- `<PLug>(VindentObject_X_I)`: select text object *a Indent* in visual mode.
-	- `<PLug>(VindentObject_O_i)`: use *in indent* as text object with other commands (verbs).
-	- `<PLug>(VindentObject_O_a)`: use *a indent* as text object with other commands (verbs).
-	- `<PLug>(VindentObject_O_I)`: use *a Indent* as text object with other commands (verbs).
+	- `<PLug>(VindentObject_O_i)`: use "*in indent*" as text object in combination with Vim verbs.
+	- `<PLug>(VindentObject_O_a)`: use "*a indent*" as text object in combination with Vim verbs. 
+	- `<PLug>(VindentObject_O_I)`: use "*a Indent*" as text object in combination with Vim verbs. 
+	- `<PLug>(VindentObject_X_i)`: select text object "*in indent*" in visual mode.
+	- `<PLug>(VindentObject_X_a)`: select text object "*a indent*" in visual mode.
+	- `<PLug>(VindentObject_X_I)`: select text object "*a Indent*" in visual mode.
 
-### Motion: move to lines with same indentation.
+## Explanation
 
-Mapping `[l` moves the
+The following explanation assumes that the default keybindings provided in [TL;DR](#TL;DR) is used.
+
+### Motion: move to line with same indentation.
+
 Consider the following LaTeX code:
 ```
 1 \begin{enumerate}
@@ -76,20 +81,14 @@ the cursor will be moved to the beginning of line 4.
 The similar is true for `[l`.
 If you press `]l` when the cursor is on line 2,
 then the cursor will move to line 3.
-If no line with the same indentation is found, then the cursor does not move.
-
 This also works in visual mode, so you can select text with this motion.
-Note that this motion ignores empty lines, so if the code looks like this,
-```
-1 \begin{enumerate}
-2
-3 	\item I am item 1.
-4
-5 	\item I am item 2.
-6
-7 \end{enumerate}
-```
-the aforementioned motions still work.
+
+**Note**
+
+- The motion assumes that the indentation is consistent. E.g., 4 spaces would not be considered to be equal to a tab.
+- If no line with the same indentation is found, the cursor will not move.
+- The motion ignores empty lines. So if there is an empty line between line 2
+  and 3 in the aforementioned code sample, the motions still work as expected.
 
 ### Text Objects: select lines of text with "same" indentation
 
@@ -112,13 +111,13 @@ In summary,
 - Object `ai` (*a indent*): select adjacent lines with the same indentation and one extra line with less indentation at the beginning.
 - Object `aI` (*a Indent*): select adjacent lines with the same indentation and two extra line with less indentation: one at the beginning and one at the end.
 
-Object `ai` is useful in languages like python that uses indentation to specify scopes.
-Object `aI` is useful in languages like LaTeX with many opening and closing matching pairs on the same indentation level.
-Note that this text object assumes that the indentation is consistent, e.g.,
-it would not consider 4 white spaces to be equal to a tab.
+**Note**
 
-Similar to the motion `[l` and `]l`, the three text objects also ignores empty lines.
-Consider the following LaTeX code:
+- Similar to `[l` and `]l`, the text objects assumes that the indentation is consistent.
+- Similar to `[l` and `]l`, the text objects ignores empty lines.
+- The text object would not select empty lines at the beginning or the end.
+
+The notes can be summarized in the following example in LaTeX:
 ```
 1 \begin{enumerate}
 2
@@ -133,8 +132,8 @@ Consider the following LaTeX code:
 11
 12 \end{enumerate}
 ```
-If the cursor is on line 3 ad you press `vii`, lines 3 to 8 would be selected;
-if the cursor is on line 7 and you press `vai`, lines 3 to 7 would be selected.
+If the cursor is on line 3 ad you press `dii`, lines 3 to 8 would be deleted;
+if the cursor is on line 7 and you press `dai`, lines 3 to 7 would be deleted.
 
 ## Licence
 
