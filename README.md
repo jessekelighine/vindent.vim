@@ -6,33 +6,26 @@ do with indents:
 1. Create a *motion* that moves cursor to the previous or next line with the same indentation as the current line.
 2. Create three *text object* that selects adjacent lines with the same indentation (with three slight variations).
 
-This plugin is partially inspired by
-[jeetsukumaran/vim-indentwise](https://github.com/jeetsukumaran/vim-indentwise)
+This plugin was partially inspired by
+[vim-indentwise](https://github.com/jeetsukumaran/vim-indentwise)
 and
-[michaeljsmith/vim-indent-object](https://github.com/michaeljsmith/vim-indent-object).
+[vim-indent-object](https://github.com/michaeljsmith/vim-indent-object).
 `vindent.vim` is basically a simplified version of the two combined with minimal vimscript.
+
+## Installation
+
+Install using your favourite plugin manager, or use Vim's built-in package support:
+```sh
+mkdir -p ~/.vim/pack/jessekelighine/start
+cd ~/.vim/pack/jessekelighine/start
+git clone https://github.com/jessekelighine/vindent.vim
+```
 
 ## Usage
 
-### Mappings
+### TL;DR
 
-`vindent.vim` provides the following `<Plug>`'s:
-
-1. Motion:
-	- `<Plug>(VindentMove_prev_normal)`: move to previous line with same indent in normal mode.
-	- `<Plug>(VindentMove_prev_visual)`: move to previous line with same indent in visual mode.
-	- `<Plug>(VindentMove_next_normal)`: move to next line with same indent in normal mode.
-	- `<Plug>(VindentMove_next_visual)`: move to next line with same indent in visual mode.
-2. Text Object:
-	- `<PLug>(VindentObject_X_i)`: select text object *indent-i* in visual mode.
-	- `<PLug>(VindentObject_X_a)`: select text object *indent-a* in visual mode.
-	- `<PLug>(VindentObject_X_I)`: select text object *indent-I* in visual mode.
-	- `<PLug>(VindentObject_O_i)`: use *indent-i* as text object with other commands (verbs).
-	- `<PLug>(VindentObject_O_a)`: use *indent-a* as text object with other commands (verbs).
-	- `<PLug>(VindentObject_O_I)`: use *indent-I* as text object with other commands (verbs).
-
-However, `vindent.vim` provides no default keybindings.
-I use the following keybindings:
+Put this in your `.vimrc`
 ```vim
 " vindent.vim motion
 nnoremap <silent> [l <Plug>(VindentMove_prev_normal)
@@ -47,10 +40,28 @@ onoremap <silent> ii <PLug>(VindentObject_O_i)
 onoremap <silent> ai <PLug>(VindentObject_O_a)
 onoremap <silent> aI <PLug>(VindentObject_O_I)
 ```
-Feel free to use other keybindings and put it in your `.vimrc`.
-I'll explain the functionalities with these default keybindings.
+and move to lines with the same indentation with `[l` and `]l`;
+select indentation text objects with `ii` (*in indent*), `ai` (*a indent*), and `aI` (*a Indent*).
+Feel free to use other keybindings.
 
-### (1) Functionality 1: move to same indentation.
+### Mappings
+
+`vindent.vim` provides the following `<Plug>`'s:
+
+1. Motion:
+	- `<Plug>(VindentMove_prev_normal)`: move to previous line with same indent in normal mode.
+	- `<Plug>(VindentMove_prev_visual)`: move to previous line with same indent in visual mode.
+	- `<Plug>(VindentMove_next_normal)`: move to next line with same indent in normal mode.
+	- `<Plug>(VindentMove_next_visual)`: move to next line with same indent in visual mode.
+2. Text Object:
+	- `<PLug>(VindentObject_X_i)`: select text object *in indent* in visual mode.
+	- `<PLug>(VindentObject_X_a)`: select text object *a indent* in visual mode.
+	- `<PLug>(VindentObject_X_I)`: select text object *a Indent* in visual mode.
+	- `<PLug>(VindentObject_O_i)`: use *in indent* as text object with other commands (verbs).
+	- `<PLug>(VindentObject_O_a)`: use *a indent* as text object with other commands (verbs).
+	- `<PLug>(VindentObject_O_I)`: use *a Indent* as text object with other commands (verbs).
+
+### Motion: move to lines with same indentation.
 
 Mapping `[l` moves the
 Consider the following LaTeX code:
@@ -80,7 +91,7 @@ Note that this motion ignores empty lines, so if the code looks like this,
 ```
 the aforementioned motions still work.
 
-### (2) Functionality 2: indentation text objects.
+### Text Objects: select lines of text with "same" indentation
 
 Consider the following LaTeX code:
 ```
@@ -124,15 +135,6 @@ Consider the following LaTeX code:
 ```
 If the cursor is on line 3 ad you press `vii`, lines 3 to 8 would be selected;
 if the cursor is on line 7 and you press `vai`, lines 3 to 7 would be selected.
-
-## Installation
-
-Install using your favourite plugin manager, or use Vim's built-in package support:
-```sh
-mkdir -p ~/.vim/pack/jessekelighine/start
-cd ~/.vim/pack/jessekelighine/start
-git clone https://github.com/jessekelighine/vindent.vim
-```
 
 ## Licence
 
