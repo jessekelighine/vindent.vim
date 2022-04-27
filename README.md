@@ -28,8 +28,8 @@ git clone https://github.com/jessekelighine/vindent.vim
 
 ### TL;DR
 
-1. **Vindent Motion**: Move to lines with the same indentation with `[l` and `]l`. (more [details](#motion-move-to-line-with-same-indentation))
-2. **Vindent Text Objects**: Use text objects with `ii` (*in indent*), `ai` (*a indent*), and `aI` (*a Indent*). (more [details](#text-objects-select-lines-of-text-with-same-indentation))
+1. **Vindent Motion**: Move to lines with the same indentation with `[l` and `]l`. (more [details](#vindent-motion-move-to-line-with-same-indentation))
+2. **Vindent Text Objects**: Use text objects with `ii` (*in indent*), `ai` (*a indent*), and `aI` (*a Indent*). (more [details](#vindent-text-objects-select-lines-of-text-with-same-indentation))
 
 ### Mappings
 
