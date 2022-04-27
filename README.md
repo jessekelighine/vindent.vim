@@ -1,3 +1,9 @@
+---
+title:  "vindent.vim"
+author: "jessekelighine@gmail.com"
+date:   "2022-Apr-27"
+---
+
 # vindent.vim
 
 `vindent.vim` is a simple plugin that provides two functionalities that have to
