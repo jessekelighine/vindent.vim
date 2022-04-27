@@ -67,7 +67,7 @@ onoremap <silent> ii <PLug>(VindentObject_O_i)
 onoremap <silent> ai <PLug>(VindentObject_O_a)
 onoremap <silent> aI <PLug>(VindentObject_O_I)
 ```
-Feel free to change them directly. 
+Feel free to change them directly.
 
 ## Explanation
 
@@ -103,13 +103,13 @@ i.e., you can `V]l` or `d]l` or do anything similar.
 
 Consider the LaTeX code:
 ```tex
-\begin{enumerate}                            % line 1
-    \item                                    % line 2
-        I am an a sentence that was          % line 3
-        intentionally split into two lines.  % line 4
-    \item                                    % line 5
-        I am another sentence.               % line 6
-\end{enumerate}                              % line 7
+\begin{enumerate}                            % line 1             ┐
+    \item                                    % line 2       ┐     │ vaI
+        I am an a sentence that was          % line 3 ┐ vii │ vai │
+        intentionally split into two lines.  % line 4 ┘     ┘     │
+    \item                                    % line 5             │
+        I am another sentence.               % line 6             │
+\end{enumerate}                              % line 7             ┘
 ```
 If the cursor is on line 3 and `vii` is pressed, lines 3 and 4 would be selected;
 if `vai` is pressed, lines 2, 3, and 4 would be selected.
@@ -131,16 +131,16 @@ In summary,
 
 The last three points from **Notes** can be demonstrated by the following example in LaTeX:
 ```tex
-\begin{enumerate}                         % line 1
+\begin{enumerate}                         % line 1 vii
                                           % line 2
-    \item                                 % line 3
-        I am an intentionally very long   % line 4
-        and meaningless sentence.         % line 5
-                                          % line 6
-        And something random here.        % line 7
-                                          % line 8
-    \item                                 % line 9
-        I am another sentence.            % line 10
+    \item                                 % line 3  ┐ dii ┐
+        I am an intentionally very long   % line 4  │     │
+        and meaningless sentence.         % line 5  │     │
+                                          % line 6  │     │
+        And something random here.        % line 7  │     ┘ dai
+                                          % line 8  │
+    \item                                 % line 9  │
+        I am another sentence.            % line 10 ┘
                                           % line 11
 \end{enumerate}                           % line 12
 ```
