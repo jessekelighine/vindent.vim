@@ -51,7 +51,7 @@ endfunction
 function! vindent#Range(line=line('.'), skip=1, hanging=0)
 	let l:indent = vindent#Get(a:line) | if l:indent=='' | return [0,0] | endif
 	let [ l:line_s, l:line_e ] = [ a:line, a:line ]
-	while l:line_s<=line('$') && ( vindent#NoLess(l:indent,l:line_s) || (a:skip?getline(l:line_s)=="":0) ) | let l:line_s=l:line_s-1 | endwhile
+	while l:line_s>=1         && ( vindent#NoLess(l:indent,l:line_s) || (a:skip?getline(l:line_s)=="":0) ) | let l:line_s=l:line_s-1 | endwhile
 	while l:line_e<=line('$') && ( vindent#NoLess(l:indent,l:line_e) || (a:skip?getline(l:line_e)=="":0) ) | let l:line_e=l:line_e+1 | endwhile
 	let l:return = [ l:line_s+1, l:line_e-1 ]
 	if !a:hanging
