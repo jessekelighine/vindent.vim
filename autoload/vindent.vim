@@ -64,7 +64,7 @@ endfunction
 " Define indent text objects.
 function! vindent#Object(code)
 	let l:range = vindent#Range() | if l:range==[0,0] | return | endif " return if there is no indent.
-	if  l:range[0]==l:range[1]   | exec "norm V"     | return | endif " spcial case
+	if  l:range[0]==l:range[1]    | exec "norm V"     | return | endif " spcial case
 	call cursor(l:range[0],0)
 	if     a:code==#'i' | exec "norm  V" . (l:range[1]-l:range[0]  ) . 'j'
 	elseif a:code==#'a' | exec "norm kV" . (l:range[1]-l:range[0]+1) . 'j'
