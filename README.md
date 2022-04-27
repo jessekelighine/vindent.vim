@@ -52,10 +52,10 @@ For detailed explanation see [here](#Explanation).
 `vindent.vim` provides the following `<Plug>`'s with no default keybindings:
 
 1. Motion:
-	- `<Plug>(VindentMove_prev_normal)`: move to previous line with same indent in normal mode.
-	- `<Plug>(VindentMove_prev_visual)`: move to previous line with same indent in visual mode.
-	- `<Plug>(VindentMove_next_normal)`: move to next line with same indent in normal mode.
-	- `<Plug>(VindentMove_next_visual)`: move to next line with same indent in visual mode.
+	- `<Plug>(VindentMove_N_prev)`: move to previous line with same indent in normal mode.
+	- `<Plug>(VindentMove_X_prev)`: move to previous line with same indent in visual mode.
+	- `<Plug>(VindentMove_N_next)`: move to next line with same indent in normal mode.
+	- `<Plug>(VindentMove_X_next)`: move to next line with same indent in visual mode.
 2. Text Object:
 	- `<PLug>(VindentObject_O_i)`: use "*in indent*" as text object in combination with Vim verbs.
 	- `<PLug>(VindentObject_O_a)`: use "*a indent*" as text object in combination with Vim verbs. 
