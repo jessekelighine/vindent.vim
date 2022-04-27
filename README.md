@@ -116,9 +116,11 @@ if `vai` is pressed, lines 2, 3, and 4 would be selected.
 If the cursor is on line 2 and `vaI` is pressed, then lines 1 to 7 would be selected.
 In summary,
 
-- Object `ii` (*in indent*): select adjacent lines with the same indentation.
-- Object `ai` (*a indent*):  select adjacent lines with the same indentation and one extra line with less indentation at the beginning.
-- Object `aI` (*a Indent*):  select adjacent lines with the same indentation and two extra line with less indentation: one at the beginning and one at the end.
+| Text Object | mnemonics   | description                                                                                                                        |
+| ---         | ---         | ---                                                                                                                                |
+| `ii`        | *in indent* | select adjacent lines with the same indentation.                                                                                   |
+| `ai`        | *a indent*  | select adjacent lines with the same indentation and one extra line with less indentation at the beginning.                         |
+| `aI`        | *a Indent*  | select adjacent lines with the same indentation and two extra line with less indentation: one at the beginning and one at the end. |
 
 **Notes**: Some quirks about vindent text objects:
 
