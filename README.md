@@ -88,10 +88,10 @@ Feel free to change them directly.
 
 Consider the LaTeX code:
 ```tex
-\begin{enumerate}       % line 1
-    \item I am item 1.  % line 2
-    \item I am item 2.  % line 3
-\end{enumerate}         % line 4
+\begin{enumerate}       % line 1  ┐ ]l
+    \item I am item 1.  % line 2  │  ┐ ]l
+    \item I am item 2.  % line 3  │ <┘
+\end{enumerate}         % line 4 <┘
 ```
 If the cursor is on line 1 and `]l` is pressed,
 the cursor will move to the beginning of line 4.
