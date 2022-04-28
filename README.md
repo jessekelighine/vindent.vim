@@ -14,8 +14,8 @@ and
 [vim-indent-object](https://github.com/michaeljsmith/vim-indent-object).
 `vindent.vim` is essentially a simplified version of the two plugins combined.
 Same indent level jumping from [vim-indentwise](https://github.com/jeetsukumaran/vim-indentwise)
-and all text objects from [vim-indent-object](https://github.com/michaeljsmith/vim-indent-object) are reimplemented here
-with less than *100 lines* of vimscript!
+and all text objects from [vim-indent-object](https://github.com/michaeljsmith/vim-indent-object)
+are reimplemented here with less than *100 lines* of vimscript!
 
 ## Installation
 
