@@ -17,14 +17,14 @@ endfunction
 
 " Returns 1 if `a:line` is a valid line number.
 function! <SID>Valid(line=line('.'))
-	return ( a:line>=1 && a:line<=line('$') ? 1 : 0 )
+	return a:line>=1 && a:line<=line('$') ? 1 : 0
 endfunction
 
 "### Motion ###################################################################
 
 " Find the "prev" or "next" line with the same indentation and return its line
 " number.  If no such lines are found, then 0 is returned.
-function! <SID>Find(direct, line=line('.'), skip=1) range
+function! <SID>Find(direct, line=line('.'), skip=1)
 	let l:line   = a:line
 	let l:indent = <SID>Get(a:line)
 	let l:inc    = a:direct=='prev' ? -1 : 1
@@ -37,13 +37,13 @@ function! <SID>Find(direct, line=line('.'), skip=1) range
 endfunction
 
 " Go to the "prev" or "next" line with the same indentation.
-function! vindent#Move(direct, mode) range
-	exe "norm \<Esc>"
+function! vindent#Move(direct, mode)
 	if getline('.')=="" | return | endif " return if on empty line.
 	let l:moveto = <SID>Find(a:direct) | if l:moveto==0 | return | endif " special case
 	let l:move   = abs(l:moveto-line('.')) . ( a:direct=='prev' ? 'k' : 'j' )
+	echom l:moveto
 	if a:mode=='N' | silent exec "norm :".l:moveto."\<CR>_" | endif
-	if a:mode=='X' | silent exec "norm \<Esc>gv".l:move."_" | endif
+	if a:mode=='X' | silent exec "norm gv".l:move."_"       | endif
 	if a:mode=='O' | silent exec "norm V".l:move."_"        | endif
 endfunction
 
