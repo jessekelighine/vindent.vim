@@ -3,10 +3,8 @@
 `vindent.vim` is a simple plugin for Vim and Neovim that provides two functionalities that have to
 do with indentations:
 
-1. Creates a *vindent motion* that moves cursor to the previous or next line
-   with the same indentation as the current line.
-2. Creates three *vindent text object* that selects adjacent lines with the
-   same indentation (with three slight variations).
+1. Creates a *vindent motion* that moves cursor to the previous or next line with the same indentation as the current line.
+2. Creates three *vindent text object* that selects adjacent lines with the same indentation (with three slight variations).
 
 This plugin was partially inspired by
 [vim-indentwise](https://github.com/jeetsukumaran/vim-indentwise)
@@ -54,14 +52,14 @@ git clone https://github.com/jessekelighine/vindent.vim
 
 2. **Vindent Text Objects:**
 
-| Plug                        | description                              |
-| ---                         | ---                                      |
-| `<PLug>(VindentObject_X_i)` | select text "*in indent*". (visual mode) |
-| `<PLug>(VindentObject_X_a)` | select text "*a indent*".  (visual mode) |
-| `<PLug>(VindentObject_X_I)` | select text "*a Indent*".  (visual mode) |
-| `<PLug>(VindentObject_O_i)` | use "*in indent*" as text object.        |
-| `<PLug>(VindentObject_O_a)` | use "*a indent*"  as text object.        |
-| `<PLug>(VindentObject_O_I)` | use "*a Indent*"  as text object.        |
+| Plug                         | description                              |
+| ---                          | ---                                      |
+| `<PLug>(VindentObject_X_ii)` | select text "*in indent*". (visual mode) |
+| `<PLug>(VindentObject_X_ai)` | select text "*a indent*".  (visual mode) |
+| `<PLug>(VindentObject_X_aI)` | select text "*a Indent*".  (visual mode) |
+| `<PLug>(VindentObject_O_ii)` | use "*in indent*" as text object.        |
+| `<PLug>(VindentObject_O_ai)` | use "*a indent*"  as text object.        |
+| `<PLug>(VindentObject_O_aI)` | use "*a Indent*"  as text object.        |
 
 The default keybindings are defined in `plugin/vindent.vim` as follows:
 ```vim
