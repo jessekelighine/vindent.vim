@@ -15,6 +15,11 @@ function! <SID>NoLess(indent,line)
 	return matchstr(<SID>Get(a:line),"^".a:indent)!="" ? 1 : 0
 endfunction
 
+" Returns 1 if `a:line` is a valid line number.
+function! <SID>Valid(line=line('.'))
+	return ( a:line>=1 && a:line<=line('$') ? 1 : 0 )
+endfunction
+
 "### Motion ###################################################################
 
 " Find the "prev" or "next" line with the same indentation and return its line
@@ -25,9 +30,9 @@ function! <SID>Find(direct, line=line('.'), skip=1)
 	let l:inc    = a:direct=='prev' ? -1 : 1
 	while 1
 		let l:line = l:line + l:inc
-		if a:skip && getline(l:line)==''  | continue      | endif
-		if <SID>Same(l:indent,l:line)  | return l:line | endif
-		if l:line<=1 || l:line>=line('$') | return 0      | endif
+		if !<SID>Valid(l:line)           | return 0      | endif
+		if a:skip && getline(l:line)=='' | continue      | endif
+		if <SID>Same(l:indent,l:line)    | return l:line | endif
 	endwhile
 endfunction
 
@@ -51,8 +56,8 @@ endfunction
 function! <SID>Range(line=line('.'), skip=1, hanging=0)
 	let l:indent = <SID>Get(a:line) | if l:indent=='' | return [0,0] | endif " return [0,0] if there is no indent
 	let [ l:ls, l:le ] = [ a:line, a:line ]
-	while l:ls>=1         && ( <SID>NoLess(l:indent,l:ls) || (a:skip?getline(l:ls)=="":0) ) | let l:ls=l:ls-1 | endwhile
-	while l:le<=line('$') && ( <SID>NoLess(l:indent,l:le) || (a:skip?getline(l:le)=="":0) ) | let l:le=l:le+1 | endwhile
+	while <SID>Valid(l:ls) && ( <SID>NoLess(l:indent,l:ls) || (a:skip?getline(l:ls)=="":0) ) | let l:ls=l:ls-1 | endwhile
+	while <SID>Valid(l:le) && ( <SID>NoLess(l:indent,l:le) || (a:skip?getline(l:le)=="":0) ) | let l:le=l:le+1 | endwhile
 	let l:return = [ l:ls+1, l:le-1 ]
 	if !a:hanging
 		while getline(l:return[0])=="" | let l:return[0]=l:return[0]+1 | endwhile
@@ -66,8 +71,7 @@ function! vindent#Object(code)
 	let l:range = <SID>Range() | if l:range==[0,0] | return | endif " return if there is no indent.
 	let l:move  = l:range[1] - l:range[0]
 	call cursor(l:range[0],0)
-	if     a:code==#'i' | exec "norm  V" . ( l:move==0 ? '' : l:move.'j' )
-	elseif a:code==#'a' | exec "norm kV" . ( l:move+1 ) . 'j'
-	elseif a:code==#'I' | exec "norm kV" . ( l:move+2 ) . 'j'
-	endif
+	if a:code==#'ii' | exec "norm  V" . ( l:move==0 ? '' : l:move.'j' ) | endif
+	if a:code==#'ai' | exec "norm kV" . ( l:move+1 ) . 'j'              | endif
+	if a:code==#'aI' | exec "norm kV" . ( l:move+2 ) . 'j'              | endif
 endfunction

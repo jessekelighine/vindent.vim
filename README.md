@@ -73,12 +73,12 @@ xnoremap <silent> ]l <Plug>(VindentMove_X_next)
 onoremap <silent> [l <Plug>(VindentMove_O_prev)
 onoremap <silent> ]l <Plug>(VindentMove_O_next)
 " Default Keybindings: vindent text object.
-xnoremap <silent> ii <PLug>(VindentObject_X_i)
-xnoremap <silent> ai <PLug>(VindentObject_X_a)
-xnoremap <silent> aI <PLug>(VindentObject_X_I)
-onoremap <silent> ii <PLug>(VindentObject_O_i)
-onoremap <silent> ai <PLug>(VindentObject_O_a)
-onoremap <silent> aI <PLug>(VindentObject_O_I)
+xnoremap <silent> ii <PLug>(VindentObject_X_ii)
+xnoremap <silent> ai <PLug>(VindentObject_X_ai)
+xnoremap <silent> aI <PLug>(VindentObject_X_aI)
+onoremap <silent> ii <PLug>(VindentObject_O_ii)
+onoremap <silent> ai <PLug>(VindentObject_O_ai)
+onoremap <silent> aI <PLug>(VindentObject_O_aI)
 ```
 Feel free to change them directly.
 
