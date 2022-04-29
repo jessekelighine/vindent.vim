@@ -24,7 +24,7 @@ endfunction
 
 " Find the "prev" or "next" line with the same indentation and return its line
 " number.  If no such lines are found, then 0 is returned.
-function! <SID>Find(direct, line=line('.'), skip=1)
+function! <SID>Find(direct, line=line('.'), skip=1) range
 	let l:line   = a:line
 	let l:indent = <SID>Get(a:line)
 	let l:inc    = a:direct=='prev' ? -1 : 1
@@ -37,12 +37,13 @@ function! <SID>Find(direct, line=line('.'), skip=1)
 endfunction
 
 " Go to the "prev" or "next" line with the same indentation.
-function! vindent#Move(direct, mode)
+function! vindent#Move(direct, mode) range
+	exe "norm \<Esc>"
 	if getline('.')=="" | return | endif " return if on empty line.
 	let l:moveto = <SID>Find(a:direct) | if l:moveto==0 | return | endif " special case
 	let l:move   = abs(l:moveto-line('.')) . ( a:direct=='prev' ? 'k' : 'j' )
-	if a:mode=='N' | silent exec 'norm :'.l:moveto."\<CR>_" | endif
-	if a:mode=='X' | silent exec "norm \<Esc>gv".l:move.'_' | endif
+	if a:mode=='N' | silent exec "norm :".l:moveto."\<CR>_" | endif
+	if a:mode=='X' | silent exec "norm \<Esc>gv".l:move."_" | endif
 	if a:mode=='O' | silent exec "norm V".l:move."_"        | endif
 endfunction
 
