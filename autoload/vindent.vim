@@ -41,7 +41,6 @@ function! vindent#Move(direct, mode)
 	if getline('.')=="" | return | endif " return if on empty line.
 	let l:moveto = <SID>Find(a:direct) | if l:moveto==0 | return | endif " special case
 	let l:move   = abs(l:moveto-line('.')) . ( a:direct=='prev' ? 'k' : 'j' )
-	echom l:moveto
 	if a:mode=='N' | silent exec "norm :".l:moveto."\<CR>_" | endif
 	if a:mode=='X' | silent exec "norm gv".l:move."_"       | endif
 	if a:mode=='O' | silent exec "norm V".l:move."_"        | endif
