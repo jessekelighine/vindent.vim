@@ -1,5 +1,7 @@
 " plugin/indent.vim
 
+if exists("g:loaded_vindent") | finish | endif | let g:loaded_vindent=1
+
 " Define: vindent motion.
 nnoremap <silent> <Plug>(VindentMove_N_prev) :call vindent#Move('prev','N')<CR>
 nnoremap <silent> <Plug>(VindentMove_N_next) :call vindent#Move('next','N')<CR>
