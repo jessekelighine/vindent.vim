@@ -3,12 +3,12 @@
 if exists("g:loaded_vindent") | finish | endif | let g:loaded_vindent=1
 
 " Define: vindent motion.
-nnoremap <silent> <Plug>(VindentMove_N_prev) :call      vindent#Move('prev','N')<CR>
-nnoremap <silent> <Plug>(VindentMove_N_next) :call      vindent#Move('next','N')<CR>
+nnoremap <silent> <Plug>(VindentMove_N_prev)      :call vindent#Move('prev','N')<CR>
+nnoremap <silent> <Plug>(VindentMove_N_next)      :call vindent#Move('next','N')<CR>
 xnoremap <silent> <Plug>(VindentMove_X_prev) <Esc>:call vindent#Move('prev','X')<CR>
 xnoremap <silent> <Plug>(VindentMove_X_next) <Esc>:call vindent#Move('next','X')<CR>
-onoremap <silent> <Plug>(VindentMove_O_prev) :call      vindent#Move('prev','O')<CR>
-onoremap <silent> <Plug>(VindentMove_O_next) :call      vindent#Move('next','O')<CR>
+onoremap <silent> <Plug>(VindentMove_O_prev)      :call vindent#Move('prev','O')<CR>
+onoremap <silent> <Plug>(VindentMove_O_next)      :call vindent#Move('next','O')<CR>
 " Define: vindent text objects.
 xnoremap <silent> <PLug>(VindentObject_X_ii) :call vindent#Object('ii')<CR>
 xnoremap <silent> <PLug>(VindentObject_X_ai) :call vindent#Object('ai')<CR>

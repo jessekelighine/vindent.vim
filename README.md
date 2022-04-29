@@ -6,10 +6,8 @@ do with indentations:
 1. Creates a *vindent motion* that moves cursor to the previous or next line with the same indentation as the current line.
 2. Creates three *vindent text object* that selects adjacent lines with the same indentation (with three slight variations).
 
-This plugin was partially inspired by
-[vim-indentwise](https://github.com/jeetsukumaran/vim-indentwise)
-and
-[vim-indent-object](https://github.com/michaeljsmith/vim-indent-object).
+This plugin was partially inspired by [vim-indentwise](https://github.com/jeetsukumaran/vim-indentwise)
+and [vim-indent-object](https://github.com/michaeljsmith/vim-indent-object).
 `vindent.vim` is essentially a simplified version of the two plugins combined.
 Same indent level jumping from [vim-indentwise](https://github.com/jeetsukumaran/vim-indentwise)
 and all text objects from [vim-indent-object](https://github.com/michaeljsmith/vim-indent-object)
