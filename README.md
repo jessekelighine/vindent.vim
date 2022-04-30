@@ -59,7 +59,7 @@ git clone https://github.com/jessekelighine/vindent.vim
 | `<PLug>(VindentObject_O_ai)` | use "*a indent*"  as text object.        |
 | `<PLug>(VindentObject_O_aI)` | use "*a Indent*"  as text object.        |
 
-The default keybindings are defined in `plugin/vindent.vim` as follows:
+The default keybindings are definedin [`plugin/vindent.vim`](./plugin/vindent.vim) as follows:
 ```vim
 " Default Keybindings: vindent motion.
 nnoremap <silent> [l <Plug>(VindentMove_N_prev)
