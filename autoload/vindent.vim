@@ -61,22 +61,26 @@ endfunction
 " is set, then empty lines would be ignored.  If `hanging` is set to 0, then
 " empty lines selected at the beginning or end would not be in the returned
 " range.
-function! <SID>Range(line=line('.'), skip=1, hanging=0)
+function! <SID>Range(line=line('.'), skip=1)
 	let l:indent = <SID>Get(a:line) | if l:indent=='' | return [0,0] | endif " return [0,0] if there is no indent
 	let [ l:ls, l:le ] = [ a:line, a:line ]
 	while <SID>Valid(l:ls) && ( <SID>NoLess(l:indent,l:ls) || (a:skip?getline(l:ls)=="":0) ) | let l:ls=l:ls-1 | endwhile
 	while <SID>Valid(l:le) && ( <SID>NoLess(l:indent,l:le) || (a:skip?getline(l:le)=="":0) ) | let l:le=l:le+1 | endwhile
-	let l:return = [ l:ls+1, l:le-1 ]
-	if !a:hanging
-		while getline(l:return[0])=="" | let l:return[0]=l:return[0]+1 | endwhile
-		while getline(l:return[1])=="" | let l:return[1]=l:return[1]-1 | endwhile
-	endif
-	return l:return
+	return [ l:ls+1, l:le-1 ]
+endfunction
+
+" exclude empty lines on either ends from `a:range`.
+function! <SID>NoHang(range, begin, end)
+	let l:range = a:range
+	while a:begin && getline(l:range[0])=="" | let l:range[0]=l:range[0]+1 | endwhile
+	while a:end   && getline(l:range[1])=="" | let l:range[1]=l:range[1]-1 | endwhile
+	return l:range
 endfunction
 
 " Define indent text objects.
 function! vindent#Object(code)
 	let l:range = <SID>Range() | if l:range==[0,0] | return | endif " return if there is no indent.
+	let l:range = <SID>NoHang( l:range, (a:code[0]==#'i'?1:0), (a:code[1]==#'i'?1:0) )
 	let l:move  = l:range[1] - l:range[0]
 	call cursor(l:range[0],0)
 	if a:code==#'ii' | exec "norm  V" . ( l:move==0 ? '' : l:move.'j' ) | endif
