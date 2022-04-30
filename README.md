@@ -27,11 +27,24 @@ git clone https://github.com/jessekelighine/vindent.vim
 
 ### TL;DR
 
+After installation, put the following lines in your `~/.vimrc`:
+```vim
+let g:vindent_motion_prev='[l'
+let g:vindent_motion_next=']l'
+let g:vindent_object_ii='ii'
+let g:vindent_object_ai='ai'
+let g:vindent_object_aI='aI'
+```
+and enjoy the two functionalities:
+
 1. **Vindent Motion**: Move to lines with the same indentation with `[l` and `]l`.
    (more [details](#vindent-motion-move-to-line-with-same-indentation))
 2. **Vindent Text Objects**: Use text objects with `ii` (*in indent*),
    `ai` (*a indent*), and `aI` (*a Indent*).
    (more [details](#vindent-text-objects-select-lines-of-text-with-same-indentation))
+
+**Note**: The mapping `[l` and `]l` are also used in [vim-unimpaired](https://github.com/tpope/vim-unimpaired),
+so be sure you change them if you also use [vim-unimpaired](https://github.com/tpope/vim-unimpaired).
 
 ### Mappings
 
@@ -59,26 +72,23 @@ git clone https://github.com/jessekelighine/vindent.vim
 | `<PLug>(VindentObject_O_ai)` | use "*a indent*"  as text object.        |
 | `<PLug>(VindentObject_O_aI)` | use "*a Indent*"  as text object.        |
 
-The default keybindings are defined in [`plugin/vindent.vim`](./plugin/vindent.vim) as follows:
-```vim
-" Default Keybindings: vindent motion.
-nnoremap <silent> [l <Plug>(VindentMove_N_prev)
-nnoremap <silent> ]l <Plug>(VindentMove_N_next)
-xnoremap <silent> [l <Plug>(VindentMove_X_prev)
-xnoremap <silent> ]l <Plug>(VindentMove_X_next)
-onoremap <silent> [l <Plug>(VindentMove_O_prev)
-onoremap <silent> ]l <Plug>(VindentMove_O_next)
-" Default Keybindings: vindent text object.
-xnoremap <silent> ii <PLug>(VindentObject_X_ii)
-xnoremap <silent> ai <PLug>(VindentObject_X_ai)
-xnoremap <silent> aI <PLug>(VindentObject_X_aI)
-onoremap <silent> ii <PLug>(VindentObject_O_ii)
-onoremap <silent> ai <PLug>(VindentObject_O_ai)
-onoremap <silent> aI <PLug>(VindentObject_O_aI)
-```
-Feel free to change them directly.
+No default keybindings are provided.
+You can set keybindings using the following variables:
+
+| variable name           | description                                                 |
+| ---                     | ---                                                         |
+| `g:vindent_motion_prev` | key sequence to move to the previous line with same indent. |
+| `g:vindent_motion_next` | key sequence to move to the next     line with same indent. |
+| `g:vindent_object_ii`   | key sequence to select text object "*in indent*"            |
+| `g:vindent_object_ai`   | key sequence to select text object "*a  indent*"            |
+| `g:vindent_object_aI`   | key sequence to select text object "*a  Indent*"            |
+
+An example (keybindings that I use) is provided in [TL;DR](#tldr).
+Alternatively, you can create mappings directly by using the `<Plug>`s provided.
 
 ## Explanation
+
+The following explanation assumes that the keybindings in [TL;DR](#tldr) is used.
 
 ### Vindent Motion: move to line with same indentation.
 
