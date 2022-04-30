@@ -1,23 +1,27 @@
 " autoload/vindent.vim
 
+"### Utilities ################################################################
+
 " Returns the indentation of a given line.
 function! <SID>Get(line=line('.'))
 	return matchstr(getline(a:line),'^\s*')
 endfunction
 
-" Returns 1 if the indentation on line `a:line` is identical to `a:indent`.
+" Returns 1 if `a:line` is a valid line number.
+function! <SID>Valid(line=line('.'))
+	return a:line>=1 && a:line<=line('$') ? 1 : 0
+endfunction
+
+"### Test Indent Levels #######################################################
+
+" Returns 1 if the indentation on `a:line` is identical to `a:indent`.
 function! <SID>Same(indent,line)
 	return <SID>Get(a:line)==a:indent ? 1 : 0
 endfunction
 
-" Returns 1 if the indentation on line `a:line` is no less than `a:indent`.
+" Returns 1 if the indentation on `a:line` is no less than `a:indent`.
 function! <SID>NoLess(indent,line)
 	return matchstr(<SID>Get(a:line),"^".a:indent)!="" ? 1 : 0
-endfunction
-
-" Returns 1 if `a:line` is a valid line number.
-function! <SID>Valid(line=line('.'))
-	return a:line>=1 && a:line<=line('$') ? 1 : 0
 endfunction
 
 "### Motion ###################################################################
@@ -39,7 +43,11 @@ endfunction
 " Go to the "prev" or "next" line with the same indentation.
 function! vindent#Move(direct, mode)
 	if getline('.')=="" | return | endif " return if on empty line.
-	let l:moveto = <SID>Find(a:direct) | if l:moveto==0 | return | endif " special case
+	let l:moveto = <SID>Find(a:direct)
+	if l:moveto==0 " special case if `<SID>Find` returns 0.
+		if a:mode=='X' | silent exec "norm gv" | endif
+		return
+	endif
 	let l:move   = abs(l:moveto-line('.')) . ( a:direct=='prev' ? 'k' : 'j' )
 	if a:mode=='N' | silent exec "norm :".l:moveto."\<CR>_" | endif
 	if a:mode=='X' | silent exec "norm gv".l:move."_"       | endif
