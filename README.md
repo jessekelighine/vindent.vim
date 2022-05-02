@@ -1,14 +1,14 @@
 # vindent.vim
 
-`vindent.vim` is a minimal plugin for Vim and Neovim two indentation related functionalities:
+`vindent.vim` is a minimal plugin for Vim and Neovim that provides two functionalities:
 
-1. Creates a *vindent motion* that moves cursor to the previous or next line with the same indentation as the current line.
-2. Creates three *vindent text object* that selects adjacent lines with the same indentation (with three slight variations).
+1. Jump to previous/next line with same indentation. (*vindent motion*)
+2. Select adjacent lines with same or more indentation. (*vindent text object*: 3 variations)
 
 This plugin was partially inspired by [vim-indentwise](https://github.com/jeetsukumaran/vim-indentwise)
 and [vim-indent-object](https://github.com/michaeljsmith/vim-indent-object).
 `vindent.vim` is essentially a simplified version of the two plugins combined,
-reimplemented with less than *100 lines* of vimscript!
+but reimplemented with less than *100 lines* of vimscript!
 
 ## Installation
 
@@ -32,18 +32,17 @@ let g:vindent_object_ii='ii'
 let g:vindent_object_ai='ai'
 let g:vindent_object_aI='aI'
 ```
-and enjoy the two functionalities:
+and enjoy using:
 
-1. **Vindent Motion**: Move to lines with the same indentation with `[l` and `]l`.
-   (more [details](#vindent-motion-move-to-line-with-same-indentation))
-2. **Vindent Text Objects**: Use text objects with `ii` (*in indent*),
-   `ai` (*a indent*), and `aI` (*a Indent*).
-   (more [details](#vindent-text-objects-select-lines-of-text-with-same-indentation))
+1. **Vindent Motion**: Jump to previous/next with same indentation with `[l`/`]l`.
+   ([explanation](#vindent-motion-move-to-line-with-same-indentation))
+2. **Vindent Text Objects**: Select text with `ii` (*in indent*), `ai` (*an indent*), and `aI` (*an Indent*).
+   ([explanation](#vindent-text-objects-select-lines-of-text-with-same-indentation))
 
 **Note**: The mapping `[l` and `]l` are also used in [vim-unimpaired](https://github.com/tpope/vim-unimpaired),
 so be sure you change them if you also use [vim-unimpaired](https://github.com/tpope/vim-unimpaired).
 
-### Key Bindings
+### Keybindings
 
 `vindent.vim` comes with no default keybindings.
 You can set keybindings using the following variables:
@@ -85,7 +84,7 @@ Alternatively, you can create mappings directly by using the `<Plug>`s provided.
 | `<PLug>(VindentObject_O_ai)` | use "*an indent*" as text object.        |
 | `<PLug>(VindentObject_O_aI)` | use "*an Indent*" as text object.        |
 
-These definitions can be found in [`plugin/vindent.vim`](./plugin/vimdent.vim).
+These definitions can be found in [`plugin/vindent.vim`](./plugin/vindent.vim).
 
 ## Explanation
 
