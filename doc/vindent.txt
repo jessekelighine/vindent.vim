@@ -1,0 +1,198 @@
+*vindent.txt* Move around and select text by indentations.
+
+
+                                 VINDENT.VIM
+
+
+==============================================================================
+Contents                                                    *vindent.Contents*
+
+    1. Introduction ............................ |vindent.Introduction|
+    2. Usage ................................... |vindent.Usage|
+    3. Details ................................. |vindent.Details|
+        3.1 Motions ............................ |vindent.Motions|
+        3.2 Text Objects ....................... |vindent.Text_Objects|
+    4. License ................................. |vindent.License|
+    5. Bugs .................................... |vindent.Bugs|
+    6. Contributing ............................ |vindent.Contributing|
+    7. Changelog ............................... |vindent.Changelog|
+    8. Credits ................................. |vindent.Credits|
+
+==============================================================================
+INTRODUCTION                                            *vindent.Introduction*
+
+This plugin provides two indentation related functionalities:
+
+1. |vindent.Motions|
+   A |motion| that moves to previous or next line with the same indentation as
+   the current line.  Consists of two components:
+    - |indent_prev|: move to previous line with same indent.
+    - |indent_next|: move to next     line with same indent.
+
+2. |vindent.Text_Objects|
+   Three text |objects| to select text:
+    - |in_indent|: select adjacent lines with the same or more indentation.
+    - |an_indent|: select |in_indent| and one extra line with less indentation
+      at the beginning.
+    - |an_Indent|: select |in_indent| and two extra line with less indentation:
+      one at the beginning and one at the end.
+
+==============================================================================
+USAGE                                                          *vindent.Usage*
+
+						*vindent_variable*
+This plugin does not come with default keybindings.  You can define your own
+keybindings using the following |vindent_variable|s:
+
+- `g:vindent_motion_prev`: Keybinding to motion |indent_prev|.
+- `g:vindent_motion_next`: Keybinding to motion |indent_next|.
+- `g:vindent_object_ii`:   Keybinding to text object |in_indent|.
+- `g:vindent_object_ai`:   Keybinding to text object |an_indent|.
+- `g:vindent_object_aI`:   Keybinding to text object |an_Indent|.
+
+For example, I have the following definitions in my |vimrc|:
+
+	`let g:vindent_motion_prev = '[l'`
+	`let g:vindent_motion_next = ']l'`
+	`let g:vindent_object_ii   = 'ii'`
+	`let g:vindent_object_ai   = 'ai'`
+	`let g:vindent_object_aI   = 'aI'`
+
+						*vindent_plug*
+Alternatively, you can create mappings using the <Plug>s provided by this
+plugin:
+
+- `<Plug>(VindentMove_N_prev)`: |indent_prev| in normal mode.
+- `<Plug>(VindentMove_N_next)`: |indent_next| in normal mode.
+- `<Plug>(VindentMove_X_prev)`: |indent_prev| in visual mode.
+- `<Plug>(VindentMove_X_next)`: |indent_next| in visual mode.
+- `<Plug>(VindentMove_O_prev)`: |indent_prev| as text object.
+- `<Plug>(VindentMove_O_next)`: |indent_next| as text object.
+
+- `<PLug>(VindentObject_X_ii)`: |in_indent| in visual mode.
+- `<PLug>(VindentObject_X_ai)`: |an_indent| in visual mode.
+- `<PLug>(VindentObject_X_aI)`: |an_Indent| in visual mode.
+- `<PLug>(VindentObject_O_ii)`: |in_indent| as text object.
+- `<PLug>(VindentObject_O_ai)`: |an_indent| as text object.
+- `<PLug>(VindentObject_O_aI)`: |an_Indent| as text object.
+
+==============================================================================
+DETAILS                                                      *vindent.Details*
+
+------------------------------------------------------------------------------
+MOTIONS                                                      *vindent.Motions*
+
+"indent_prev"					*indent_prev*
+		A |motion| that moves the cursor to the previous line that has
+		the exact same indentation as the current line.  This motion
+		works in normal mode, visual mode and as a text object.  This
+		motion does NOT take {count}.
+
+		Keybinding defined by `g:vindent_motion_prev` is mapped to
+		this motion, which consists of three |vindent_plug|s:
+		    - `<Plug>(VindentMove_N_prev)`
+		    - `<Plug>(VindentMove_X_prev)`
+		    - `<Plug>(VindentMove_O_prev)`
+
+		Here are some quirks about this motion:
+		    - This motion does nothing (cursor will not move) if the
+		      current line is |empty|.
+		    - This motion assumes that the indentation is consistent.
+		      For example, on a line indented with 1 tab,
+		      |indent_prev| would not move the cursor to a line
+		      indented with 8 spaces.
+		    - This motion ignores |empty| lines.  If there is an empty
+		      line between two lines with the same indentation, that
+		      empty line would be ignored.
+		    - If no line with the same indentation is found, the
+		      cursor will not move.
+		    - If being used as a text object, this motion operates on
+		      texts line-wise like |V|.
+
+"indent_next"					*indent_next*
+		Similar to |indent_prev|, but moves the cursor to the next
+		line with the exact same indentation as the current line.
+
+------------------------------------------------------------------------------
+TEXT OBJECTS                                            *vindent.Text_Objects*
+
+"in_indent"					*in_indent*
+		A text |object| that selects adjacent lines with the same or
+		more indentations as the current line.  This text object
+		select text line-wise like |V|.  This text object does NOT
+		take {count}.
+
+		Keybinding defined by `g:vindent_object_ii` is mapped to this
+		text object, which consists of two |vindent_plug|s:
+		    - `<PLug>(VindentObject_X_ii)`
+		    - `<PLug>(VindentObject_O_ii)`
+
+		Here are some quirks about this motion:
+		    - This object assumes indentations are consistent.
+		    - This object ignores |empty| lines.
+		    - This object would not select |empty| lines at the
+		      beginning or the end.
+		    - This object would select nothing if the current line is
+		      either "empty" or "not indented".
+
+		For example, consider the following LaTeX code:
+			` 1 \begin{enumerate}`
+			` 2`
+			` 3     \item`
+			` 4`
+			` 5         Some sentence that is`
+			` 6         split into two lines.`
+			` 7`
+			` 8     \item`
+			` 9         Another sentence here.`
+			`10`
+			`11 \end{enumerate}`
+		If the cursor is on line 5, |in_indent| selects lines 5 and 6.
+		If the cursor is on line 3, |in_indent| selects lines 3 to 9.
+		If the cursor is on line 5, |an_indent| selects lines 3 to 6.
+		If the cursor is on line 3, |an_Indent| selects lines 1 to 11.
+		If the cursor is on line 1, |in_indent| and |an_indent| and
+		|an_Indent| all select nothing since line 1 is not indented.
+
+"an_indent"					*an_indent*
+		Similar to |in_indent|, but selects adjacent lines with the
+		same or more indentations and one more line at the beginning
+		with less indentation.
+
+"an_Indent"					*an_Indent*
+		Similar to |in_indent|, but selects adjacent lines with the
+		same or more indentations and two more lines with less
+		indentation: one at the beginning and one at the end.
+
+==============================================================================
+LICENSE                                                      *vindent.License*
+
+Distributed under the same terms as Vim itself. See
+	`:help license`
+for details.
+
+==============================================================================
+BUGS                                                            *vindent.Bugs*
+
+No known bugs.  If you find one, please create an
+issue at https://github.com/jessekelighine/vindent.vim.
+
+==============================================================================
+CONTRIBUTING                                            *vindent.Contributing*
+
+If you wish to contribute, please make a pull request to
+https://github.com/jessekelighine/vindent.vim.
+
+==============================================================================
+CHANGELOG
+
+v1.0.0
+	- Initial version.
+
+==============================================================================
+CREDITS
+
+This plugin is created by Jesse Chen. (email: `jessekelighine@gmail.com`)
+
+------------------------------------------------------------------------------
+vim:tw=78:ts=8:noet:ft=help:norl:
