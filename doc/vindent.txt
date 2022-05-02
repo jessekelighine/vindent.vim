@@ -23,13 +23,13 @@ INTRODUCTION                                            *vindent.Introduction*
 
 This plugin provides two indentation related functionalities:
 
-1. |vindent.Motions|
+1. |vindent.Motions|:
    A |motion| that moves to previous or next line with the same indentation as
    the current line.  Consists of two components:
     - |indent_prev|: move to previous line with same indent.
     - |indent_next|: move to next     line with same indent.
 
-2. |vindent.Text_Objects|
+2. |vindent.Text_Objects|:
    Three text |objects| to select text:
     - |in_indent|: select adjacent lines with the same or more indentation.
     - |an_indent|: select |in_indent| and one extra line with less indentation
