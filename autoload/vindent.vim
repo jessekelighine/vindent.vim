@@ -84,9 +84,8 @@ endfunction
 " Define indent text objects.
 let s:nohang = { 'ii': [1, 1], 'iI': [1, 1], 'ai': [0, 1], 'aI': [0, 0] }
 let s:exact  = { 'ii': 0,      'iI': 1,      'ai': 0,      'aI': 0      }
-let s:skip   = { 'ii': 1,      'iI': 0,      'ai': 1,      'aI': 1      }
 function! vindent#Object(code)
-	let l:range = <SID>Range(s:exact[a:code],line('.'),s:skip[a:code]) | if l:range==[0,0] | return | endif
+	let l:range = <SID>Range(s:exact[a:code]) | if l:range==[0,0] | return | endif
 	let l:range = <SID>NoHang(l:range, s:nohang[a:code][0], s:nohang[a:code][1])
 	let l:move  = l:range[1] - l:range[0]
 	call cursor(l:range[0],0)
