@@ -26,17 +26,17 @@ This plugin provides two indentation related functionalities:
 1. |vindent_Motions|:
    A |motion| that moves to previous or next line with the same indentation as
    the current line.  Consists of two components:
-    - |indent_prev|: move to previous line with same indent.
-    - |indent_next|: move to next     line with same indent.
+       - |indent_prev|: move to previous line with same indent.
+       - |indent_next|: move to next     line with same indent.
 
 2. |vindent_Text_Objects|:
    Text |objects| to select text by indentation. Four variations:
-    - |in_indent|: select adjacent lines with the same or more indentation.
-    - |in_Indent|: select adjacent lines with same indentation.
-    - |an_indent|: select |in_indent| and one extra line with less indentation
-      at the beginning.
-    - |an_Indent|: select |in_indent| and two extra line with less indentation:
-      one at the beginning and one at the end.
+       - |in_indent|: select adjacent lines with the same or more indentation.
+       - |in_Indent|: select adjacent lines with same indentation.
+       - |an_indent|: select |in_indent| and one extra line with less
+         indentation at the beginning.
+       - |an_Indent|: select |in_indent| and two extra line with less
+         indentation: one at the beginning and one at the end.
 
 ==============================================================================
 2. Usage                                                       *vindent_Usage*
