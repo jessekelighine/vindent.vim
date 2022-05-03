@@ -106,20 +106,20 @@ plugin:
 		    - `<Plug>(VindentMove_X_prev)`: for visual mode
 		    - `<Plug>(VindentMove_O_prev)`: for text object
 
-		Here are some quirks about this motion:
-		    - This motion does nothing (cursor will not move) if the
+		Here are some quirks about |indent_prev| and |indent_next|:
+		    - These motions do nothing (cursor does not move) if the
 		      current line is |empty|.
-		    - This motion assumes that the indentation is consistent.
-		      For example, on a line indented with 1 tab,
+		    - These motions assume that the indentations are
+		      consistent. For example, on a line indented with 1 tab,
 		      |indent_prev| would not move the cursor to a line
 		      indented with 8 spaces.
-		    - This motion ignores |empty| lines.  If there is an empty
-		      line between two lines with the same indentation, that
-		      empty line would be ignored.
+		    - These motions ignore |empty| lines.  E.g., if there is
+		      an empty line between two lines with the same
+		      indentation, that empty line would be ignored.
 		    - If no line with the same indentation is found, the
-		      cursor will not move.
-		    - If being used as a text object, this motion operates on
-		      texts line-wise like |V|.
+		      cursor does not move.
+		    - If being used as a text object, these motions operate on
+		      texts line-wise, like |V|.
 
 		For example, consider the following LaTeX code: >
 			 1 \begin{enumerate}
@@ -155,7 +155,7 @@ plugin:
 "in_indent"					*in_indent*
 		A text |object| that selects adjacent lines with the same or
 		more indentations as the current line.  This text object
-		select text line-wise like |V|.  This text object does NOT
+		select text line-wise, like |V|.  This text object does NOT
 		take {count}.
 
 		Keybinding defined by `g:vindent_object_ii` is mapped to this
@@ -163,12 +163,12 @@ plugin:
 		    - `<PLug>(VindentObject_X_ii)`: for visual mode.
 		    - `<PLug>(VindentObject_O_ii)`: for text object.
 
-		Here are some quirks about this motion:
-		    - This object assumes indentations are consistent.
-		    - This object ignores |empty| lines.
-		    - This object would not select |empty| lines at the
+		Here are some quirks about objects in |vindent_Text_Objects|:
+		    - These objects assume indentations are consistent.
+		    - These objects ignore |empty| lines.
+		    - These objects do not select |empty| lines at the
 		      beginning or the end.
-		    - This object would select nothing if the current line is
+		    - These objects select nothing if the current line is
 		      either "empty" or "not indented".
 
 		For example, consider the following LaTeX code: >
@@ -185,6 +185,7 @@ plugin:
 			11 \end{enumerate}
 <		If cursor is on line 5, |in_indent| selects lines 5 and 6.
 		If cursor is on line 3, |in_indent| selects lines 3 to 9.
+		If cursor is on line 3, |in_Indent| selects line  3.
 		If cursor is on line 5, |an_indent| selects lines 3 to 6.
 		If cursor is on line 3, |an_Indent| selects lines 1 to 11.
 		If cursor is on line 1, |in_indent| and |an_indent| and
@@ -255,7 +256,7 @@ v1.0.0:                                                            2022-May-03
 ==============================================================================
 8. Credits                                                   *vindent_Credits*
 
-This plugin is created by Jesse Chen. (email: `jessekelighine@gmail.com`)
+This plugin is created by Jesse Chen. (email: jessekelighine@gmail.com)
 
 ==============================================================================
 vim:tw=78:ts=8:noet:ft=help:norl:
