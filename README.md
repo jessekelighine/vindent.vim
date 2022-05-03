@@ -3,7 +3,7 @@
 `vindent.vim` is a minimal plugin for Vim and Neovim that provides two functionalities:
 
 1. Jump to previous/next line with same indentation. (*vindent motion*)
-2. Select adjacent lines with same or more indentation. (*vindent text object*: 3 variations)
+2. Select adjacent lines with same or more indentation. (*vindent text object*: 4 variations)
 
 This plugin was partially inspired by [vim-indentwise](https://github.com/jeetsukumaran/vim-indentwise)
 and [vim-indent-object](https://github.com/michaeljsmith/vim-indent-object).
@@ -22,152 +22,96 @@ git clone https://github.com/jessekelighine/vindent.vim
 
 ## Usage
 
-### TL;DR
-
-After installation, put the following lines in your `~/.vimrc`:
+`vindent.vim` comes with no default keybindings.  So after installation, put
+the following lines in your `~/.vimrc`:
 ```vim
-let g:vindent_motion_prev='[l'
-let g:vindent_motion_next=']l'
-let g:vindent_object_ii='ii'
-let g:vindent_object_ai='ai'
-let g:vindent_object_aI='aI'
+let g:vindent_motion_prev = '[l'
+let g:vindent_motion_next = ']l'
+let g:vindent_object_ii   = 'ii'
+let g:vindent_object_iI   = 'iI'
+let g:vindent_object_ai   = 'ai'
+let g:vindent_object_aI   = 'aI'
 ```
 and enjoy using:
 
 1. **Vindent Motion**: Jump to previous/next with same indentation with `[l`/`]l`.
-   ([explanation](#vindent-motion-move-to-line-with-same-indentation))
-2. **Vindent Text Objects**: Select text with `ii` (*in indent*), `ai` (*an indent*), and `aI` (*an Indent*).
-   ([explanation](#vindent-text-objects-select-lines-of-text-with-same-indentation))
+   ([examples](#vindent-motion-move-to-line-with-same-indentation))
+2. **Vindent Text Objects**: Select text with `ii` (*in indent*), `iI` (*in Indent*), `ai` (*an indent*), and `aI` (*an Indent*).
+   ([examples](#vindent-text-objects-select-lines-of-text-with-same-indentation))
 
-**Note**: The mapping `[l` and `]l` are also used in [vim-unimpaired](https://github.com/tpope/vim-unimpaired),
-so be sure you change them if you also use [vim-unimpaired](https://github.com/tpope/vim-unimpaired).
+Feel free to customize the keybindings.
+**Note**: If you wish not to use a certain functionality, simply leave the corresponding variable undefined.
+`[l` and `]l` are commonly used keybindings (E.g., [vim-unimpaired](https://github.com/tpope/vim-unimpaired)),
+so be sure to change them if you already use those.
 
-### Keybindings
+For details please refer to the [`doc flie`](./doc/vindent.txt).
 
-`vindent.vim` comes with no default keybindings.
-You can set keybindings using the following variables:
+## Examples
 
-| variable name           | description                                                    |
-| ---                     | ---                                                            |
-| `g:vindent_motion_prev` | keybinding to move to the previous line with same indentation. |
-| `g:vindent_motion_next` | keybinding to move to the next     line with same indentation. |
-| `g:vindent_object_ii`   | keybinding to select text object "*in indent*".                |
-| `g:vindent_object_ai`   | keybinding to select text object "*an indent*".                |
-| `g:vindent_object_aI`   | keybinding to select text object "*an Indent*".                |
-
-An example of use is provided in [TL;DR](#tldr).
-If you wish not to use a certain functionality,
-simply leave the corresponding variable undefined.
-
-Alternatively, you can create mappings directly by using the `<Plug>`s provided.
-`vindent.vim` provides the following `<Plug>`s:
-
-1. **Vindent Motions:**
-
-| Plug                         | description                                                 |
-| ---                          | ---                                                         |
-| `<Plug>(VindentMove_N_prev)` | (normal mode) move to previous line with same indent level. |
-| `<Plug>(VindentMove_N_next)` | (normal mode) move to next     line with same indent level. |
-| `<Plug>(VindentMove_X_prev)` | (visual mode) move to previous line with same indent level. |
-| `<Plug>(VindentMove_X_next)` | (visual mode) move to next     line with same indent level. |
-| `<Plug>(VindentMove_O_prev)` | (text object) move to previous line with same indent level. |
-| `<Plug>(VindentMove_O_next)` | (text object) move to next     line with same indent level. |
-
-2. **Vindent Text Objects:**
-
-| Plug                         | description                              |
-| ---                          | ---                                      |
-| `<PLug>(VindentObject_X_ii)` | (visual mode) select text "*in indent*". |
-| `<PLug>(VindentObject_X_ai)` | (visual mode) select text "*an indent*". |
-| `<PLug>(VindentObject_X_aI)` | (visual mode) select text "*an Indent*". |
-| `<PLug>(VindentObject_O_ii)` | use "*in indent*" as text object.        |
-| `<PLug>(VindentObject_O_ai)` | use "*an indent*" as text object.        |
-| `<PLug>(VindentObject_O_aI)` | use "*an Indent*" as text object.        |
-
-These definitions can be found in [`plugin/vindent.vim`](./plugin/vindent.vim).
-
-## Explanation
-
-The following explanation assumes that the keybindings in [TL;DR](#tldr) are used.
+The following examples assumes that the keybindings in [Usage](#usage) are used.
 
 ### Vindent Motion: move to line with same indentation.
 
 Consider the LaTeX code:
 ```tex
-\begin{enumerate}       % line 1  ┐ ]l
-    \item I am item 1.  % line 2  │  ┐ ]l
-    \item I am item 2.  % line 3  │ <┘
-\end{enumerate}         % line 4 <┘
+ 1 \begin{enumerate}
+ 2
+ 3     \item
+ 4
+ 5         Some sentence that is
+ 6         split into two lines.
+ 7
+ 8     \item
+ 9         Another sentence here.
+10
+11 \end{enumerate}
 ```
-If the cursor is on line 1 and `]l` is pressed,
-the cursor will move to the beginning of line 4.
-The similar is true for `[l`.
-If `]l` is pressed when the cursor is on line 2,
-the cursor will move to line 3.
-Vindent motion also works in visual mode and as a text object,
-i.e., you can `V]l` or `d]l` or do anything similar.
 
-**Notes**: Some quirks about vindent motion:
+- If cursor is on line 3, then `]l` moves it to line 8.
+- If cursor is on line 6, then `]l` moves it to line 9.
+- If cursor is on line 6, then `[l` moves it to line 5.
+- If cursor is on line 1, then `]l` moves it to line 11.
+- If cursor is on line 3, then `d]l` deletes lines 3 to 8. (Also functions as test object)
+- If cursor is on line 2, then `]l` does not move. (No movement if the line is empty)
 
-- Vindent motion does nothing (cursor will not move) if the current line is empty.
-- Vindent motion assumes that the indentation is consistent.
-  E.g., pressing `]l` on a line indented with one tab would not move the cursor
-  to a line indented with 4 spaces.
-- Vindent motion ignores empty lines.  If there is an empty line between line 2
-  and 3 in the aforementioned code sample, vindent motion would still behave as
-  expected.
-- If no line with the same indentation is found, the cursor will not move.
-- If being used as a text object, `d]l` deletes entire lines.  Similar for `c`.
+For more details please refer to the [`doc flie`](./doc/vindent.txt).
 
 ### Vindent Text Objects: select lines of text with "same" indentation
 
-Consider the LaTeX code:
-```tex
-\begin{enumerate}                            % line 1             ┐
-    \item                                    % line 2       ┐     │ vaI
-        I am a sentence that was             % line 3 ┐ vii │ vai │
-        intentionally split into two lines.  % line 4 ┘     ┘     │
-    \item                                    % line 5             │
-        I am another sentence.               % line 6             │
-\end{enumerate}                              % line 7             ┘
-```
-If the cursor is on line 3 and `vii` is pressed, lines 3 and 4 would be selected;
-if `vai` is pressed, lines 2, 3, and 4 would be selected.
-If the cursor is on line 2 and `vaI` is pressed, then lines 1 to 7 would be selected.
-In summary,
+The text objects are:
 
 | Text Object | mnemonics   | description                                                                                                                                |
 | ---         | ---         | ---                                                                                                                                        |
 | `ii`        | *in indent* | select adjacent lines with the same or more indentation.                                                                                   |
+| `iI`        | *in Indent* | select adjacent lines with the same indentation.                                                                                           |
 | `ai`        | *an indent* | select adjacent lines with the same or more indentation and one extra line with less indentation at the beginning.                         |
 | `aI`        | *an Indent* | select adjacent lines with the same or more indentation and two extra line with less indentation: one at the beginning and one at the end. |
 
-**Notes**: Some quirks about vindent text objects:
-
-- Similar to `[l` and `]l`, vindent text objects assumes that the indentation is consistent.
-- Similar to `[l` and `]l`, vindent text objects ignores empty lines.
-- Vindent text objects would not select empty lines at the beginning or the end.
-- Vindent text objects would select nothing if the current line is either *empty* or *not indented*.
-
-The last three points from **Notes** can be demonstrated by the following example in LaTeX:
+Consider the LaTeX code:
 ```tex
-\begin{enumerate}                         % line 1 vii    ┐   
-                                          % line 2        │   
-    \item                                 % line 3  ┐     │     ┐ dii
-        I am an intentionally very long   % line 4  │     │     │
-        and meaningless sentence.         % line 5  │     │     │
-                                          % line 6  │     │     │
-        And something random here.        % line 7  ┘ dai │     │
-                                          % line 8        │     │
-    \item                                 % line 9        │ cai │
-        I am another sentence.            % line 10       ┘     ┘
-                                          % line 11
-\end{enumerate}                           % line 12
+ 1 \begin{enumerate}
+ 2     \item
+ 3
+ 4         Some sentence that is
+ 5         split into two lines.
+ 6
+ 7         \begin{enumerate}
+ 8             \item This thing.
+ 9         \end{enumerate}
+10
+11     \item
+12         Another sentence here.
+13 \end{enumerate}
 ```
-If the cursor is on line 3 and `dii` is pressed, lines 3 to 10 would be deleted.
-If the cursor is on line 9 and `cai` is pressed, lines 1 to 10 would be changed.
-If the cursor is on line 7 and `dai` is pressed, lines 3 to 7  would be deleted.
-If the cursor is on line 1 and `vii` is pressed, nothing would happen (since `\begin{enumerate}` is not indented).
+
+- If cursor is on line 5,  then `vii` selects lines 4  to 9. (Empty lines are ignored)
+- If cursor is on line 5,  then `viI` selects lines 4  to 7.
+- If cursor is on line 12, then `vai` selects lines 11 to 12.
+- If cursor is on line 7,  then `vai` selects lines 2  to 9.
+- If cursor is on line 11, then `vaI` selects lines 1  to 14.
+- If cursor is on line 8,  then `vaI` selects lines 7  to 9.
+
+For more details please refer to the [`doc flie`](./doc/vindent.txt).
 
 ## Licence
 
