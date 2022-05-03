@@ -1,36 +1,36 @@
-*vindent.txt* Move around and select text by indentations.
+*vindent.txt* Navigate and Select Text by Indentations.
 
 
                                  VINDENT.VIM
 
 
 ==============================================================================
-CONTENTS                                                    *vindent.Contents*
+Contents                                                    *vindent_Contents*
 
-    1. Introduction ............................ |vindent.Introduction|
-    2. Usage ................................... |vindent.Usage|
-    3. Details ................................. |vindent.Details|
-        3.1 Motions ............................ |vindent.Motions|
-        3.2 Text Objects ....................... |vindent.Text_Objects|
-    4. License ................................. |vindent.License|
-    5. Bugs .................................... |vindent.Bugs|
-    6. Contributing ............................ |vindent.Contributing|
-    7. Changelog ............................... |vindent.Changelog|
-    8. Credits ................................. |vindent.Credits|
+    1. Introduction ............................ |vindent_Introduction|
+    2. Usage ................................... |vindent_Usage|
+    3. Details ................................. |vindent_Details|
+        3.1 Motions ............................ |vindent_Motions|
+        3.2 Text Objects ....................... |vindent_Text_Objects|
+    4. License ................................. |vindent_License|
+    5. Bugs .................................... |vindent_Bugs|
+    6. Contributing ............................ |vindent_Contributing|
+    7. Changelog ............................... |vindent_Changelog|
+    8. Credits ................................. |vindent_Credits|
 
 ==============================================================================
-INTRODUCTION                                            *vindent.Introduction*
+1. Introduction                                         *vindent_Introduction*
 
 This plugin provides two indentation related functionalities:
 
-1. |vindent.Motions|:
+1. |vindent_Motions|:
    A |motion| that moves to previous or next line with the same indentation as
    the current line.  Consists of two components:
     - |indent_prev|: move to previous line with same indent.
     - |indent_next|: move to next     line with same indent.
 
-2. |vindent.Text_Objects|:
-   Three text |objects| to select text:
+2. |vindent_Text_Objects|:
+   Text |objects| to select text by indentation. Three variations:
     - |in_indent|: select adjacent lines with the same or more indentation.
     - |an_indent|: select |in_indent| and one extra line with less indentation
       at the beginning.
@@ -38,9 +38,10 @@ This plugin provides two indentation related functionalities:
       one at the beginning and one at the end.
 
 ==============================================================================
-USAGE                                                          *vindent.Usage*
+2. Usage                                                       *vindent_Usage*
 
-						*vindent_variable*
+KEYBINDING VARIABLES				*vindent_variable*
+
 This plugin does not come with default keybindings.  You can define your own
 keybindings using the following |vindent_variable|s:
 
@@ -50,15 +51,21 @@ keybindings using the following |vindent_variable|s:
 - `g:vindent_object_ai`:   Keybinding to text object |an_indent|.
 - `g:vindent_object_aI`:   Keybinding to text object |an_Indent|.
 
-For example, I have the following definitions in my |vimrc|:
+For example, I have the following definitions in my |vimrc|
+>
+	let g:vindent_motion_prev = '[l'
+	let g:vindent_motion_next = ']l'
+	let g:vindent_object_ii   = 'ii'
+	let g:vindent_object_ai   = 'ai'
+	let g:vindent_object_aI   = 'aI'
+<
+If you wish not to use a certain functionality, simply leave the corresponding
+keybinding variable undefined.  Note: `[l` and `]l` are common keybindings,
+use |maparg()| to check if the two are already in use before copying the above
+to your |vimrc|.
 
-	`let g:vindent_motion_prev = '[l'`
-	`let g:vindent_motion_next = ']l'`
-	`let g:vindent_object_ii   = 'ii'`
-	`let g:vindent_object_ai   = 'ai'`
-	`let g:vindent_object_aI   = 'aI'`
+PLUGS						*vindent_plug*
 
-						*vindent_plug*
 Alternatively, you can create mappings using the <Plug>s provided by this
 plugin:
 
@@ -77,10 +84,10 @@ plugin:
 - `<PLug>(VindentObject_O_aI)`: |an_Indent| as text object.
 
 ==============================================================================
-DETAILS                                                      *vindent.Details*
+3. Details                                                   *vindent_Details*
 
 ------------------------------------------------------------------------------
-MOTIONS                                                      *vindent.Motions*
+3.1 Motions                                                  *vindent_Motions*
 
 "indent_prev"					*indent_prev*
 		A |motion| that moves the cursor to the previous line that has
@@ -90,9 +97,9 @@ MOTIONS                                                      *vindent.Motions*
 
 		Keybinding defined by `g:vindent_motion_prev` is mapped to
 		this motion, which consists of three |vindent_plug|s:
-		    - `<Plug>(VindentMove_N_prev)`
-		    - `<Plug>(VindentMove_X_prev)`
-		    - `<Plug>(VindentMove_O_prev)`
+		    - `<Plug>(VindentMove_N_prev)`: for normal mode
+		    - `<Plug>(VindentMove_X_prev)`: for visual mode
+		    - `<Plug>(VindentMove_O_prev)`: for text object
 
 		Here are some quirks about this motion:
 		    - This motion does nothing (cursor will not move) if the
@@ -109,12 +116,36 @@ MOTIONS                                                      *vindent.Motions*
 		    - If being used as a text object, this motion operates on
 		      texts line-wise like |V|.
 
+		For example, consider the following LaTeX code: >
+			 1 \begin{enumerate}
+			 2
+			 3     \item
+			 4
+			 5         Some sentence that is
+			 6         split into two lines.
+			 7
+			 8     \item
+			 9         Another sentence here.
+			10
+			11 \end{enumerate}
+<		If cursor is on line 6, |indent_prev| moves it to lines 5.
+		If cursor is on line 9, |indent_prev| moves it to lines 6.
+		If cursor is on line 1, |indent_next| moves it to lines 11.
+
 "indent_next"					*indent_next*
-		Similar to |indent_prev|, but moves the cursor to the next
-		line with the exact same indentation as the current line.
+		Same as |indent_prev|, but moves the cursor to the next line
+		with the exact same indentation as the current line.
+
+		Keybinding defined by `g:vindent_motion_next` is mapped to
+		this motion, which consists of three |vindent_plug|s:
+		    - `<Plug>(VindentMove_N_next)`: for normal mode
+		    - `<Plug>(VindentMove_X_next)`: for visual mode
+		    - `<Plug>(VindentMove_O_next)`: for text object
+
+		See |indent_prev| for more details and example.
 
 ------------------------------------------------------------------------------
-TEXT OBJECTS                                            *vindent.Text_Objects*
+3.2 Test Objects                                        *vindent_Text_Objects*
 
 "in_indent"					*in_indent*
 		A text |object| that selects adjacent lines with the same or
@@ -124,8 +155,8 @@ TEXT OBJECTS                                            *vindent.Text_Objects*
 
 		Keybinding defined by `g:vindent_object_ii` is mapped to this
 		text object, which consists of two |vindent_plug|s:
-		    - `<PLug>(VindentObject_X_ii)`
-		    - `<PLug>(VindentObject_O_ii)`
+		    - `<PLug>(VindentObject_X_ii)`: for visual mode.
+		    - `<PLug>(VindentObject_O_ii)`: for text object.
 
 		Here are some quirks about this motion:
 		    - This object assumes indentations are consistent.
@@ -135,62 +166,76 @@ TEXT OBJECTS                                            *vindent.Text_Objects*
 		    - This object would select nothing if the current line is
 		      either "empty" or "not indented".
 
-		For example, consider the following LaTeX code:
-			` 1 \begin{enumerate}`
-			` 2`
-			` 3     \item`
-			` 4`
-			` 5         Some sentence that is`
-			` 6         split into two lines.`
-			` 7`
-			` 8     \item`
-			` 9         Another sentence here.`
-			`10`
-			`11 \end{enumerate}`
-		If the cursor is on line 5, |in_indent| selects lines 5 and 6.
-		If the cursor is on line 3, |in_indent| selects lines 3 to 9.
-		If the cursor is on line 5, |an_indent| selects lines 3 to 6.
-		If the cursor is on line 3, |an_Indent| selects lines 1 to 11.
-		If the cursor is on line 1, |in_indent| and |an_indent| and
+		For example, consider the following LaTeX code: >
+			 1 \begin{enumerate}
+			 2
+			 3     \item
+			 4
+			 5         Some sentence that is
+			 6         split into two lines.
+			 7
+			 8     \item
+			 9         Another sentence here.
+			10
+			11 \end{enumerate}
+<		If cursor is on line 5, |in_indent| selects lines 5 and 6.
+		If cursor is on line 3, |in_indent| selects lines 3 to 9.
+		If cursor is on line 5, |an_indent| selects lines 3 to 6.
+		If cursor is on line 3, |an_Indent| selects lines 1 to 11.
+		If cursor is on line 1, |in_indent| and |an_indent| and
 		|an_Indent| all select nothing since line 1 is not indented.
 
 "an_indent"					*an_indent*
-		Similar to |in_indent|, but selects adjacent lines with the
-		same or more indentations and one more line at the beginning
-		with less indentation.
+		Same as |in_indent|, but selects adjacent lines with the same
+		or more indentations and one extra line at the beginning with
+		less indentation.
+
+		Keybinding defined by `g:vindent_object_ai` is mapped to this
+		text object, which consists of two |vindent_plug|s:
+		    - `<PLug>(VindentObject_X_ai)`: for visual mode.
+		    - `<PLug>(VindentObject_O_ai)`: for text object.
+
+		See |in_indent| for details and example.
 
 "an_Indent"					*an_Indent*
-		Similar to |in_indent|, but selects adjacent lines with the
-		same or more indentations and two more lines with less
-		indentation: one at the beginning and one at the end.
+		Same as |in_indent|, but selects adjacent lines with the same
+		or more indentations and two extra lines with less indentation:
+		one at the beginning and one at the end.
+
+		Keybinding defined by `g:vindent_object_aI` is mapped to this
+		text object, which consists of two |vindent_plug|s:
+		    - `<PLug>(VindentObject_X_aI)`: for visual mode.
+		    - `<PLug>(VindentObject_O_aI)`: for text object.
+
+		See |in_indent| for details and example.
 
 ==============================================================================
-LICENSE                                                      *vindent.License*
+4. License                                                   *vindent_License*
 
-Distributed under the same terms as Vim itself. See
-	`:help license`
-for details.
-
-==============================================================================
-BUGS                                                            *vindent.Bugs*
-
-No known bugs yet.  If you find one, please create an
-issue at https://github.com/jessekelighine/vindent.vim.
+Distributed under the same terms as Vim itself. See >
+	:help license
+<for details.
 
 ==============================================================================
-CONTRIBUTING                                            *vindent.Contributing*
+5. Bugs                                                         *vindent_Bugs*
 
-If you wish to contribute, please make a pull request to
+No known bugs yet.  If you find one (or would like to request a feature),
+please create an issue at https://github.com/jessekelighine/vindent.vim.
+
+==============================================================================
+6. Contributing                                         *vindent_Contributing*
+
+If you wish to contribute, please make a pull request at
 https://github.com/jessekelighine/vindent.vim.
 
 ==============================================================================
-CHANGELOG                                                  *vindent.Changelog*
+7. Changelog                                               *vindent_Changelog*
 
-v1.0.0
+v1.0.0:                                                            2022-May-03
 	- Initial version.
 
 ==============================================================================
-CREDITS                                                      *vindent.Credits*
+8. Credits                                                   *vindent_Credits*
 
 This plugin is created by Jesse Chen. (email: `jessekelighine@gmail.com`)
 
