@@ -12,6 +12,11 @@ function! <SID>Valid(line=line('.'))
 	return a:line>=1 && a:line<=line('$') ? 1 : 0
 endfunction
 
+" Test if line is empty if `a:skip==1`; otherwise return 0.
+function! <SID>Skip(skip=1, line=line('.'))
+	return a:skip ? empty(getline(a:line)) : 0
+endfunction
+
 "### Test Indent Levels #######################################################
 
 " Returns 1 if the indentation on `a:line` is identical to `a:indent`.
@@ -28,23 +33,22 @@ endfunction
 
 " Find the "prev" or "next" line with the same indentation and return its line
 " number.  If no such lines are found, then 0 is returned.
-function! <SID>Find(direct, line=line('.'), skip=1)
-	let l:line   = a:line
-	let l:indent = <SID>Get(a:line)
-	let l:inc    = a:direct=='prev' ? -1 : 1
+function! <SID>Find(direct, line=line('.'), indent=<SID>Get(line('.')), skip=1)
+	let l:line = a:line
+	let l:inc  = a:direct=='prev' ? -1 : 1
 	while 1
 		let l:line = l:line + l:inc
-		if !<SID>Valid(l:line)           | return 0      | endif
-		if a:skip && empty(getline(l:line)) | continue      | endif
-		if <SID>Same(l:indent,l:line)    | return l:line | endif
+		if !<SID>Valid(l:line)        | return 0      | endif
+		if <SID>Skip(a:skip,l:line)   | continue      | endif
+		if <SID>Same(a:indent,l:line) | return l:line | endif
 	endwhile
 endfunction
 
 " Go to the "prev" or "next" line with the same indentation.
 function! vindent#Move(direct, mode)
-	if empty(getline('.')) | return | endif " return if line empty.
+	if <SID>Skip() | return | endif
 	let l:moveto = <SID>Find(a:direct)
-	if l:moveto==0 " special case if `<SID>Find` returns 0.
+	if l:moveto==0
 		if a:mode=='X' | silent exec "norm gv" | endif
 		return
 	endif
@@ -60,29 +64,34 @@ endfunction
 " Find the range (lines) of text with same indent level.  If the line with
 " line number `a:line` is not indented, then [0,0] is returned.  If `skip`
 " is set, then empty lines would be ignored.
-function! <SID>Range(line=line('.'), skip=1)
-	let l:indent = <SID>Get(a:line) | if l:indent=='' | return [0,0] | endif " return [0,0] if no indent
+function! <SID>Range(exact, line=line('.'), skip=1)
+	let l:indent = <SID>Get(a:line) | if l:indent=='' | return [0,0] | endif
 	let [ l:ls, l:le ] = [ a:line, a:line ]
-	while <SID>Valid(l:ls) && ( <SID>NoLess(l:indent,l:ls) || (a:skip?empty(getline(l:ls)):0) ) | let l:ls=l:ls-1 | endwhile
-	while <SID>Valid(l:le) && ( <SID>NoLess(l:indent,l:le) || (a:skip?empty(getline(l:le)):0) ) | let l:le=l:le+1 | endwhile
+	let l:test = a:exact ? "<SID>Same" : "<SID>NoLess"
+	while <SID>Valid(l:ls) && ( function(l:test)(l:indent,l:ls) || <SID>Skip(a:skip,l:ls) ) | let l:ls=l:ls-1 | endwhile
+	while <SID>Valid(l:le) && ( function(l:test)(l:indent,l:le) || <SID>Skip(a:skip,l:le) ) | let l:le=l:le+1 | endwhile
 	return [ l:ls+1, l:le-1 ]
 endfunction
 
 " exclude empty lines on either ends from `a:range`.
 function! <SID>NoHang(range, begin, end)
 	let l:range = a:range
-	while a:begin && empty(getline(l:range[0])) | let l:range[0]=l:range[0]+1 | endwhile
-	while a:end   && empty(getline(l:range[1])) | let l:range[1]=l:range[1]-1 | endwhile
+	while a:begin && <SID>Skip(1,l:range[0]) | let l:range[0]=l:range[0]+1 | endwhile
+	while a:end   && <SID>Skip(1,l:range[1]) | let l:range[1]=l:range[1]-1 | endwhile
 	return l:range
 endfunction
 
 " Define indent text objects.
+let s:nohang = { 'ii': [1, 1], 'iI': [1, 1], 'ai': [0, 1], 'aI': [0, 0] }
+let s:exact  = { 'ii': 0,      'iI': 1,      'ai': 0,      'aI': 0      }
+let s:skip   = { 'ii': 1,      'iI': 0,      'ai': 1,      'aI': 1      }
 function! vindent#Object(code)
-	let l:range = <SID>Range() | if l:range==[0,0] | return | endif " return if no indent.
-	let l:range = <SID>NoHang( l:range, (a:code[0]==#'i'?1:0), (a:code[1]==#'i'?1:0) )
+	let l:range = <SID>Range(s:exact[a:code],line('.'),s:skip[a:code]) | if l:range==[0,0] | return | endif
+	let l:range = <SID>NoHang(l:range, s:nohang[a:code][0], s:nohang[a:code][1])
 	let l:move  = l:range[1] - l:range[0]
 	call cursor(l:range[0],0)
 	if     a:code==#'ii' | exec "norm  V" . ( l:move==0 ? '' : l:move.'j' )
+	elseif a:code==#'iI' | exec "norm  V" . ( l:move==0 ? '' : l:move.'j' )
 	elseif a:code==#'ai' | exec "norm kV" . ( l:move+1 ) . 'j'
 	elseif a:code==#'aI' | exec "norm kV" . ( l:move+2 ) . 'j'
 	endif

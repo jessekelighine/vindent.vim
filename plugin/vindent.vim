@@ -11,9 +11,11 @@ onoremap <silent> <Plug>(VindentMove_O_prev)      :call vindent#Move('prev','O')
 onoremap <silent> <Plug>(VindentMove_O_next)      :call vindent#Move('next','O')<CR>
 " Define: vindent text objects.
 xnoremap <silent> <PLug>(VindentObject_X_ii) :call vindent#Object('ii')<CR>
+xnoremap <silent> <PLug>(VindentObject_X_iI) :call vindent#Object('iI')<CR>
 xnoremap <silent> <PLug>(VindentObject_X_ai) :call vindent#Object('ai')<CR>
 xnoremap <silent> <PLug>(VindentObject_X_aI) :call vindent#Object('aI')<CR>
 onoremap <silent> <PLug>(VindentObject_O_ii) :call vindent#Object('ii')<CR>
+onoremap <silent> <PLug>(VindentObject_O_iI) :call vindent#Object('iI')<CR>
 onoremap <silent> <PLug>(VindentObject_O_ai) :call vindent#Object('ai')<CR>
 onoremap <silent> <PLug>(VindentObject_O_aI) :call vindent#Object('aI')<CR>
 
@@ -33,6 +35,10 @@ endif
 if exists("g:vindent_object_ii")
 	execute 'xnoremap <silent> '.g:vindent_object_ii.' <PLug>(VindentObject_X_ii)'
 	execute 'onoremap <silent> '.g:vindent_object_ii.' <PLug>(VindentObject_O_ii)'
+endif
+if exists("g:vindent_object_iI")
+	execute 'xnoremap <silent> '.g:vindent_object_iI.' <PLug>(VindentObject_X_iI)'
+	execute 'onoremap <silent> '.g:vindent_object_iI.' <PLug>(VindentObject_O_iI)'
 endif
 if exists("g:vindent_object_ai")
 	execute 'xnoremap <silent> '.g:vindent_object_ai.' <PLug>(VindentObject_X_ai)'
