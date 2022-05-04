@@ -48,14 +48,10 @@ endfunction
 function! vindent#Move(direct, mode)
 	if <SID>Skip() | return | endif
 	let l:moveto = <SID>Find(a:direct)
-	if l:moveto==0
-		if a:mode=='X' | silent exec "norm gv" | endif
-		return
-	endif
-	let l:move   = abs(l:moveto-line('.')) . ( a:direct=='prev' ? 'k' : 'j' )
-	if     a:mode=='N' | silent exec "norm :"  . l:moveto . "\<CR>_"
-	elseif a:mode=='X' | silent exec "norm gv" . l:move   . "_"
-	elseif a:mode=='O' | silent exec "norm  V" . l:move   . "_"
+	let l:move   = abs(l:moveto - line('.')) . ( a:direct=='prev' ? 'k' : 'j' )
+	if     a:mode=='N' | silent exec l:moveto==0 ? "return"  : "norm :"  . l:moveto . "\<CR>_"
+	elseif a:mode=='X' | silent exec l:moveto==0 ? "norm gv" : "norm gv" . l:move   . "_"
+	elseif a:mode=='O' | silent exec l:moveto==0 ? "return"  : "norm  V" . l:move   . "_"
 	endif
 endfunction
 
