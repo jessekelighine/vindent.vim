@@ -52,7 +52,11 @@ The following examples assumes that the keybindings in [Usage](#usage) are used.
 
 ### Vindent Motion: move to line with same indentation.
 
-Consider the LaTeX code:
+This motion is very self explanatory: move to the previous or next line with
+the same indentation.  This motion does not move the cursor if the cursor is on
+an empty line.  This motion operates on text *line-wise* if it is used as a text object.
+
+Here are some examples.  Consider the LaTeX code:
 ```tex
  1 \begin{enumerate}
  2
@@ -71,7 +75,7 @@ Consider the LaTeX code:
 - If cursor is on line 6, then `]l` moves it to line 9.
 - If cursor is on line 6, then `[l` moves it to line 5.
 - If cursor is on line 1, then `]l` moves it to line 11.
-- If cursor is on line 3, then `d]l` deletes lines 3 to 8. (Also functions as test object)
+- If cursor is on line 3, then `d]l` deletes lines 3 to 8. (As test object)
 - If cursor is on line 2, then `]l` does not move. (No movement if the line is empty)
 
 For more details please refer to the [`doc flie`](./doc/vindent.txt).
@@ -87,7 +91,10 @@ The text objects are:
 | `ai`        | *an indent* | select adjacent lines with the same or more indentation and one extra line with less indentation at the beginning.                         |
 | `aI`        | *an Indent* | select adjacent lines with the same or more indentation and two extra line with less indentation: one at the beginning and one at the end. |
 
-Consider the LaTeX code:
+For all these object, empty lines are ignored (otherwise why not use `vip` instead?).
+Also, this text object selects nothing if there is no indentation on that line (otherwise the entire document would probably be selected).
+
+Here are some examples to clear thing up.  Consider the LaTeX code:
 ```tex
  1 \begin{enumerate}
  2     \item
@@ -104,7 +111,7 @@ Consider the LaTeX code:
 13 \end{enumerate}
 ```
 
-- If cursor is on line 5,  then `vii` selects lines 4  to 9. (Empty lines are ignored)
+- If cursor is on line 5,  then `vii` selects lines 4  to 9.
 - If cursor is on line 5,  then `viI` selects lines 4  to 7.
 - If cursor is on line 12, then `vai` selects lines 11 to 12.
 - If cursor is on line 7,  then `vai` selects lines 2  to 9.
