@@ -3,12 +3,13 @@
 if exists("g:loaded_vindent") | finish | endif | let g:loaded_vindent=1
 
 " Define: vindent motion.
-nnoremap <silent> <Plug>(VindentMove_N_prev)      :call vindent#Move('prev','N')<CR>
-nnoremap <silent> <Plug>(VindentMove_N_next)      :call vindent#Move('next','N')<CR>
-xnoremap <silent> <Plug>(VindentMove_X_prev) <Esc>:call vindent#Move('prev','X')<CR>
-xnoremap <silent> <Plug>(VindentMove_X_next) <Esc>:call vindent#Move('next','X')<CR>
-onoremap <silent> <Plug>(VindentMove_O_prev)      :call vindent#Move('prev','O')<CR>
-onoremap <silent> <Plug>(VindentMove_O_next)      :call vindent#Move('next','O')<CR>
+nnoremap <silent> <Plug>(VindentMove_N_prev) :<C-U>call vindent#Motion('prev','N',v:count1)<CR>
+nnoremap <silent> <Plug>(VindentMove_N_next) :<C-U>call vindent#Motion('next','N',v:count1)<CR>
+xnoremap <silent> <Plug>(VindentMove_X_prev) :<C-U>call vindent#Motion('prev','X',v:count1)<CR>
+xnoremap <silent> <Plug>(VindentMove_X_next) :<C-U>call vindent#Motion('next','X',v:count1)<CR>
+onoremap <silent> <Plug>(VindentMove_O_prev) :<C-U>call vindent#Motion('prev','O',v:count1)<CR>
+onoremap <silent> <Plug>(VindentMove_O_next) :<C-U>call vindent#Motion('next','O',v:count1)<CR>
+
 " Define: vindent text objects.
 xnoremap <silent> <PLug>(VindentObject_X_ii) :call vindent#Object('ii')<CR>
 xnoremap <silent> <PLug>(VindentObject_X_iI) :call vindent#Object('iI')<CR>
@@ -20,15 +21,15 @@ onoremap <silent> <PLug>(VindentObject_O_ai) :call vindent#Object('ai')<CR>
 onoremap <silent> <PLug>(VindentObject_O_aI) :call vindent#Object('aI')<CR>
 
 " Bindkeys: motion
-if exists("g:vindent_motion_prev")
-	execute 'nnoremap <silent> '.g:vindent_motion_prev.' <Plug>(VindentMove_N_prev)'
-	execute 'xnoremap <silent> '.g:vindent_motion_prev.' <Plug>(VindentMove_X_prev)'
-	execute 'onoremap <silent> '.g:vindent_motion_prev.' <Plug>(VindentMove_O_prev)'
+if exists("g:vindent_move_prev")
+	execute 'nnoremap <silent> '.g:vindent_move_prev.' <Plug>(VindentMove_N_prev)'
+	execute 'xnoremap <silent> '.g:vindent_move_prev.' <Plug>(VindentMove_X_prev)'
+	execute 'onoremap <silent> '.g:vindent_move_prev.' <Plug>(VindentMove_O_prev)'
 endif
-if exists("g:vindent_motion_next")
-	execute 'nnoremap <silent> '.g:vindent_motion_next.' <Plug>(VindentMove_N_next)'
-	execute 'xnoremap <silent> '.g:vindent_motion_next.' <Plug>(VindentMove_X_next)'
-	execute 'onoremap <silent> '.g:vindent_motion_next.' <Plug>(VindentMove_O_next)'
+if exists("g:vindent_move_next")
+	execute 'nnoremap <silent> '.g:vindent_move_next.' <Plug>(VindentMove_N_next)'
+	execute 'xnoremap <silent> '.g:vindent_move_next.' <Plug>(VindentMove_X_next)'
+	execute 'onoremap <silent> '.g:vindent_move_next.' <Plug>(VindentMove_O_next)'
 endif
 
 " Bindkeys: text object
