@@ -7,16 +7,15 @@
 ==============================================================================
 Contents                                                    *vindent_Contents*
 
-    1. Introduction ............................ |vindent_Introduction|
-    2. Usage ................................... |vindent_Usage|
-    3. Details ................................. |vindent_Details|
-        3.1 Motions ............................ |vindent_Motions|
-        3.2 Text Objects ....................... |vindent_Text_Objects|
-    4. License ................................. |vindent_License|
-    5. Bugs .................................... |vindent_Bugs|
-    6. Contributing ............................ |vindent_Contributing|
-    7. Changelog ............................... |vindent_Changelog|
-    8. Credits ................................. |vindent_Credits|
+    1. Introduction ......................... |vindent_Introduction|
+    2. Usage ................................ |vindent_Usage|
+    3. Details .............................. |vindent_Details|
+        3.1 Motions ......................... |vindent_Motions|
+        3.2 Text Objects .................... |vindent_Text_Objects|
+    4. License .............................. |vindent_License|
+    5. Bugs and Contributing ................ |vindent_Bugs_and_Contributing|
+    6. Changelog ............................ |vindent_Changelog|
+    7. Credits .............................. |vindent_Credits|
 
 ==============================================================================
 1. Introduction                                         *vindent_Introduction*
@@ -98,7 +97,7 @@ plugin:
 		A |motion| that moves the cursor to the previous line that has
 		the exact same indentation as the current line.  This motion
 		works in normal mode, visual mode and as a text object.  This
-		motion does NOT take {count}.
+		motion can take {count}.
 
 		Keybinding defined by `g:vindent_motion_prev` is mapped to
 		this motion, which consists of three |vindent_plug|s:
@@ -107,15 +106,12 @@ plugin:
 		    - `<Plug>(VindentMove_O_prev)`: for text object
 
 		Here are some quirks about |indent_prev| and |indent_next|:
-		    - These motions do nothing (cursor does not move) if the
+		    - The motions do nothing (cursor does not move) if the
 		      current line is |empty|.
-		    - These motions assume that the indentations are
-		      consistent. For example, on a line indented with 1 tab,
+		    - The motions assume that the indentations are consistent.
+		      For example, on a line indented with 1 tab,
 		      |indent_prev| would not move the cursor to a line
 		      indented with 8 spaces.
-		    - These motions ignore |empty| lines.  E.g., if there is
-		      an empty line between two lines with the same
-		      indentation, that empty line would be ignored.
 		    - If no line with the same indentation is found, the
 		      cursor does not move.
 		    - If being used as a text object, these motions operate on
@@ -136,6 +132,8 @@ plugin:
 <		If cursor is on line 6, |indent_prev| moves it to lines 5.
 		If cursor is on line 9, |indent_prev| moves it to lines 6.
 		If cursor is on line 1, |indent_next| moves it to lines 11.
+		If the keybinding `]l` is mapped to |indent_next| and the
+		cursor is on line 5, then `2]l` moves the cursor to line 9.
 
 "indent_next"					*indent_next*
 		Same as |indent_prev|, but moves the cursor to the next line
@@ -164,11 +162,11 @@ plugin:
 		    - `<PLug>(VindentObject_O_ii)`: for text object.
 
 		Here are some quirks about objects in |vindent_Text_Objects|:
-		    - These objects assume indentations are consistent.
-		    - These objects ignore |empty| lines.
-		    - These objects do not select |empty| lines at the
+		    - The objects assume indentations are consistent.
+		    - The objects ignore |empty| lines.
+		    - The objects do not select |empty| lines at the
 		      beginning or the end.
-		    - These objects select nothing if the current line is
+		    - The objects select nothing if the current line is
 		      either "empty" or "not indented".
 
 		For example, consider the following LaTeX code: >
@@ -229,32 +227,31 @@ plugin:
 ==============================================================================
 4. License                                                   *vindent_License*
 
-Distributed under the same terms as Vim itself. See >
+Distributed under the same terms as Vim itself. See 
+>
 	:help license
-<for details.
+<
+for details.
 
 ==============================================================================
-5. Bugs                                                         *vindent_Bugs*
+5. Bugs and Contributing                       *vindent_Bugs_and_Contributing*
 
-No known bugs yet.  If you find one (or would like to request a feature),
-please create an issue at https://github.com/jessekelighine/vindent.vim.
-
-==============================================================================
-6. Contributing                                         *vindent_Contributing*
-
-If you wish to contribute, please make a pull request at
+No known bugs yet.  If you find one or would like to contribute to this
+plugin, please create an issue or make a pull request at
 https://github.com/jessekelighine/vindent.vim.
 
 ==============================================================================
-7. Changelog                                               *vindent_Changelog*
+6. Changelog                                               *vindent_Changelog*
 
+v1.2.0:                                                            2022-May-04
+	- |vindent_Motions| now takes {count}.
 v1.1.0:                                                            2022-May-03
 	- Add |in_Indent| object.
 v1.0.0:                                                            2022-May-03
 	- Initial version.
 
 ==============================================================================
-8. Credits                                                   *vindent_Credits*
+7. Credits                                                   *vindent_Credits*
 
 This plugin is created by Jesse Chen. (email: jessekelighine@gmail.com)
 

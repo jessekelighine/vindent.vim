@@ -75,8 +75,9 @@ Here are some examples.  Consider the LaTeX code:
 - If cursor is on line 6, then `]l` moves it to line 9.
 - If cursor is on line 6, then `[l` moves it to line 5.
 - If cursor is on line 1, then `]l` moves it to line 11.
-- If cursor is on line 3, then `d]l` deletes lines 3 to 8. (As test object)
 - If cursor is on line 2, then `]l` does not move. (No movement if the line is empty)
+- If cursor is on line 5, then `2]l` moves it to line 9. (Takes `{count}`)
+- If cursor is on line 3, then `d]l` deletes lines 3 to 8. (As test object)
 
 For more details please refer to the [`doc flie`](./doc/vindent.txt).
 
@@ -111,11 +112,11 @@ Here are some examples to clear thing up.  Consider the LaTeX code:
 13 \end{enumerate}
 ```
 
-- If cursor is on line 5,  then `vii` selects lines 4  to 9.
-- If cursor is on line 5,  then `viI` selects lines 4  to 7.
+- If cursor is on line 5,  then `vii` selects lines 4  to 9. (Empty line 6 ignored; Empty lines 3 and 10 not selected)
+- If cursor is on line 5,  then `viI` selects lines 4  to 7. (Empty line 6 ignored; Empty line 3 not selected)
 - If cursor is on line 12, then `vai` selects lines 11 to 12.
-- If cursor is on line 7,  then `vai` selects lines 2  to 9.
-- If cursor is on line 11, then `vaI` selects lines 1  to 14.
+- If cursor is on line 7,  then `vai` selects lines 2  to 9. (Empty lines 3 and 6 ignored; Empty line 10 not selected)
+- If cursor is on line 11, then `vaI` selects lines 1  to 14. (Empty lines 3, 6, and 10 ignored)
 - If cursor is on line 8,  then `vaI` selects lines 7  to 9.
 
 For more details please refer to the [`doc flie`](./doc/vindent.txt).
