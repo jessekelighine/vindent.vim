@@ -216,8 +216,8 @@ plugin:
 
 "an_Indent"					*an_Indent*
 		Same as |in_indent|, but selects adjacent lines with the same
-		or more indentations and two extra lines with less indentation:
-		one at the beginning and one at the end.
+		or more indentations and two extra lines with less
+		indentation: one at the beginning and one at the end.
 
 		Keybinding defined by `g:vindent_object_aI` is mapped to this
 		text object, which consists of two |vindent_plug|s:
