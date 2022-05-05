@@ -9,7 +9,7 @@ endfunction
 
 " Returns 1 if "a:line" is a valid line number.
 function! <SID>Valid(line)
-	return a:line>=1 && a:line<=line('$')
+	return a:line>=1 && a:line<=line('$') ? 1 : 0
 endfunction
 
 " Test if line is empty if "a:skip" is 1; otherwise return 0.
@@ -19,12 +19,12 @@ endfunction
 
 " Returns 1 if the indentation on "a:line" is identical to "a:indent".
 function! <SID>Same(indent,line)
-	return <SID>Get(a:line)==a:indent
+	return <SID>Get(a:line)==a:indent ? 1 : 0
 endfunction
 
 " Returns 1 if the indentation on "a:line" is no less than "a:indent".
 function! <SID>NoLess(indent,line)
-	return matchstr(<SID>Get(a:line),"^".a:indent)!=""
+	return matchstr(<SID>Get(a:line),"^".a:indent)!="" ? 1 : 0
 endfunction
 
 "### Motion ###################################################################
@@ -55,9 +55,9 @@ function! vindent#Motion(direct, mode, count)
 	if <SID>Skip() | return | endif
 	let l:moveto = <SID>RecursiveFind(a:direct, a:count)
 	let l:move   = abs(l:moveto - line('.')) . ( a:direct=='prev' ? 'k' : 'j' )
-	if     a:mode=='N' | silent exec l:moveto==0 ? "return"  : "norm "        .l:move . "_"
-	elseif a:mode=='X' | silent exec l:moveto==0 ? "norm gv" : "norm \<Esc>gv".l:move . "_"
-	elseif a:mode=='O' | silent exec l:moveto==0 ? "return"  : "norm  V"      .l:move . "_"
+	if     a:mode=='N' | silent exec l:moveto==0 ? "return"  : "norm :"       .l:moveto . "\<CR>_"
+	elseif a:mode=='X' | silent exec l:moveto==0 ? "norm gv" : "norm \<Esc>gv".l:move   . "_"
+	elseif a:mode=='O' | silent exec l:moveto==0 ? "return"  : "norm  V"      .l:move   . "_"
 	endif
 endfunction
 
@@ -73,7 +73,7 @@ function! <SID>Range(exact, line=line('.'), skip=1)
 	return [ l:ls+1, l:le-1 ]
 endfunction
 
-" Exclude empty lines on either ends from "a:range".
+" exclude empty lines on either ends from "a:range".
 function! <SID>NoHang(range, begin, end)
 	let l:range = a:range
 	while a:begin && <SID>Skip(1,l:range[0]) | let l:range[0]=l:range[0]+1 | endwhile
