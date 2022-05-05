@@ -246,6 +246,10 @@ g:vindent_tabstop				*g:vindent_tabstop*
 		By default, |g:vindent_tabstop| is not defined and this plugin
 		does not assume equivalence between <Tab> and <Space>s.
 
+		In most cases, you should probably set this variable to
+		|&tabstop| if you wish to ust it at all for the behaviour to
+		match what you see visually.
+
 ==============================================================================
 4. License                                                   *vindent_License*
 
