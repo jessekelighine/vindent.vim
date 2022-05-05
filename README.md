@@ -31,6 +31,7 @@ let g:vindent_object_ii   = 'ii'
 let g:vindent_object_iI   = 'iI'
 let g:vindent_object_ai   = 'ai'
 let g:vindent_object_aI   = 'aI'
+let g:vindent_tabstop     = &tabstop " let vindent.vim know to treeat 1 <Tab> as "tabsop" <Space>s.
 ```
 and enjoy using:
 
@@ -40,9 +41,12 @@ and enjoy using:
    ([examples](#vindent-text-objects-select-lines-of-text-with-same-indentation))
 
 Feel free to customize the keybindings.
-**Note**: If you wish not to use a certain functionality, simply leave the corresponding variable undefined.
-`[l` and `]l` are commonly used keybindings (E.g., [vim-unimpaired](https://github.com/tpope/vim-unimpaired)),
-so be sure to change them if you already use those.
+
+**Note**:
+
+- If you wish not to use a certain functionality, simply leave the corresponding variable undefined.
+- If you wish not to treat `<Tab>` as some number of `<Space>`s, leave `g:vindent_tabstop` undefined.
+- `[l` and `]l` are commonly used keybindings (e.g., [vim-unimpaired](https://github.com/tpope/vim-unimpaired)), so be sure to change them if you already use those.
 
 For details please refer to the [`doc flie`](./doc/vindent.txt).
 

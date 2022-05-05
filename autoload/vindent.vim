@@ -4,7 +4,8 @@
 
 " Returns the indentation of a given line.
 function! <SID>Get(line=line('.'))
-	return matchstr(getline(a:line),'^\s*')
+	let l:return = matchstr(getline(a:line),'^\s*')
+	return exists('g:vindent_tabstop') ? substitute(l:return,'\t',repeat(" ",g:vindent_tabstop),'g') : l:return
 endfunction
 
 " Returns 1 if "a:line" is a valid line number.
@@ -30,7 +31,7 @@ endfunction
 "### Motion ###################################################################
 
 " Find the "prev" or "next" line with the same indentation and return its line number.
-function! <SID>Find(direct, line=line('.'), indent=<SID>Get(line('.')), skip=1)
+function! <SID>Find(direct, line=line('.'), indent=<SID>Get(), skip=1)
 	let l:line = a:line
 	let l:inc  = a:direct=='prev' ? -1 : 1
 	while 1
@@ -42,7 +43,7 @@ function! <SID>Find(direct, line=line('.'), indent=<SID>Get(line('.')), skip=1)
 endfunction
 
 " Calls "<SID>Find" recursively "a:count" times.
-function! <SID>RecursiveFind(direct, count, line=line('.'), indent=<SID>Get(line('.')), skip=1)
+function! <SID>RecursiveFind(direct, count, line=line('.'), indent=<SID>Get(), skip=1)
 	let l:line = a:line
 	for l:time in range(a:count)
 		let l:line = <SID>Find(a:direct, l:line, <SID>Get(l:line), a:skip)
@@ -55,9 +56,9 @@ function! vindent#Motion(direct, mode, count)
 	if <SID>Skip() | return | endif
 	let l:moveto = <SID>RecursiveFind(a:direct, a:count)
 	let l:move   = abs(l:moveto - line('.')) . ( a:direct=='prev' ? 'k' : 'j' )
-	if     a:mode=='N' | silent exec l:moveto==0 ? "return"  : "norm "        .l:move . "_"
-	elseif a:mode=='X' | silent exec l:moveto==0 ? "norm gv" : "norm \<Esc>gv".l:move . "_"
-	elseif a:mode=='O' | silent exec l:moveto==0 ? "return"  : "norm  V"      .l:move . "_"
+	if     a:mode=='N' | silent exec l:moveto==0 ? "return"   : "norm! "    .l:move."_"
+	elseif a:mode=='X' | silent exec l:moveto==0 ? "norm! gv" : "norm! \egv".l:move."_"
+	elseif a:mode=='O' | silent exec l:moveto==0 ? "return"   : "norm! V"   .l:move."_"
 	endif
 endfunction
 
@@ -89,9 +90,9 @@ function! vindent#Object(code)
 	let l:range = <SID>NoHang(l:range, s:nohang[a:code][0], s:nohang[a:code][1])
 	let l:move  = l:range[1] - l:range[0]
 	call cursor(l:range[0],0)
-	if     a:code==#'ii' | exec "norm  V" . ( l:move==0 ? '' : l:move.'j' )
-	elseif a:code==#'iI' | exec "norm  V" . ( l:move==0 ? '' : l:move.'j' )
-	elseif a:code==#'ai' | exec "norm kV" . ( l:move+1 ) . 'j'
-	elseif a:code==#'aI' | exec "norm kV" . ( l:move+2 ) . 'j'
+	if     a:code==#'ii' | exec "norm!  V" . ( l:move==0 ? '' : l:move.'j' )
+	elseif a:code==#'iI' | exec "norm!  V" . ( l:move==0 ? '' : l:move.'j' )
+	elseif a:code==#'ai' | exec "norm! kV" . ( l:move+1 ) . 'j'
+	elseif a:code==#'aI' | exec "norm! kV" . ( l:move+2 ) . 'j'
 	endif
 endfunction

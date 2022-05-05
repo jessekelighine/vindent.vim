@@ -12,6 +12,7 @@ Contents                                                    *vindent_Contents*
     3. Details .............................. |vindent_Details|
         3.1 Motions ......................... |vindent_Motions|
         3.2 Text Objects .................... |vindent_Text_Objects|
+	3.3 Miscellaneous ................... |vindent_Miscellaneous|
     4. License .............................. |vindent_License|
     5. Bugs and Contributing ................ |vindent_Bugs_and_Contributing|
     6. Changelog ............................ |vindent_Changelog|
@@ -66,10 +67,20 @@ keybinding variable undefined.  Note: `[l` and `]l` are common keybindings,
 use |maparg()| to check if the two are already in use before copying the above
 to your |vimrc|.
 
+By default, this plugin does not assume equivalence between <Tab> and
+<Space>s by values of |tabstop|, |softtabstop|, or |shiftwidth|.  However,
+if you wish for this plugin to view a <Tab> as X <Space>, then set
+|g:vindent_tabstop| to X.  For example, I have the following in my |vimrc|:
+>
+	let g:vindent_tabstop = &tabstop
+<
+This make vindent.vim assume the equivalence between 1 <Tab> and |tabstop|
+number of spaces.
+
 PLUGS						*vindent_plug*
 
 Alternatively, you can create mappings using the <Plug>s provided by this
-plugin:
+plugin if you wish to map different keybindings to different modes:
 
 - `<Plug>(VindentMove_N_prev)`: |indent_prev| in normal mode.
 - `<Plug>(VindentMove_N_next)`: |indent_next| in normal mode.
@@ -108,10 +119,12 @@ plugin:
 		Here are some quirks about |indent_prev| and |indent_next|:
 		    - The motions do nothing (cursor does not move) if the
 		      current line is |empty|.
-		    - The motions assume that the indentations are consistent.
+		    - The motions assume that the indentations are consistent,
+		      unless |g:vindent_tabstop| is set.
 		      For example, on a line indented with 1 tab,
 		      |indent_prev| would not move the cursor to a line
-		      indented with 8 spaces.
+		      indented with 8 spaces, unless |g:vindent_tabstop| is
+		      set to 8.
 		    - If no line with the same indentation is found, the
 		      cursor does not move.
 		    - If being used as a text object, these motions operate on
@@ -162,7 +175,8 @@ plugin:
 		    - `<PLug>(VindentObject_O_ii)`: for text object.
 
 		Here are some quirks about objects in |vindent_Text_Objects|:
-		    - The objects assume indentations are consistent.
+		    - The objects assume indentations are consistent, unless
+		      |g:vindent_tabstop| is set.
 		    - The objects ignore |empty| lines.
 		    - The objects do not select |empty| lines at the
 		      beginning or the end.
@@ -224,6 +238,14 @@ plugin:
 
 		See |in_indent| for details and example.
 
+------------------------------------------------------------------------------
+3.3 Miscellaneous                                      *vindent_Miscellaneous*
+
+g:vindent_tabstop				*g:vindent_tabstop*
+		Number of <Space>s assumed to be equivalent to 1 <Tab>.
+		By default, |g:vindent_tabstop| is not defined and this plugin
+		does not assume equivalence between <Tab> and <Space>s.
+
 ==============================================================================
 4. License                                                   *vindent_License*
 
@@ -243,6 +265,8 @@ https://github.com/jessekelighine/vindent.vim.
 ==============================================================================
 6. Changelog                                               *vindent_Changelog*
 
+v1.3.0                                                             2022-May-05
+	- Add |g:vindent_tabstop|.
 v1.2.0:                                                            2022-May-04
 	- |vindent_Motions| now takes {count}.
 v1.1.0:                                                            2022-May-03
