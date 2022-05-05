@@ -10,6 +10,8 @@ and [vim-indent-object](https://github.com/michaeljsmith/vim-indent-object).
 `vindent.vim` is essentially a simplified version of the two plugins combined,
 but reimplemented with less than *100 lines* of vimscript!
 
+You can also find this plugin on [vim.org](https://www.vim.org/scripts/script.php?script_id=6016).
+
 ## Installation
 
 Install using your favourite plugin manager, or use Vim's built-in package
