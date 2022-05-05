@@ -8,7 +8,7 @@
 This plugin was partially inspired by [vim-indentwise](https://github.com/jeetsukumaran/vim-indentwise)
 and [vim-indent-object](https://github.com/michaeljsmith/vim-indent-object).
 `vindent.vim` is essentially a simplified version of the two plugins combined,
-but reimplemented with less than *100 lines* of vimscript at its core!
+but reimplemented with less than *100 lines* of vimscript!
 
 ## Installation
 
@@ -31,7 +31,7 @@ let g:vindent_object_ii   = 'ii'
 let g:vindent_object_iI   = 'iI'
 let g:vindent_object_ai   = 'ai'
 let g:vindent_object_aI   = 'aI'
-let g:vindent_tabstop     = &tabstop " let vindent.vim know to treeat 1 <Tab> as "tabstop" <Space>s.
+let g:vindent_tabstop     = &tabstop " let vindent.vim know to treeat 1 <Tab> as "tabsop" <Space>s.
 ```
 and enjoy using:
 
