@@ -18,43 +18,61 @@ function! <SID>Skip(skip=1, line=line('.'))
 	return a:skip ? empty(getline(a:line)) : 0
 endfunction
 
-" Returns 1 if the indentation on "a:line" is identical to "a:indent".
+"### Indent Comparisons #######################################################
+" Test if indentation on "a:line" is "FUNCTION_NAME" than/as/to "a:indent".
+
 function! <SID>Same(indent,line)
 	return <SID>Get(a:line)==a:indent
 endfunction
 
-" Returns 1 if the indentation on "a:line" is no less than "a:indent".
 function! <SID>NoLess(indent,line)
-	return matchstr(<SID>Get(a:line),"^".a:indent)!=""
+	return matchstr(<SID>Get(a:line),"^".a:indent)==a:indent
+endfunction
+
+function! <SID>Less(indent,line)
+	return !<SID>NoLess(a:indent,a:line)
+endfunction
+
+function! <SID>More(indent,line)
+	return <SID>NoLess(a:indent,a:line) && !<SID>Same(a:indent,a:line)
+endfunction
+
+function! <SID>NoMore(indent,line)
+	return !<SID>More(a:indent,a:line)
+endfunction
+
+function! <SID>Diff(indent,line)
+	return !<SID>Same(a:indent,a:line)
 endfunction
 
 "### Motion ###################################################################
 
 " Find the "prev" or "next" line with the same indentation and return its line number.
-function! <SID>Find(direct, line=line('.'), indent=<SID>Get(), skip=1)
+function! <SID>Find(direct, type, line=line('.'), indent=<SID>Get(), skip=1)
 	let l:line = a:line
 	let l:inc  = a:direct=='prev' ? -1 : 1
+	let l:type = "<SID>".a:type
 	while 1
 		let l:line = l:line + l:inc
-		if !<SID>Valid(l:line)        | return 0      | endif
-		if <SID>Skip(a:skip,l:line)   | continue      | endif
-		if <SID>Same(a:indent,l:line) | return l:line | endif
+		if !<SID>Valid(l:line)               | return 0      | endif
+		if <SID>Skip(a:skip,l:line)          | continue      | endif
+		if function(l:type)(a:indent,l:line) | return l:line | endif
 	endwhile
 endfunction
 
 " Calls "<SID>Find" recursively "a:count" times.
-function! <SID>RecursiveFind(direct, count, line=line('.'), indent=<SID>Get(), skip=1)
+function! <SID>RecursiveFind(direct, count, type, line=line('.'), indent=<SID>Get(), skip=1)
 	let l:line = a:line
 	for l:time in range(a:count)
-		let l:line = <SID>Find(a:direct, l:line, <SID>Get(l:line), a:skip)
+		let l:line = <SID>Find(a:direct, a:type, l:line, <SID>Get(l:line), a:skip)
 	endfor
 	return l:line
 endfunction
 
 " Vindent Motion: Go to the "prev" or "next" line with the same indentation.
-function! vindent#Motion(direct, mode, count)
+function! vindent#Motion(direct, mode, count, type)
 	if <SID>Skip() | return | endif
-	let l:moveto = <SID>RecursiveFind(a:direct, a:count)
+	let l:moveto = <SID>RecursiveFind(a:direct, a:count, a:type)
 	let l:move   = abs(l:moveto - line('.')) . ( a:direct=='prev' ? 'k' : 'j' )
 	if     a:mode=='N' | silent exec l:moveto==0 ? "return"   : "norm! "    .l:move."_"
 	elseif a:mode=='X' | silent exec l:moveto==0 ? "norm! gv" : "norm! \egv".l:move."_"
