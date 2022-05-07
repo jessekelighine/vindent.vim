@@ -247,8 +247,8 @@ g:vindent_tabstop				*g:vindent_tabstop*
 		does not assume equivalence between <Tab> and <Space>s.
 
 		In most cases, you should probably set this variable to
-		|&tabstop| if you wish to ust it at all for the behaviour to
-		match what you see visually.
+		|&tabstop| if you wish to use this functionality, so that the
+		behaviour will match what you see visually.
 
 ==============================================================================
 4. License                                                   *vindent_License*
@@ -269,7 +269,7 @@ https://github.com/jessekelighine/vindent.vim.
 ==============================================================================
 6. Changelog                                               *vindent_Changelog*
 
-v1.3.0                                                             2022-May-05
+v1.3.0:                                                            2022-May-05
 	- Add |g:vindent_tabstop|.
 v1.2.0:                                                            2022-May-04
 	- |vindent_Motions| now takes {count}.
