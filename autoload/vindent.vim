@@ -19,7 +19,6 @@ function! <SID>Skip(skip=1, line=line('.'))
 endfunction
 
 "### Indent Comparisons #######################################################
-" Test if indentation on "a:line" is "FUNCTION_NAME" than/as/to "a:indent".
 
 function! <SID>Same(indent,line)
 	return <SID>Get(a:line)==a:indent
@@ -35,10 +34,6 @@ endfunction
 
 function! <SID>More(indent,line)
 	return <SID>NoLess(a:indent,a:line) && !<SID>Same(a:indent,a:line)
-endfunction
-
-function! <SID>NoMore(indent,line)
-	return !<SID>More(a:indent,a:line)
 endfunction
 
 function! <SID>Diff(indent,line)
