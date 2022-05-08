@@ -43,12 +43,11 @@ let g:vindent_tabstop   = &tabstop " let vindent know to treat 1 <Tab> as tabsto
 ```
 and enjoy using:
 
-1. **Vindent Motions**:
+1. **Vindent Motions**: ([examples](#vindent-motion-move-to-line-with-same-indentation))
 	- Jump to previous/next with same indentation with `[=`/`]=`.
 	- Jump to previous/next with less indentation with `[-`/`]-`.
 	- Jump to previous/next with more indentation with `[+`/`]+`.
 	- Jump to previous/next with different indentation with `[;`/`];`.
-   ([examples](#vindent-motion-move-to-line-with-same-indentation))
 2. **Vindent Text Objects**: Select text with `ii` (*in indent*), `iI` (*in Indent*), `ai` (*an indent*), and `aI` (*an Indent*).
    ([examples](#vindent-text-objects-select-lines-of-text-with-same-indentation))
 
@@ -91,15 +90,16 @@ used and consider the LaTeX code:
 - If the cursor is on line 1,  `]=`  moves it to line 11.
 - If the cursor is on line 2,  `]=`  does not move. (No movement if the line is empty)
 - If the cursor is on line 5,  `2]=` moves it to line 9. (Takes `{count}`)
-- If the cursor is on line 3,  `d]=` deletes lines 3 to 8. (As test object)
+- If the cursor is on line 3,  `d]=` deletes lines 3 to 8. (As text object)
 - If the cursor is on line 6,  `[-`  moves it to line 3. (Less indentation)
 - If the cursor is on line 1,  `]+`  moves it to line 3. (More indentation)
 - If the cursor is on line 11, `[+`  moves it to line 9.
 - If the cursor is on line 3,  `];`  moves it to line 5. (Different indentation)
+- If the cursor is on line 5,  `];`  moves it to line 8. (Different indentation)
 
 For more details please refer to the [`doc flie`](./doc/vindent.txt).
 
-### Vindent Text Objects: select lines of text with "same" indentation
+### Vindent Text Objects
 
 The text objects are:
 
@@ -113,7 +113,9 @@ The text objects are:
 For all these object, empty lines are ignored (otherwise why not use `vip` instead?).
 Also, this text object selects nothing if there is no indentation on that line (otherwise the entire document would probably be selected).
 
-Here are some examples to clear thing up.  Consider the LaTeX code:
+Here are some examples to clear things up.  Assume that the keybindings in
+[Usage](#usage) are used and consider the LaTeX code:
+
 ```tex
  1 \begin{enumerate}
  2     \item
@@ -136,6 +138,7 @@ Here are some examples to clear thing up.  Consider the LaTeX code:
 - If cursor is on line 7,  then `vai` selects lines 2  to 9. (Empty lines 3 and 6 ignored; Empty line 10 not selected)
 - If cursor is on line 11, then `vaI` selects lines 1  to 14. (Empty lines 3, 6, and 10 ignored)
 - If cursor is on line 8,  then `vaI` selects lines 7  to 9.
+- If cursor is on line 1, `vii`, `viI`, `vai`, and `vaI` all select nothing. (Since line 1 is not indented)
 
 For more details please refer to the [`doc flie`](./doc/vindent.txt).
 

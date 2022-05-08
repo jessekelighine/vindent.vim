@@ -162,6 +162,7 @@ even if no keybinding to that motion or text object is supplied:
 		If the cursor is on line 1,  `]+`  moves it to line 3.
 		If the cursor is on line 11, `[+`  moves it to line 9.
 		If the cursor is on line 3,  `];`  moves it to line 5.
+		If the cursor is on line 5,  `];`  moves it to line 8.
 
 "vindent_motion_less"				*vindent_motion_less*
 		Same as |vindent_motion_same|, but moves the cursor to the
@@ -225,23 +226,26 @@ even if no keybinding to that motion or text object is supplied:
 
 		For example, consider the following LaTeX code: >
 			 1 \begin{enumerate}
-			 2
-			 3     \item
-			 4
-			 5         Some sentence that is
-			 6         split into two lines.
-			 7
-			 8     \item
-			 9         Another sentence here.
+			 2     \item
+			 3
+			 4         Some sentence that is
+			 5         split into two lines.
+			 6
+			 7         \begin{enumerate}
+			 8             \item This thing.
+			 9         \end{enumerate}
 			10
-			11 \end{enumerate}
-<		If cursor is on line 5, |in_indent| selects lines 5 and 6.
-		If cursor is on line 3, |in_indent| selects lines 3 to 9.
-		If cursor is on line 3, |in_Indent| selects line  3.
-		If cursor is on line 5, |an_indent| selects lines 3 to 6.
-		If cursor is on line 3, |an_Indent| selects lines 1 to 11.
-		If cursor is on line 1, |in_indent| and |an_indent| and
-		|an_Indent| all select nothing since line 1 is not indented.
+			11     \item
+			12         Another sentence here.
+			13 \end{enumerate}
+<	        If cursor is on line 5,  |in_indent| selects lines 4  to 9.
+	        If cursor is on line 5,  |in_Indent| selects lines 4  to 7.
+	        If cursor is on line 12, |an_indent| selects lines 11 to 12.
+	        If cursor is on line 7,  |an_indent| selects lines 2  to 9.
+	        If cursor is on line 11, |an_Indent| selects lines 1  to 14.
+	        If cursor is on line 8,  |an_Indent| selects lines 7  to 9.
+	        If cursor is on line 1, |in_indent|, |in_Indent|, |an_indent|,
+	        and |an_Indent| all select nothing since line 1 is not indented.
 
 "in_Indent"					*in_Indent*
 		Same as |in_indent|, but selects adjacent lines with the exact
