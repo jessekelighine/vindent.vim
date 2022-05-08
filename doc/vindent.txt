@@ -24,79 +24,89 @@ Contents                                                    *vindent_Contents*
 This plugin provides two indentation related functionalities:
 
 1. |vindent_Motions|:
-   A |motion| that moves to previous or next line with the same indentation as
-   the current line.  Consists of two components:
-       - |indent_prev|: move to previous line with same indent.
-       - |indent_next|: move to next     line with same indent.
+   |Motion|s that moves to previous or next line with the same, less, more, or
+   differneet indentation as the current line:
+   - |vindent_motion_same|: move to previous/next line with same      indent.
+   - |vindent_motion_less|: move to previous/next line with less      indent.
+   - |vindent_motion_more|: move to previous/next line with more      indent.
+   - |vindent_motion_diff|: move to previous/next line with differnet indent.
 
 2. |vindent_Text_Objects|:
    Text |objects| to select text by indentation. Four variations:
-       - |in_indent|: select adjacent lines with the same or more indentation.
-       - |in_Indent|: select adjacent lines with same indentation.
-       - |an_indent|: select |in_indent| and one extra line with less
-         indentation at the beginning.
-       - |an_Indent|: select |in_indent| and two extra line with less
-         indentation: one at the beginning and one at the end.
+   - |in_indent|: select adjacent lines with the same or more indentation.
+   - |in_Indent|: select adjacent lines with same indentation.
+   - |an_indent|: select |in_indent| and one extra line with less
+     indentation at the beginning.
+   - |an_Indent|: select |in_indent| and two extra line with less
+     indentation: one at the beginning and one at the end.
 
 ==============================================================================
 2. Usage                                                       *vindent_Usage*
 
-KEYBINDING VARIABLES				*vindent_variable*
-
 This plugin does not come with default keybindings.  You can define your own
-keybindings using the following |vindent_variable|s:
+keybindings using the following variables:
 
-- `g:vindent_motion_prev`: Keybinding to motion |indent_prev|.
-- `g:vindent_motion_next`: Keybinding to motion |indent_next|.
-- `g:vindent_object_ii`:   Keybinding to text object |in_indent|.
-- `g:vindent_object_iI`:   Keybinding to text object |in_Indent|.
-- `g:vindent_object_ai`:   Keybinding to text object |an_indent|.
-- `g:vindent_object_aI`:   Keybinding to text object |an_Indent|.
+- `g:vindent_motion_same_prev`: |vindent_motion_same| to previous line.
+- `g:vindent_motion_same_next`: |vindent_motion_same| to next     line.
+- `g:vindent_motion_less_prev`: |vindent_motion_less| to previous line.
+- `g:vindent_motion_less_next`: |vindent_motion_less| to next     line.
+- `g:vindent_motion_more_prev`: |vindent_motion_more| to previous line.
+- `g:vindent_motion_more_next`: |vindent_motion_more| to next     line.
+- `g:vindent_motion_diff_prev`: |vindent_motion_diff| to previous line.
+- `g:vindent_motion_diff_next`: |vindent_motion_diff| to next     line.
+- `g:vindent_object_ii`: select to text object |in_indent|.
+- `g:vindent_object_iI`: select to text object |in_Indent|.
+- `g:vindent_object_ai`: select to text object |an_indent|.
+- `g:vindent_object_aI`: select to text object |an_Indent|.
 
 For example, I have the following definitions in my |vimrc|
 >
-	let g:vindent_motion_prev = '[l'
-	let g:vindent_motion_next = ']l'
-	let g:vindent_object_ii   = 'ii'
-	let g:vindent_object_iI   = 'iI'
-	let g:vindent_object_ai   = 'ai'
-	let g:vindent_object_aI   = 'aI'
+	let g:vindent_motion_same_prev = '[='
+	let g:vindent_motion_same_next = ']='
+	let g:vindent_motion_less_prev = '[-'
+	let g:vindent_motion_less_next = ']-'
+	let g:vindent_motion_more_prev = '[+'
+	let g:vindent_motion_more_next = ']+'
+	let g:vindent_motion_diff_prev = '[;'
+	let g:vindent_motion_diff_next = '];'
+	let g:vindent_object_ii = 'ii'
+	let g:vindent_object_iI = 'iI'
+	let g:vindent_object_ai = 'ai'
+	let g:vindent_object_aI = 'aI'
+	let g:vindent_tabstop   = &tabstop
 <
 If you wish not to use a certain functionality, simply leave the corresponding
-keybinding variable undefined.  Note: `[l` and `]l` are common keybindings,
-use |maparg()| to check if the two are already in use before copying the above
-to your |vimrc|.
+keybinding variable undefined.
 
 By default, this plugin does not assume equivalence between <Tab> and
 <Space>s by values of |tabstop|, |softtabstop|, or |shiftwidth|.  However,
-if you wish for this plugin to view a <Tab> as X <Space>, then set
-|g:vindent_tabstop| to X.  For example, I have the following in my |vimrc|:
+if you wish for this plugin to view a <Tab> as 8 <Space>, then set
+|g:vindent_tabstop| to 8.  For example, I have the following in my |vimrc|:
 >
 	let g:vindent_tabstop = &tabstop
 <
-This make vindent.vim assume the equivalence between 1 <Tab> and |tabstop|
+This make the plugin assume the equivalence between 1 <Tab> and |tabstop|
 number of spaces.
 
 PLUGS						*vindent_plug*
 
-Alternatively, you can create mappings using the <Plug>s provided by this
-plugin if you wish to map different keybindings to different modes:
+Under the hood, the keybindings provided by the user are mapped to the
+following <Plug>s created by this plugin.  These <Plug> will still be defined
+even if no keybinding to that motion or text object is supplied:
 
-- `<Plug>(VindentMove_N_prev)`: |indent_prev| in normal mode.
-- `<Plug>(VindentMove_N_next)`: |indent_next| in normal mode.
-- `<Plug>(VindentMove_X_prev)`: |indent_prev| in visual mode.
-- `<Plug>(VindentMove_X_next)`: |indent_next| in visual mode.
-- `<Plug>(VindentMove_O_prev)`: |indent_prev| as text object.
-- `<Plug>(VindentMove_O_next)`: |indent_next| as text object.
+- `<Plug>(VindentMotion_prev_same)`: |vindent_motion_same| to previous.
+- `<Plug>(VindentMotion_next_same)`: |vindent_motion_same| to next.
+- `<Plug>(VindentMotion_prev_less)`: |vindent_motion_less| to previous.
+- `<Plug>(VindentMotion_next_less)`: |vindent_motion_less| to next.
+- `<Plug>(VindentMotion_prev_more)`: |vindent_motion_more| to previous.
+- `<Plug>(VindentMotion_next_more)`: |vindent_motion_more| to next.
+- `<Plug>(VindentMotion_prev_diff)`: |vindent_motion_diff| to previous.
+- `<Plug>(VindentMotion_next_diff)`: |vindent_motion_diff| to next.
 
-- `<PLug>(VindentObject_X_ii)`: |in_indent| in visual mode.
-- `<PLug>(VindentObject_X_iI)`: |in_Indent| in visual mode.
-- `<PLug>(VindentObject_X_ai)`: |an_indent| in visual mode.
-- `<PLug>(VindentObject_X_aI)`: |an_Indent| in visual mode.
-- `<PLug>(VindentObject_O_ii)`: |in_indent| as text object.
-- `<PLug>(VindentObject_O_iI)`: |in_Indent| as text object.
-- `<PLug>(VindentObject_O_ai)`: |an_indent| as text object.
-- `<PLug>(VindentObject_O_aI)`: |an_Indent| as text object.
+- `<PLug>(VindentObject_ii)`: |in_indent| text object.
+- `<PLug>(VindentObject_ai)`: |an_indent| text object.
+- `<PLug>(VindentObject_ii)`: |in_indent| text object.
+- `<PLug>(VindentObject_ai)`: |an_indent| text object.
 
 ==============================================================================
 3. Details                                                   *vindent_Details*
@@ -104,33 +114,33 @@ plugin if you wish to map different keybindings to different modes:
 ------------------------------------------------------------------------------
 3.1 Motions                                                  *vindent_Motions*
 
-"indent_prev"					*indent_prev*
-		A |motion| that moves the cursor to the previous line that has
-		the exact same indentation as the current line.  This motion
-		works in normal mode, visual mode and as a text object.  This
+"vindent_motion_same"				*vindent_motion_same*
+		A |motion| that moves the cursor to the previous or next line
+		with the SAME indentation as the current line.  This motion
+		works in normal mode, visual mode and as a text object. This
 		motion can take {count}.
 
-		Keybinding defined by `g:vindent_motion_prev` is mapped to
-		this motion, which consists of three |vindent_plug|s:
-		    - `<Plug>(VindentMove_N_prev)`: for normal mode
-		    - `<Plug>(VindentMove_X_prev)`: for visual mode
-		    - `<Plug>(VindentMove_O_prev)`: for text object
+		Keybinding defined by `g:vindent_motion_same_prev` and
+		`g:vindent_motion_same_next` is mapped to this motion,
+		which maps to the following |vindent_plug|s respectively:
+		    - `<Plug>(VindentMotion_prev_same)`
+		    - `<Plug>(VindentMotion_next_same)`
 
-		Here are some quirks about |indent_prev| and |indent_next|:
+		Here are some quirks about |vindent_Motions|:
 		    - The motions do nothing (cursor does not move) if the
 		      current line is |empty|.
 		    - The motions assume that the indentations are consistent,
-		      unless |g:vindent_tabstop| is set.
-		      For example, on a line indented with 1 tab,
-		      |indent_prev| would not move the cursor to a line
-		      indented with 8 spaces, unless |g:vindent_tabstop| is
-		      set to 8.
+		      unless |g:vindent_tabstop| is set. For example, on a
+		      line indented with 1 tab, |same_indent_prev| would not
+		      move the cursor to a line indented with 8 spaces, unless
+		      |g:vindent_tabstop| is set to 8.
 		    - If no line with the same indentation is found, the
 		      cursor does not move.
 		    - If being used as a text object, these motions operate on
 		      texts line-wise, like |V|.
 
-		For example, consider the following LaTeX code: >
+		For example, consider the following LaTeX code and assume that
+		the keybindings provided in |vindent_Usage| are used: >
 			 1 \begin{enumerate}
 			 2
 			 3     \item
@@ -142,23 +152,55 @@ plugin if you wish to map different keybindings to different modes:
 			 9         Another sentence here.
 			10
 			11 \end{enumerate}
-<		If cursor is on line 6, |indent_prev| moves it to lines 5.
-		If cursor is on line 9, |indent_prev| moves it to lines 6.
-		If cursor is on line 1, |indent_next| moves it to lines 11.
-		If the keybinding `]l` is mapped to |indent_next| and the
-		cursor is on line 5, then `2]l` moves the cursor to line 9.
+<		If the cursor is on line 6,  `[=`  moves it to line 5.
+		If the cursor is on line 9,  `[=`  moves it to line 6.
+		If the cursor is on line 1,  `]=`  moves it to line 11.
+		If the cursor is on line 2,  `]=`  does not move.
+		If the cursor is on line 5,  `2]=` moves it to line 9.
+		If the cursor is on line 3,  `d]=` deletes lines 3 to 8.
+		If the cursor is on line 6,  `[-`  moves it to line 3.
+		If the cursor is on line 1,  `]+`  moves it to line 3.
+		If the cursor is on line 11, `[+`  moves it to line 9.
+		If the cursor is on line 3,  `];`  moves it to line 5.
 
-"indent_next"					*indent_next*
-		Same as |indent_prev|, but moves the cursor to the next line
-		with the exact same indentation as the current line.
+"vindent_motion_less"				*vindent_motion_less*
+		Same as |vindent_motion_same|, but moves the cursor to the
+		previous or next line with LESS indentation as the current
+		line.
 
-		Keybinding defined by `g:vindent_motion_next` is mapped to
-		this motion, which consists of three |vindent_plug|s:
-		    - `<Plug>(VindentMove_N_next)`: for normal mode
-		    - `<Plug>(VindentMove_X_next)`: for visual mode
-		    - `<Plug>(VindentMove_O_next)`: for text object
+		Keybinding defined by `g:vindent_motion_less_prev` and
+		`g:vindent_motion_less_next` is mapped to this motion,
+		which maps to the following |vindent_plug|s respectively:
+		    - `<Plug>(VindentMotion_prev_less)`
+		    - `<Plug>(VindentMotion_next_less)`
 
-		See |indent_prev| for more details and example.
+		See |vindent_motion_same| for more details and example.
+
+"vindent_motion_more"				*vindent_motion_more*
+		Same as |vindent_motion_same|, but moves the cursor to the
+		previous or next line with MORE indentation as the current
+		line.
+
+		Keybinding defined by `g:vindent_motion_more_prev` and
+		`g:vindent_motion_more_next` is mapped to this motion,
+		which maps to the following |vindent_plug|s respectively:
+		    - `<Plug>(VindentMotion_prev_more)`
+		    - `<Plug>(VindentMotion_next_more)`
+
+		See |vindent_motion_same| for more details and example.
+
+"vindent_motion_diff"				*vindent_motion_diff*
+		Same as |vindent_motion_same|, but moves the cursor to the
+		previous or next line with DIFFERENT indentation as the
+		current line.
+
+		Keybinding defined by `g:vindent_motion_diff_prev` and
+		`g:vindent_motion_diff_next` is mapped to this motion,
+		which maps to the following |vindent_plug|s respectively:
+		    - `<Plug>(VindentMotion_prev_diff)`
+		    - `<Plug>(VindentMotion_next_diff)`
+
+		See |vindent_motion_same| for more details and example.
 
 ------------------------------------------------------------------------------
 3.2 Test Objects                                        *vindent_Text_Objects*
@@ -170,9 +212,7 @@ plugin if you wish to map different keybindings to different modes:
 		take {count}.
 
 		Keybinding defined by `g:vindent_object_ii` is mapped to this
-		text object, which consists of two |vindent_plug|s:
-		    - `<PLug>(VindentObject_X_ii)`: for visual mode.
-		    - `<PLug>(VindentObject_O_ii)`: for text object.
+		text object, i.e., `<PLug>(VindentObject_ii)`.
 
 		Here are some quirks about objects in |vindent_Text_Objects|:
 		    - The objects assume indentations are consistent, unless
@@ -208,9 +248,7 @@ plugin if you wish to map different keybindings to different modes:
 		same indentations.
 
 		Keybinding defined by `g:vindent_object_iI` is mapped to this
-		text object, which consists of two |vindent_plug|s:
-		    - `<PLug>(VindentObject_X_iI)`: for visual mode.
-		    - `<PLug>(VindentObject_O_iI)`: for text object.
+		text object, i.e., `<PLug>(VindentObject_iI)`.
 
 		See |in_indent| for details and example.
 
@@ -220,9 +258,7 @@ plugin if you wish to map different keybindings to different modes:
 		less indentation.
 
 		Keybinding defined by `g:vindent_object_ai` is mapped to this
-		text object, which consists of two |vindent_plug|s:
-		    - `<PLug>(VindentObject_X_ai)`: for visual mode.
-		    - `<PLug>(VindentObject_O_ai)`: for text object.
+		text object, i.e., `<PLug>(VindentObject_ai)`.
 
 		See |in_indent| for details and example.
 
@@ -232,9 +268,7 @@ plugin if you wish to map different keybindings to different modes:
 		indentation: one at the beginning and one at the end.
 
 		Keybinding defined by `g:vindent_object_aI` is mapped to this
-		text object, which consists of two |vindent_plug|s:
-		    - `<PLug>(VindentObject_X_aI)`: for visual mode.
-		    - `<PLug>(VindentObject_O_aI)`: for text object.
+		text object, i.e., `<PLug>(VindentObject_aI)`.
 
 		See |in_indent| for details and example.
 
@@ -269,6 +303,11 @@ https://github.com/jessekelighine/vindent.vim.
 ==============================================================================
 6. Changelog                                               *vindent_Changelog*
 
+v2.0.0:                                                            2022-May-08
+	- |vindent_Motions| now can to jump to line with SAME, LESS, MORE, or
+	  DIFFERENT indentation as the current line.
+	- <Plug>s are simplified.
+	- Core implementation no longer less than 100 lines :(
 v1.3.0:                                                            2022-May-05
 	- Add |g:vindent_tabstop|.
 v1.2.0:                                                            2022-May-04
@@ -281,7 +320,8 @@ v1.0.0:                                                            2022-May-03
 ==============================================================================
 7. Credits                                                   *vindent_Credits*
 
-This plugin is created by Jesse Chen. (email: jessekelighine@gmail.com)
+This plugin is created by Jesse Chen.  Find me on GitHub at 
+https://github.com/jessekelighine.
 
 ==============================================================================
 vim:tw=78:ts=8:noet:ft=help:norl:

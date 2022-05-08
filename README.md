@@ -2,13 +2,13 @@
 
 `vindent.vim` is a minimal plugin for Vim and Neovim that provides two functionalities:
 
-1. Jump to previous/next line with same indentation. (*vindent motion*)
-2. Select adjacent lines with same or more indentation. (*vindent text object*: 4 variations)
+1. Jump to previous/next line with *same*, *less*, *more* or *different* indentation. (**vindent motions**)
+2. Select adjacent lines with same or more indentation. (**vindent text object**: 4 variations)
 
 This plugin was partially inspired by [vim-indentwise](https://github.com/jeetsukumaran/vim-indentwise)
 and [vim-indent-object](https://github.com/michaeljsmith/vim-indent-object).
 `vindent.vim` is essentially a simplified version of the two plugins combined,
-but reimplemented with less than *100 lines* of vimscript!
+but reimplemented with less than *200 lines* of vimscript!
 
 You can also find this plugin on [vim.org](https://www.vim.org/scripts/script.php?script_id=6016).
 
@@ -27,17 +27,27 @@ git clone https://github.com/jessekelighine/vindent.vim
 `vindent.vim` comes with no default keybindings.  So after installation, put
 the following lines in your `~/.vimrc`:
 ```vim
-let g:vindent_motion_prev = '[l'
-let g:vindent_motion_next = ']l'
-let g:vindent_object_ii   = 'ii'
-let g:vindent_object_iI   = 'iI'
-let g:vindent_object_ai   = 'ai'
-let g:vindent_object_aI   = 'aI'
-let g:vindent_tabstop     = &tabstop " let vindent.vim know to treeat 1 <Tab> as "tabsop" <Space>s.
+let g:vindent_motion_same_prev = '[='
+let g:vindent_motion_same_next = ']='
+let g:vindent_motion_less_prev = '[-'
+let g:vindent_motion_less_next = ']-'
+let g:vindent_motion_more_prev = '[+'
+let g:vindent_motion_more_next = ']+'
+let g:vindent_motion_diff_prev = '[;'
+let g:vindent_motion_diff_next = '];'
+let g:vindent_object_ii = 'ii'
+let g:vindent_object_iI = 'iI'
+let g:vindent_object_ai = 'ai'
+let g:vindent_object_aI = 'aI'
+let g:vindent_tabstop   = &tabstop " let vindent know to treat 1 <Tab> as tabstop # of <Spaces>s.
 ```
 and enjoy using:
 
-1. **Vindent Motion**: Jump to previous/next with same indentation with `[l`/`]l`.
+1. **Vindent Motions**:
+	- Jump to previous/next with same indentation with `[=`/`]=`.
+	- Jump to previous/next with less indentation with `[-`/`]-`.
+	- Jump to previous/next with more indentation with `[+`/`]+`.
+	- Jump to previous/next with different indentation with `[;`/`];`.
    ([examples](#vindent-motion-move-to-line-with-same-indentation))
 2. **Vindent Text Objects**: Select text with `ii` (*in indent*), `iI` (*in Indent*), `ai` (*an indent*), and `aI` (*an Indent*).
    ([examples](#vindent-text-objects-select-lines-of-text-with-same-indentation))
@@ -48,21 +58,21 @@ Feel free to customize the keybindings.
 
 - If you wish not to use a certain functionality, simply leave the corresponding variable undefined.
 - If you wish not to treat `<Tab>` as some number of `<Space>`s, leave `g:vindent_tabstop` undefined.
-- `[l` and `]l` are commonly used keybindings (e.g., [vim-unimpaired](https://github.com/tpope/vim-unimpaired)), so be sure to change them if you already use those.
 
 For details please refer to the [`doc flie`](./doc/vindent.txt).
 
 ## Examples
 
-The following examples assumes that the keybindings in [Usage](#usage) are used.
-
-### Vindent Motion: move to line with same indentation.
+### Vindent Motion
 
 This motion is very self explanatory: move to the previous or next line with
-the same indentation.  This motion does not move the cursor if the cursor is on
-an empty line.  This motion operates on text *line-wise* if it is used as a text object.
+either *same*, *less*, *more*, or *different* indentation.  This motion does
+not move the cursor if the cursor is on an empty line.  This motion operates on
+text *line-wise* if it is used as a text object.
 
-Here are some examples.  Consider the LaTeX code:
+Here are some examples.  Assume that the keybindings in [Usage](#usage) are
+used and consider the LaTeX code:
+
 ```tex
  1 \begin{enumerate}
  2
@@ -76,14 +86,16 @@ Here are some examples.  Consider the LaTeX code:
 10
 11 \end{enumerate}
 ```
-
-- If cursor is on line 3, then `]l` moves it to line 8.
-- If cursor is on line 6, then `]l` moves it to line 9.
-- If cursor is on line 6, then `[l` moves it to line 5.
-- If cursor is on line 1, then `]l` moves it to line 11.
-- If cursor is on line 2, then `]l` does not move. (No movement if the line is empty)
-- If cursor is on line 5, then `2]l` moves it to line 9. (Takes `{count}`)
-- If cursor is on line 3, then `d]l` deletes lines 3 to 8. (As test object)
+- If the cursor is on line 6,  `[=`  moves it to line 5.
+- If the cursor is on line 9,  `[=`  moves it to line 6.
+- If the cursor is on line 1,  `]=`  moves it to line 11.
+- If the cursor is on line 2,  `]=`  does not move. (No movement if the line is empty)
+- If the cursor is on line 5,  `2]=` moves it to line 9. (Takes `{count}`)
+- If the cursor is on line 3,  `d]=` deletes lines 3 to 8. (As test object)
+- If the cursor is on line 6,  `[-`  moves it to line 3. (Less indentation)
+- If the cursor is on line 1,  `]+`  moves it to line 3. (More indentation)
+- If the cursor is on line 11, `[+`  moves it to line 9.
+- If the cursor is on line 3,  `];`  moves it to line 5. (Different indentation)
 
 For more details please refer to the [`doc flie`](./doc/vindent.txt).
 
