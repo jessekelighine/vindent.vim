@@ -5,7 +5,8 @@
 " Returns the indentation of a given line.
 function! <SID>Get(line=line('.'))
 	let l:return = matchstr(getline(a:line),'^\s*')
-	return exists('g:vindent_tabstop') ? substitute(l:return,'\t',repeat(" ",g:vindent_tabstop),'g') : l:return
+	if !exists('g:vindent_tabstop') | return l:return | endif
+	return substitute(l:return,'\t',repeat(" ",g:vindent_tabstop),'g')
 endfunction
 
 " Returns 1 if "a:line" is a valid line number.
@@ -42,7 +43,7 @@ endfunction
 
 "### Motion ###################################################################
 
-" Find the "prev" or "next" line with the same indentation and return its line number.
+" Find "prev" or "next" line with "a:type" indent, return line number.
 function! <SID>Find(direct, type, line=line('.'), indent=<SID>Get(), skip=1)
 	let l:line = a:line
 	let l:inc  = a:direct=='prev' ? -1 : 1
@@ -67,11 +68,11 @@ endfunction
 " Vindent Motion: Go to the "prev" or "next" line with the same indentation.
 function! vindent#Motion(direct, mode, count, type)
 	if <SID>Skip() | return | endif
-	let l:moveto = <SID>RecursiveFind(a:direct, a:count, a:type)
-	let l:move   = abs(l:moveto - line('.')) . ( a:direct=='prev' ? 'k' : 'j' )
-	if     a:mode=='N' | silent exec l:moveto==0 ? "return"   : "norm! "    .l:move."_"
-	elseif a:mode=='X' | silent exec l:moveto==0 ? "norm! gv" : "norm! \egv".l:move."_"
-	elseif a:mode=='O' | silent exec l:moveto==0 ? "return"   : "norm! V"   .l:move."_"
+	let l:to   = <SID>RecursiveFind(a:direct, a:count, a:type)
+	let l:move = abs(l:to - line('.')) . ( a:direct=='prev' ? 'k' : 'j' )
+	if     a:mode=='N' | exe l:to==0 ? "return"   : "norm! "    .l:move."_"
+	elseif a:mode=='X' | exe l:to==0 ? "norm! gv" : "norm! \egv".l:move."_"
+	elseif a:mode=='O' | exe l:to==0 ? "return"   : "norm! V"   .l:move."_"
 	endif
 endfunction
 
@@ -80,18 +81,20 @@ endfunction
 " Find the range (lines) of text with same indent level.
 function! <SID>Range(exact, line=line('.'), skip=1)
 	let l:indent = <SID>Get(a:line) | if l:indent=='' | return [0,0] | endif
-	let [ l:ls, l:le ] = [ a:line, a:line ]
-	let l:test = a:exact ? "<SID>Same" : "<SID>NoLess"
-	while <SID>Valid(l:ls) && ( function(l:test)(l:indent,l:ls) || <SID>Skip(a:skip,l:ls) ) | let l:ls=l:ls-1 | endwhile
-	while <SID>Valid(l:le) && ( function(l:test)(l:indent,l:le) || <SID>Skip(a:skip,l:le) ) | let l:le=l:le+1 | endwhile
-	return [ l:ls+1, l:le-1 ]
+	let l:func   = a:exact ? "Diff" : "Less"
+	let l:line_s = <SID>Find('prev', l:func, a:line, l:indent, a:skip)
+	let l:line_e = <SID>Find('next', l:func, a:line, l:indent, a:skip)
+	return [
+				\ l:line_s==0 ? 1         : l:line_s+1,
+				\ l:line_e==0 ? line('$') : l:line_e-1
+				\ ]
 endfunction
 
 " Exclude empty lines on either ends from "a:range".
-function! <SID>NoHang(range, begin, end)
+function! <SID>NoHang(range, beginend)
 	let l:range = a:range
-	while a:begin && <SID>Skip(1,l:range[0]) | let l:range[0]=l:range[0]+1 | endwhile
-	while a:end   && <SID>Skip(1,l:range[1]) | let l:range[1]=l:range[1]-1 | endwhile
+	while a:beginend[0] && <SID>Skip(1,l:range[0]) | let l:range[0]=l:range[0]+1 | endwhile
+	while a:beginend[1] && <SID>Skip(1,l:range[1]) | let l:range[1]=l:range[1]-1 | endwhile
 	return l:range
 endfunction
 
@@ -100,7 +103,7 @@ let s:nohang = { 'ii': [1, 1], 'iI': [1, 1], 'ai': [0, 1], 'aI': [0, 0] }
 let s:exact  = { 'ii': 0,      'iI': 1,      'ai': 0,      'aI': 0      }
 function! vindent#Object(code)
 	let l:range = <SID>Range(s:exact[a:code]) | if l:range==[0,0] | return | endif
-	let l:range = <SID>NoHang(l:range, s:nohang[a:code][0], s:nohang[a:code][1])
+	let l:range = <SID>NoHang(l:range, s:nohang[a:code])
 	let l:move  = l:range[1] - l:range[0]
 	call cursor(l:range[0],0)
 	if     a:code==#'ii' | exec "norm!  V" . ( l:move==0 ? '' : l:move.'j' )
