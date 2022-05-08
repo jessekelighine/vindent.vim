@@ -45,22 +45,7 @@ onoremap <Plug>(VindentObject_iI) :call vindent#Object('iI')<CR>
 onoremap <Plug>(VindentObject_ai) :call vindent#Object('ai')<CR>
 onoremap <Plug>(VindentObject_aI) :call vindent#Object('aI')<CR>
 
-if exists("g:vindent_object_ii")
-	execute 'xnoremap <silent> '.g:vindent_object_ii.' <PLug>(VindentObject_ii)'
-	execute 'onoremap <silent> '.g:vindent_object_ii.' <PLug>(VindentObject_ii)'
-endif
-
-if exists("g:vindent_object_iI")
-	execute 'xnoremap <silent> '.g:vindent_object_iI.' <PLug>(VindentObject_iI)'
-	execute 'onoremap <silent> '.g:vindent_object_iI.' <PLug>(VindentObject_iI)'
-endif
-
-if exists("g:vindent_object_ai")
-	execute 'xnoremap <silent> '.g:vindent_object_ai.' <PLug>(VindentObject_ai)'
-	execute 'onoremap <silent> '.g:vindent_object_ai.' <PLug>(VindentObject_ai)'
-endif
-
-if exists("g:vindent_object_aI")
-	execute 'xnoremap <silent> '.g:vindent_object_aI.' <PLug>(VindentObject_aI)'
-	execute 'onoremap <silent> '.g:vindent_object_aI.' <PLug>(VindentObject_aI)'
-endif
+if exists("g:vindent_object_ii") | exe 'xnoremap <silent> '.g:vindent_object_ii.' <PLug>(VindentObject_ii)' | exe 'onoremap <silent> '.g:vindent_object_ii.' <PLug>(VindentObject_ii)' | endif
+if exists("g:vindent_object_iI") | exe 'xnoremap <silent> '.g:vindent_object_iI.' <PLug>(VindentObject_iI)' | exe 'onoremap <silent> '.g:vindent_object_iI.' <PLug>(VindentObject_iI)' | endif
+if exists("g:vindent_object_ai") | exe 'xnoremap <silent> '.g:vindent_object_ai.' <PLug>(VindentObject_ai)' | exe 'onoremap <silent> '.g:vindent_object_ai.' <PLug>(VindentObject_ai)' | endif
+if exists("g:vindent_object_aI") | exe 'xnoremap <silent> '.g:vindent_object_aI.' <PLug>(VindentObject_aI)' | exe 'onoremap <silent> '.g:vindent_object_aI.' <PLug>(VindentObject_aI)' | endif
