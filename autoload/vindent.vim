@@ -43,34 +43,33 @@ endfunction
 
 "### Motion ###################################################################
 
-" Find "prev" or "next" line with "a:func" indent, return line number.
-function! <SID>Find(direct, func, line, indent, skip)
+" Find "prev" or "next" line with "a:type" indent, return line number.
+function! <SID>Find(direct, type, line=line('.'), indent=<SID>Get(), skip=1)
 	let l:line = a:line
 	let l:inc  = a:direct=='prev' ? -1 : 1
-	let l:func = "<SID>".a:func
+	let l:type = "<SID>".a:type
 	while 1
 		let l:line = l:line + l:inc
 		if !<SID>Valid(l:line)               | return 0      | endif
 		if <SID>Skip(a:skip,l:line)          | continue      | endif
-		if function(l:func)(a:indent,l:line) | return l:line | endif
+		if function(l:type)(a:indent,l:line) | return l:line | endif
 	endwhile
 endfunction
 
 " Calls "<SID>Find" recursively "a:count" times.
-function! <SID>RecursiveFind(direct, count, func, line, indent, skip)
+function! <SID>RecursiveFind(direct, count, type, line=line('.'), indent=<SID>Get(), skip=1)
 	let l:line = a:line
 	for l:time in range(a:count)
-		let l:line = <SID>Find(a:direct, a:func, l:line, <SID>Get(l:line), a:skip)
+		let l:line = <SID>Find(a:direct, a:type, l:line, <SID>Get(l:line), a:skip)
 	endfor
 	return l:line
 endfunction
 
 " Vindent Motion: Go to the "prev" or "next" line with the same indentation.
-function! vindent#Motion(direct, mode, count, func)
+function! vindent#Motion(direct, mode, count, type)
 	if <SID>Skip() | return | endif
-	let l:line = line('.')
-	let l:to   = <SID>RecursiveFind(a:direct, a:count, a:func, l:line, <SID>Get(l:line), 1)
-	let l:move = abs(l:to - l:line) . ( a:direct=='prev' ? 'k' : 'j' )
+	let l:to   = <SID>RecursiveFind(a:direct, a:count, a:type)
+	let l:move = abs(l:to - line('.')) . ( a:direct=='prev' ? 'k' : 'j' )
 	if     a:mode=='N' | exe l:to==0 ? "return"   : "norm! "    .l:move."_"
 	elseif a:mode=='X' | exe l:to==0 ? "norm! gv" : "norm! \egv".l:move."_"
 	elseif a:mode=='O' | exe l:to==0 ? "return"   : "norm! V"   .l:move."_"
