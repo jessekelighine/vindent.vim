@@ -3,13 +3,14 @@
 `vindent.vim` is a minimal plugin for Vim and Neovim that provides three functionalities:
 
 1. Jump to previous/next line with *same*, *less*, *more* or *different* indentation. (**vindent motions**)
-2. Jump to previous/next "text block" with *same* (in some sense) indentation. (**vindent block motions**: 4 variations)
-3. Select adjacent lines with same or more indentation. (**vindent text object**: 4 variations)
+2. Jump to previous/next "text block" with *same* indentation. (**vindent block motions**: 4 variations)
+3. Select adjacent lines with *same or more* indentation. (**vindent text object**: 4 variations)
 
-This plugin was partially inspired by [vim-indentwise](https://github.com/jeetsukumaran/vim-indentwise)
+This plugin is inspired by [vim-indentwise](https://github.com/jeetsukumaran/vim-indentwise)
 and [vim-indent-object](https://github.com/michaeljsmith/vim-indent-object).
-`vindent.vim` is essentially a simplified version of the two plugins combined,
-but reimplemented with about *200 lines* of vimscript!
+`vindent.vim` is essentially a combination of the two,
+but reimplemented with less vimscript (only *200 lines*)
+and works better with `{count}`s, visual mode, and with normal commands `d` and `c`!
 
 You can also find this plugin on [vim.org](https://www.vim.org/scripts/script.php?script_id=6016).
 
@@ -115,7 +116,7 @@ This motion moves the cursor to the previous or next "text block" of the same
 indentation as the current line.  `vindent.vim` provides 4 variations of this
 motion since there are some subtleties in defining a "text block".
 
-The 4 variations are all named as `vindent_blockmotion_<A1><A2>` where `<A1>`
+The 4 variations are all named `vindent_blockmotion_<A1><A2>` where `<A1>`
 and `<A2>` can be either `O` (for YES) or `X` (for NO):
 
 - `<A1>` indicates whether "empty lines" are considered boundaries of a text block.
@@ -158,6 +159,8 @@ If the cursor is on line 10, then pressing...
 every breakage of continuous lines with same indentation are considered a
 boundary.  Also, in many cases, `[1`/`]1` can be much more useful than `[=`/`]=`.
 You might not even need `[=`/`]=`!
+
+For more details please refer to the [`doc flie`](./doc/vindent.txt).
 
 ### Vindent Text Object
 
