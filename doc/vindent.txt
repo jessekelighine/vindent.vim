@@ -11,8 +11,9 @@ Contents                                                    *vindent_Contents*
     2. Usage ................................ |vindent_Usage|
     3. Details .............................. |vindent_Details|
         3.1 Motions ......................... |vindent_Motions|
-        3.2 Text Objects .................... |vindent_Text_Objects|
-	3.3 Miscellaneous ................... |vindent_Miscellaneous|
+        3.2 Block Motions.................... |vindent_Block_Motions|
+        3.3 Text Objects .................... |vindent_Text_Objects|
+	3.4 Miscellaneous ................... |vindent_Miscellaneous|
     4. License .............................. |vindent_License|
     5. Bugs and Contributing ................ |vindent_Bugs_and_Contributing|
     6. Changelog ............................ |vindent_Changelog|
@@ -21,7 +22,7 @@ Contents                                                    *vindent_Contents*
 ==============================================================================
 1. Introduction                                         *vindent_Introduction*
 
-This plugin provides two indentation related functionalities:
+This plugin provides three indentation related functionalities:
 
 1. |vindent_Motions|:
    |Motion|s that moves to previous or next line with the same, less, more, or
@@ -31,7 +32,16 @@ This plugin provides two indentation related functionalities:
    - |vindent_motion_more|: move to previous/next line with more      indent.
    - |vindent_motion_diff|: move to previous/next line with differnet indent.
 
-2. |vindent_Text_Objects|:
+2. |vindent_Block_Motions|:
+   |Motion|s that moves to previous or next "block" of text with the same
+   indentation.  Four variants, all named `vindent_blockmotion_<A1><A2>`
+   where `<A1>` and `<A2>` indicates:
+   - `<A1>`: `O` or `X`: whether or not "empty lines" are considered to be
+     boundaries of a text block.
+   - `<A2>`: `O` or `X`: whether or not lines with "more" indent are
+     considered to be boundaries of a text block.
+
+3. |vindent_Text_Objects|:
    Text |objects| to select text by indentation. Four variations:
    - |in_indent|: select adjacent lines with the same or more indentation.
    - |in_Indent|: select adjacent lines with same indentation.
@@ -46,18 +56,26 @@ This plugin provides two indentation related functionalities:
 This plugin does not come with default keybindings.  You can define your own
 keybindings using the following variables:
 
-- `g:vindent_motion_same_prev`: |vindent_motion_same| to previous line.
-- `g:vindent_motion_same_next`: |vindent_motion_same| to next     line.
-- `g:vindent_motion_less_prev`: |vindent_motion_less| to previous line.
-- `g:vindent_motion_less_next`: |vindent_motion_less| to next     line.
-- `g:vindent_motion_more_prev`: |vindent_motion_more| to previous line.
-- `g:vindent_motion_more_next`: |vindent_motion_more| to next     line.
-- `g:vindent_motion_diff_prev`: |vindent_motion_diff| to previous line.
-- `g:vindent_motion_diff_next`: |vindent_motion_diff| to next     line.
-- `g:vindent_object_ii`: select to text object |in_indent|.
-- `g:vindent_object_iI`: select to text object |in_Indent|.
-- `g:vindent_object_ai`: select to text object |an_indent|.
-- `g:vindent_object_aI`: select to text object |an_Indent|.
+- `g:vindent_motion_same_prev`: |vindent_motion_same| to previous line
+- `g:vindent_motion_same_next`: |vindent_motion_same| to next     line
+- `g:vindent_motion_less_prev`: |vindent_motion_less| to previous line
+- `g:vindent_motion_less_next`: |vindent_motion_less| to next     line
+- `g:vindent_motion_more_prev`: |vindent_motion_more| to previous line
+- `g:vindent_motion_more_next`: |vindent_motion_more| to next     line
+- `g:vindent_motion_diff_prev`: |vindent_motion_diff| to previous line
+- `g:vindent_motion_diff_next`: |vindent_motion_diff| to next     line
+- `g:vindent_blockmotion_OO_prev`: |vindent_blockmotion_OO| to previous line
+- `g:vindent_blockmotion_OO_next`: |vindent_blockmotion_OO| to next     line
+- `g:vindent_blockmotion_XO_prev`: |vindent_blockmotion_XO| to previous line
+- `g:vindent_blockmotion_XO_next`: |vindent_blockmotion_XO| to next     line
+- `g:vindent_blockmotion_OX_prev`: |vindent_blockmotion_OX| to previous line
+- `g:vindent_blockmotion_OX_next`: |vindent_blockmotion_OX| to next     line
+- `g:vindent_blockmotion_XX_prev`: |vindent_blockmotion_XX| to previous line
+- `g:vindent_blockmotion_XX_next`: |vindent_blockmotion_XX| to next     line
+- `g:vindent_object_ii`: select to text object |in_indent|
+- `g:vindent_object_iI`: select to text object |in_Indent|
+- `g:vindent_object_ai`: select to text object |an_indent|
+- `g:vindent_object_aI`: select to text object |an_Indent|
 
 For example, I have the following definitions in my |vimrc|
 >
@@ -69,11 +87,18 @@ For example, I have the following definitions in my |vimrc|
 	let g:vindent_motion_more_next = ']+'
 	let g:vindent_motion_diff_prev = '[;'
 	let g:vindent_motion_diff_next = '];'
+	let g:vindent_blockmotion_OO_prev = '[1'
+	let g:vindent_blockmotion_OO_next = ']1'
+	let g:vindent_blockmotion_XO_prev = '[2'
+	let g:vindent_blockmotion_XO_next = ']2'
+	let g:vindent_blockmotion_OX_prev = '[3'
+	let g:vindent_blockmotion_OX_next = ']3'
+	let g:vindent_blockmotion_XX_prev = '[4'
+	let g:vindent_blockmotion_XX_next = ']4'
 	let g:vindent_object_ii = 'ii'
 	let g:vindent_object_iI = 'iI'
 	let g:vindent_object_ai = 'ai'
 	let g:vindent_object_aI = 'aI'
-	let g:vindent_tabstop   = &tabstop
 <
 If you wish not to use a certain functionality, simply leave the corresponding
 keybinding variable undefined.
@@ -88,26 +113,6 @@ if you wish for this plugin to view a <Tab> as 8 <Space>, then set
 This make the plugin assume the equivalence between 1 <Tab> and |tabstop|
 number of spaces.
 
-PLUGS						*vindent_plug*
-
-Under the hood, the keybindings provided by the user are mapped to the
-following <Plug>s created by this plugin.  These <Plug> will still be defined
-even if no keybinding to that motion or text object is supplied:
-
-- `<Plug>(VindentMotion_prev_same)`: |vindent_motion_same| to previous.
-- `<Plug>(VindentMotion_next_same)`: |vindent_motion_same| to next.
-- `<Plug>(VindentMotion_prev_less)`: |vindent_motion_less| to previous.
-- `<Plug>(VindentMotion_next_less)`: |vindent_motion_less| to next.
-- `<Plug>(VindentMotion_prev_more)`: |vindent_motion_more| to previous.
-- `<Plug>(VindentMotion_next_more)`: |vindent_motion_more| to next.
-- `<Plug>(VindentMotion_prev_diff)`: |vindent_motion_diff| to previous.
-- `<Plug>(VindentMotion_next_diff)`: |vindent_motion_diff| to next.
-
-- `<PLug>(VindentObject_ii)`: |in_indent| text object.
-- `<PLug>(VindentObject_ai)`: |an_indent| text object.
-- `<PLug>(VindentObject_ii)`: |in_indent| text object.
-- `<PLug>(VindentObject_ai)`: |an_indent| text object.
-
 ==============================================================================
 3. Details                                                   *vindent_Details*
 
@@ -121,10 +126,7 @@ even if no keybinding to that motion or text object is supplied:
 		motion can take {count}.
 
 		Keybinding defined by `g:vindent_motion_same_prev` and
-		`g:vindent_motion_same_next` is mapped to this motion,
-		which maps to the following |vindent_plug|s respectively:
-		    - `<Plug>(VindentMotion_prev_same)`
-		    - `<Plug>(VindentMotion_next_same)`
+		`g:vindent_motion_same_next` are mapped to this motion.
 
 		Here are some quirks about |vindent_Motions|:
 		    - The motions do nothing (cursor does not move) if the
@@ -170,10 +172,7 @@ even if no keybinding to that motion or text object is supplied:
 		line.
 
 		Keybinding defined by `g:vindent_motion_less_prev` and
-		`g:vindent_motion_less_next` is mapped to this motion,
-		which maps to the following |vindent_plug|s respectively:
-		    - `<Plug>(VindentMotion_prev_less)`
-		    - `<Plug>(VindentMotion_next_less)`
+		`g:vindent_motion_less_next` are mapped to this motion.
 
 		See |vindent_motion_same| for more details and example.
 
@@ -183,10 +182,7 @@ even if no keybinding to that motion or text object is supplied:
 		line.
 
 		Keybinding defined by `g:vindent_motion_more_prev` and
-		`g:vindent_motion_more_next` is mapped to this motion,
-		which maps to the following |vindent_plug|s respectively:
-		    - `<Plug>(VindentMotion_prev_more)`
-		    - `<Plug>(VindentMotion_next_more)`
+		`g:vindent_motion_more_next` are mapped to this motion.
 
 		See |vindent_motion_same| for more details and example.
 
@@ -196,15 +192,94 @@ even if no keybinding to that motion or text object is supplied:
 		current line.
 
 		Keybinding defined by `g:vindent_motion_diff_prev` and
-		`g:vindent_motion_diff_next` is mapped to this motion,
-		which maps to the following |vindent_plug|s respectively:
-		    - `<Plug>(VindentMotion_prev_diff)`
-		    - `<Plug>(VindentMotion_next_diff)`
+		`g:vindent_motion_diff_next` are mapped to this motion.
 
 		See |vindent_motion_same| for more details and example.
 
 ------------------------------------------------------------------------------
-3.2 Test Objects                                        *vindent_Text_Objects*
+3.2 Block Motion                                       *vindent_Block_Motions*
+
+Vindent block motions are all named `vindent_blockmotion_<A1><A2>` where
+- `<A1>` indicates (by `O` or `X`) whether "empty lines" are considered to be
+  boundaries of a "text block"
+- `<A2>` indicates whether "lines with more indentation" are considered to be
+  boundaries of a text block with same indentation.
+For example,
+>
+    1 function Hi(name)
+    2     let temp = 'something use less'
+    3     return "Hi" . a:name
+    4
+    5 endfunction
+<
+If cursor is on line 2, then lines 2 and 3 are considered to be one text
+block; if cursor is on line 1 and `<A2>` is `X`, then lines 1 to 3 are
+considered to be one text block; if cursor is on line 1 and both `<A1>` and
+`<A2>` are `O`, then lines 1 to 5 are considerd to be one big block.  See
+|vindent_blockmotion_OO| for comprehensive examples.
+
+"vindent_blockmotion_OO"			*vindent_blockmotion_OO*
+		A |motion| that moves the cursor to the previous or next
+		"block of text" that has the same indentation as the current
+		line where "empty lines" and lines with "more" indentation are
+		considered to be boundaries of text block.
+
+		Keybinding defined by `g:vindent_blockmotion_OO_prev` and
+		`g:vindent_blockmotion_OO_next` are mapped to this motion.
+
+		Here are some quirks and remarks on |vindent_Block_Motions|:
+		    - When jumping to previous block, the cursor will move to
+		      the "last" line of the previous block; when jumping to
+		      next block, the cursor will move to the "first" line of
+		      the next block.
+		    - Although there are four |vindent_Block_Motions|, I
+		      believe |vindent_blockmotion_OO| is what most people
+		      want, since every breakage of continuous lines with same
+		      indentation are considered a boundary.
+
+		For example, consider the following text and assume that
+		the keybindings provided in |vindent_Usage| are used: >
+			 1 \begin{document}
+			 2 
+			 3 I am the first sentence
+			 4 \begin{enumerate}
+			 5     \item
+			 6 
+			 7     \item
+			 8         I am a sentence
+			 9     \item
+			10 \end{enumerate}
+			11     I am an incorrectly indented sentence.
+			12 I am one last sentence.
+			13 
+			14 \end{document}
+<		If the cursor is on line 1, then pressing...
+		    - `]1` 4 times move cursor to line 3, 10, 12, and 14.
+		    - `]2` 2 times move cursor to line 10 and 12.
+		    - `]3` 3 times move cursor to line 3, 10, and 14.
+		    - `]4` does no move the cursor since lines 1 to 13 are
+		      considered to be one whole text block.  If the cursor is
+		      on line 5, then `]4` moves it to line 11.
+		If the cursor is on line 10, then pressing...
+		    - `[1` moves cursor to line 4.
+
+"vindent_blockmotion_XO"			*vindent_blockmotion_XO*
+		Same as |vindent_blockmotion_OO|, but emty lines are not
+		considered as boundaries of a text block.See
+		|vindent_blockmotion_OO| for examples.
+
+"vindent_blockmotion_OX"			*vindent_blockmotion_OX*
+		Same as |vindent_blockmotion_OO|, but lines with more
+		indentation are considered as boundaries of a text block. See
+		|vindent_blockmotion_OO| for examples.
+
+"vindent_blockmotion_XX"			*vindent_blockmotion_XX*
+		Same as |vindent_blockmotion_OO|, but empty lines and lines
+		with more indentations are not considered as boundaries of a
+		text block. See |vindent_blockmotion_OO| for examples.
+
+------------------------------------------------------------------------------
+3.3 Text Objects                                        *vindent_Text_Objects*
 
 "in_indent"					*in_indent*
 		A text |object| that selects adjacent lines with the same or
@@ -213,7 +288,7 @@ even if no keybinding to that motion or text object is supplied:
 		take {count}.
 
 		Keybinding defined by `g:vindent_object_ii` is mapped to this
-		text object, i.e., `<PLug>(VindentObject_ii)`.
+		text object.
 
 		Here are some quirks about objects in |vindent_Text_Objects|:
 		    - The objects assume indentations are consistent, unless
@@ -244,7 +319,7 @@ even if no keybinding to that motion or text object is supplied:
 	        If cursor is on line 7,  |an_indent| selects lines 2  to 9.
 	        If cursor is on line 11, |an_Indent| selects lines 1  to 14.
 	        If cursor is on line 8,  |an_Indent| selects lines 7  to 9.
-	        If cursor is on line 1, |in_indent|, |in_Indent|, |an_indent|,
+	        If cursor is on line 1,  |in_indent|, |in_Indent|, |an_indent|,
 	        and |an_Indent| all select nothing since line 1 is not indented.
 
 "in_Indent"					*in_Indent*
@@ -252,7 +327,7 @@ even if no keybinding to that motion or text object is supplied:
 		same indentations.
 
 		Keybinding defined by `g:vindent_object_iI` is mapped to this
-		text object, i.e., `<PLug>(VindentObject_iI)`.
+		text object.
 
 		See |in_indent| for details and example.
 
@@ -262,7 +337,7 @@ even if no keybinding to that motion or text object is supplied:
 		less indentation.
 
 		Keybinding defined by `g:vindent_object_ai` is mapped to this
-		text object, i.e., `<PLug>(VindentObject_ai)`.
+		text object.
 
 		See |in_indent| for details and example.
 
@@ -272,12 +347,12 @@ even if no keybinding to that motion or text object is supplied:
 		indentation: one at the beginning and one at the end.
 
 		Keybinding defined by `g:vindent_object_aI` is mapped to this
-		text object, i.e., `<PLug>(VindentObject_aI)`.
+		text object.
 
 		See |in_indent| for details and example.
 
 ------------------------------------------------------------------------------
-3.3 Miscellaneous                                      *vindent_Miscellaneous*
+3.4 Miscellaneous                                      *vindent_Miscellaneous*
 
 g:vindent_tabstop				*g:vindent_tabstop*
 		Number of <Space>s assumed to be equivalent to 1 <Tab>.
@@ -291,7 +366,7 @@ g:vindent_tabstop				*g:vindent_tabstop*
 ==============================================================================
 4. License                                                   *vindent_License*
 
-Distributed under the same terms as Vim itself. See 
+Distributed under the same terms as Vim itself. See
 >
 	:help license
 <
@@ -300,13 +375,15 @@ for details.
 ==============================================================================
 5. Bugs and Contributing                       *vindent_Bugs_and_Contributing*
 
-No known bugs yet.  If you find one or would like to contribute to this
-plugin, please create an issue or make a pull request at
-https://github.com/jessekelighine/vindent.vim.
+If you find one or would like to contribute to this plugin, please create an
+issue or make a pull request at https://github.com/jessekelighine/vindent.vim.
 
 ==============================================================================
 6. Changelog                                               *vindent_Changelog*
 
+v2.1.0:                                                            2022-May-09
+	- Add |vindent_Block_Motions|.
+	- Bug fix: make {count} work everywhere.
 v2.0.0:                                                            2022-May-08
 	- |vindent_Motions| now can to jump to line with SAME, LESS, MORE, or
 	  DIFFERENT indentation as the current line.
@@ -324,7 +401,7 @@ v1.0.0:                                                            2022-May-03
 ==============================================================================
 7. Credits                                                   *vindent_Credits*
 
-This plugin is created by Jesse Chen.  Find me on GitHub at 
+This plugin is created by Jesse Chen.  Find me on GitHub at
 https://github.com/jessekelighine.
 
 ==============================================================================
