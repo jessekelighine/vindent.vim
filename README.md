@@ -99,7 +99,6 @@ used and consider the LaTeX code:
 - If the cursor is on line 6,  `[=`  moves it to line 5.
 - If the cursor is on line 9,  `[=`  moves it to line 6.
 - If the cursor is on line 1,  `]=`  moves it to line 11.
-- If the cursor is on line 2,  `]=`  does not move. (No movement if the line is empty)
 - If the cursor is on line 5,  `2]=` moves it to line 9. (Takes `{count}`)
 - If the cursor is on line 3,  `d]=` deletes lines 3 to 8. (As text object)
 - If the cursor is on line 6,  `[-`  moves it to line 3. (Less indentation)

@@ -38,22 +38,6 @@ if exists("g:vindent_motion_more_next") | exe 'noremap <silent> '.g:vindent_moti
 if exists("g:vindent_motion_diff_prev") | exe 'noremap <silent> '.g:vindent_motion_diff_prev.' <Plug>(VindentMotion_prev_diff)' | endif
 if exists("g:vindent_motion_diff_next") | exe 'noremap <silent> '.g:vindent_motion_diff_next.' <Plug>(VindentMotion_next_diff)' | endif
 
-" VINDENT TEXT OBJECT: <Plug>s and mappings.
-
-xnoremap <Plug>(VindentObject_ii) :call vindent#Object('ii')<CR>
-xnoremap <Plug>(VindentObject_iI) :call vindent#Object('iI')<CR>
-xnoremap <Plug>(VindentObject_ai) :call vindent#Object('ai')<CR>
-xnoremap <Plug>(VindentObject_aI) :call vindent#Object('aI')<CR>
-onoremap <Plug>(VindentObject_ii) :call vindent#Object('ii')<CR>
-onoremap <Plug>(VindentObject_iI) :call vindent#Object('iI')<CR>
-onoremap <Plug>(VindentObject_ai) :call vindent#Object('ai')<CR>
-onoremap <Plug>(VindentObject_aI) :call vindent#Object('aI')<CR>
-
-if exists("g:vindent_object_ii") | exe 'xnoremap <silent> '.g:vindent_object_ii.' <Plug>(VindentObject_ii)' | exe 'onoremap <silent> '.g:vindent_object_ii.' <Plug>(VindentObject_ii)' | endif
-if exists("g:vindent_object_iI") | exe 'xnoremap <silent> '.g:vindent_object_iI.' <Plug>(VindentObject_iI)' | exe 'onoremap <silent> '.g:vindent_object_iI.' <Plug>(VindentObject_iI)' | endif
-if exists("g:vindent_object_ai") | exe 'xnoremap <silent> '.g:vindent_object_ai.' <Plug>(VindentObject_ai)' | exe 'onoremap <silent> '.g:vindent_object_ai.' <Plug>(VindentObject_ai)' | endif
-if exists("g:vindent_object_aI") | exe 'xnoremap <silent> '.g:vindent_object_aI.' <Plug>(VindentObject_aI)' | exe 'onoremap <silent> '.g:vindent_object_aI.' <Plug>(VindentObject_aI)' | endif
-
 " VINDENT BLOCK MOTION: <Plug>s and mappings.
 
 nnoremap <Plug>(VindentBlockMotion_OO_next) :<C-U>call                                        vindent#BlockMotion("next",0,"Diff","N",v:count1)<CR>
@@ -89,3 +73,19 @@ if exists("g:vindent_blockmotion_XX_prev") | exe 'noremap <silent> '.g:vindent_b
 if exists("g:vindent_blockmotion_XX_next") | exe 'noremap <silent> '.g:vindent_blockmotion_XX_next.' <Plug>(VindentBlockMotion_XX_next)' | endif
 if exists("g:vindent_blockmotion_OX_prev") | exe 'noremap <silent> '.g:vindent_blockmotion_OX_prev.' <Plug>(VindentBlockMotion_OX_prev)' | endif
 if exists("g:vindent_blockmotion_OX_next") | exe 'noremap <silent> '.g:vindent_blockmotion_OX_next.' <Plug>(VindentBlockMotion_OX_next)' | endif
+
+" VINDENT TEXT OBJECT: <Plug>s and mappings.
+
+xnoremap <Plug>(VindentObject_ii) :call vindent#Object('ii')<CR>
+xnoremap <Plug>(VindentObject_iI) :call vindent#Object('iI')<CR>
+xnoremap <Plug>(VindentObject_ai) :call vindent#Object('ai')<CR>
+xnoremap <Plug>(VindentObject_aI) :call vindent#Object('aI')<CR>
+onoremap <Plug>(VindentObject_ii) :call vindent#Object('ii')<CR>
+onoremap <Plug>(VindentObject_iI) :call vindent#Object('iI')<CR>
+onoremap <Plug>(VindentObject_ai) :call vindent#Object('ai')<CR>
+onoremap <Plug>(VindentObject_aI) :call vindent#Object('aI')<CR>
+
+if exists("g:vindent_object_ii") | exe 'xnoremap <silent> '.g:vindent_object_ii.' <Plug>(VindentObject_ii)' | exe 'onoremap <silent> '.g:vindent_object_ii.' <Plug>(VindentObject_ii)' | endif
+if exists("g:vindent_object_iI") | exe 'xnoremap <silent> '.g:vindent_object_iI.' <Plug>(VindentObject_iI)' | exe 'onoremap <silent> '.g:vindent_object_iI.' <Plug>(VindentObject_iI)' | endif
+if exists("g:vindent_object_ai") | exe 'xnoremap <silent> '.g:vindent_object_ai.' <Plug>(VindentObject_ai)' | exe 'onoremap <silent> '.g:vindent_object_ai.' <Plug>(VindentObject_ai)' | endif
+if exists("g:vindent_object_aI") | exe 'xnoremap <silent> '.g:vindent_object_aI.' <Plug>(VindentObject_aI)' | exe 'onoremap <silent> '.g:vindent_object_aI.' <Plug>(VindentObject_aI)' | endif

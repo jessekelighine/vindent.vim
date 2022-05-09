@@ -58,21 +58,15 @@ endfunction
 
 "### Motion ###################################################################
 
-" Calls "<SID>Find" recursively "a:count" times.
-function! <SID>RecursiveFind(direct, count, type, line=line('.'), indent=<SID>Get(), skip=1)
-	let l:line = a:line
-	for l:time in range(a:count)
-		let l:temp = <SID>Find(a:direct, a:type, l:line, <SID>Get(l:line), a:skip)
-		let l:line = l:temp==0 ? l:line : l:temp
-	endfor
-	return l:line
-endfunction
-
 " Vindent Motion: Go to the "prev" or "next" line with the same indentation.
 function! vindent#Motion(direct, count, mode, type)
-	if <SID>Skip() | return | endif
-	let l:to   = <SID>RecursiveFind(a:direct, a:count, a:type)
-	let l:move = abs(l:to - line('.')) . ( a:direct=='prev' ? 'k' : 'j' )
+	" if <SID>Skip() | return | endif
+	let [ l:line, l:to ] = [ line('.'), line('.') ]
+	for l:time in range(a:count)
+		let l:temp = <SID>Find(a:direct, a:type, l:to, <SID>Get(l:to), 1)
+		let l:to = l:temp==0 ? l:to : l:temp
+	endfor
+	let l:move = abs(l:to - l:line) . ( a:direct=='prev' ? 'k' : 'j' )
 	if     a:mode=='N' | exec l:to==0 ? "return"   : "norm! "    .l:move."_"
 	elseif a:mode=='X' | exec l:to==0 ? "norm! gv" : "norm! \egv".l:move."_"
 	elseif a:mode=='O' | exec l:to==0 ? "return"   : "norm! V"   .l:move."_"
@@ -84,7 +78,7 @@ endfunction
 " Find the range (lines) of text with same indent level.
 function! <SID>Range(stop_func, line=line('.'), skip=1)
 	let l:indent = <SID>Get(a:line)
-	" if l:indent=='' && a:stop_func!="Diff" | return [0,0] | endif
+	if l:indent=='' && a:stop_func!="Diff" | return [0,0] | endif
 	let l:line_s = <SID>Find('prev', a:stop_func, a:line, l:indent, a:skip)
 	let l:line_e = <SID>Find('next', a:stop_func, a:line, l:indent, a:skip)
 	return [
@@ -114,6 +108,7 @@ function! vindent#Object(code)
 	elseif a:code==#'ai' | exec "norm! kV" . ( l:move+1 ) . 'j'
 	elseif a:code==#'aI' | exec "norm! kV" . ( l:move+2 ) . 'j'
 	endif
+	echo l:range
 endfunction
 
 "### Block Motion #############################################################
@@ -130,7 +125,7 @@ endfunction
 " Vindent Block Motion: Move to the next block with same indentation.
 function! vindent#BlockMotion(direct,skip,stop_func,mode,count)
 	let [ l:line, l:to ] = [ line('.'), line('.') ]
-	for l:i in range(a:count)
+	for l:time in range(a:count)
 		let l:temp = <SID>FindBlock(a:direct,l:to,a:stop_func,a:skip)
 		let l:to = l:temp==0 ? l:to : l:temp
 	endfor

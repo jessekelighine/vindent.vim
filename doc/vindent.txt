@@ -129,8 +129,6 @@ number of spaces.
 		`g:vindent_motion_same_next` are mapped to this motion.
 
 		Here are some quirks about |vindent_Motions|:
-		    - The motions do nothing (cursor does not move) if the
-		      current line is |empty|.
 		    - The motions assume that the indentations are consistent,
 		      unless |g:vindent_tabstop| is set. For example, on a
 		      line indented with 1 tab, |same_indent_prev| would not
@@ -157,7 +155,6 @@ number of spaces.
 <		If the cursor is on line 6,  `[=`  moves it to line 5.
 		If the cursor is on line 9,  `[=`  moves it to line 6.
 		If the cursor is on line 1,  `]=`  moves it to line 11.
-		If the cursor is on line 2,  `]=`  does not move.
 		If the cursor is on line 5,  `2]=` moves it to line 9.
 		If the cursor is on line 3,  `d]=` deletes lines 3 to 8.
 		If the cursor is on line 6,  `[-`  moves it to line 3.
