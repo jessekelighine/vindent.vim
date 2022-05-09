@@ -2,30 +2,30 @@
 
 if exists("g:loaded_vindent") | finish | endif | let g:loaded_vindent=1
 
-nnoremap <Plug>(VindentMotion_prev_same) :<C-U>call vindent#Motion('prev','N',v:count1,"Same")<CR>
-nnoremap <Plug>(VindentMotion_next_same) :<C-U>call vindent#Motion('next','N',v:count1,"Same")<CR>
-xnoremap <Plug>(VindentMotion_prev_same) :<C-U>call vindent#Motion('prev','X',v:count1,"Same")<CR>
-xnoremap <Plug>(VindentMotion_next_same) :<C-U>call vindent#Motion('next','X',v:count1,"Same")<CR>
-onoremap <Plug>(VindentMotion_prev_same) :<C-U>call vindent#Motion('prev','O',v:count1,"Same")<CR>
-onoremap <Plug>(VindentMotion_next_same) :<C-U>call vindent#Motion('next','O',v:count1,"Same")<CR>
-nnoremap <Plug>(VindentMotion_prev_more) :<C-U>call vindent#Motion('prev','N',v:count1,"More")<CR>
-nnoremap <Plug>(VindentMotion_next_more) :<C-U>call vindent#Motion('next','N',v:count1,"More")<CR>
-xnoremap <Plug>(VindentMotion_prev_more) :<C-U>call vindent#Motion('prev','X',v:count1,"More")<CR>
-xnoremap <Plug>(VindentMotion_next_more) :<C-U>call vindent#Motion('next','X',v:count1,"More")<CR>
-onoremap <Plug>(VindentMotion_prev_more) :<C-U>call vindent#Motion('prev','O',v:count1,"More")<CR>
-onoremap <Plug>(VindentMotion_next_more) :<C-U>call vindent#Motion('next','O',v:count1,"More")<CR>
-nnoremap <Plug>(VindentMotion_prev_less) :<C-U>call vindent#Motion('prev','N',v:count1,"Less")<CR>
-nnoremap <Plug>(VindentMotion_next_less) :<C-U>call vindent#Motion('next','N',v:count1,"Less")<CR>
-xnoremap <Plug>(VindentMotion_prev_less) :<C-U>call vindent#Motion('prev','X',v:count1,"Less")<CR>
-xnoremap <Plug>(VindentMotion_next_less) :<C-U>call vindent#Motion('next','X',v:count1,"Less")<CR>
-onoremap <Plug>(VindentMotion_prev_less) :<C-U>call vindent#Motion('prev','O',v:count1,"Less")<CR>
-onoremap <Plug>(VindentMotion_next_less) :<C-U>call vindent#Motion('next','O',v:count1,"Less")<CR>
-nnoremap <Plug>(VindentMotion_prev_diff) :<C-U>call vindent#Motion('prev','N',v:count1,"Diff")<CR>
-nnoremap <Plug>(VindentMotion_next_diff) :<C-U>call vindent#Motion('next','N',v:count1,"Diff")<CR>
-xnoremap <Plug>(VindentMotion_prev_diff) :<C-U>call vindent#Motion('prev','X',v:count1,"Diff")<CR>
-xnoremap <Plug>(VindentMotion_next_diff) :<C-U>call vindent#Motion('next','X',v:count1,"Diff")<CR>
-onoremap <Plug>(VindentMotion_prev_diff) :<C-U>call vindent#Motion('prev','O',v:count1,"Diff")<CR>
-onoremap <Plug>(VindentMotion_next_diff) :<C-U>call vindent#Motion('next','O',v:count1,"Diff")<CR>
+nnoremap <Plug>(VindentMotion_next_diff)      :<C-U>call vindent#Motion('next',v:count1,'N',"Diff")<CR>
+nnoremap <Plug>(VindentMotion_next_less)      :<C-U>call vindent#Motion('next',v:count1,'N',"Less")<CR>
+nnoremap <Plug>(VindentMotion_next_more)      :<C-U>call vindent#Motion('next',v:count1,'N',"More")<CR>
+nnoremap <Plug>(VindentMotion_next_same)      :<C-U>call vindent#Motion('next',v:count1,'N',"Same")<CR>
+nnoremap <Plug>(VindentMotion_prev_diff)      :<C-U>call vindent#Motion('prev',v:count1,'N',"Diff")<CR>
+nnoremap <Plug>(VindentMotion_prev_less)      :<C-U>call vindent#Motion('prev',v:count1,'N',"Less")<CR>
+nnoremap <Plug>(VindentMotion_prev_more)      :<C-U>call vindent#Motion('prev',v:count1,'N',"More")<CR>
+nnoremap <Plug>(VindentMotion_prev_same)      :<C-U>call vindent#Motion('prev',v:count1,'N',"Same")<CR>
+onoremap <Plug>(VindentMotion_next_diff)      :<C-U>call vindent#Motion('next',v:count1,'O',"Diff")<CR>
+onoremap <Plug>(VindentMotion_next_less)      :<C-U>call vindent#Motion('next',v:count1,'O',"Less")<CR>
+onoremap <Plug>(VindentMotion_next_more)      :<C-U>call vindent#Motion('next',v:count1,'O',"More")<CR>
+onoremap <Plug>(VindentMotion_next_same)      :<C-U>call vindent#Motion('next',v:count1,'O',"Same")<CR>
+onoremap <Plug>(VindentMotion_prev_diff)      :<C-U>call vindent#Motion('prev',v:count1,'O',"Diff")<CR>
+onoremap <Plug>(VindentMotion_prev_less)      :<C-U>call vindent#Motion('prev',v:count1,'O',"Less")<CR>
+onoremap <Plug>(VindentMotion_prev_more)      :<C-U>call vindent#Motion('prev',v:count1,'O',"More")<CR>
+onoremap <Plug>(VindentMotion_prev_same)      :<C-U>call vindent#Motion('prev',v:count1,'O',"Same")<CR>
+xnoremap <Plug>(VindentMotion_next_diff) <Esc>:<C-U>call vindent#Motion('next',v:count1,'X',"Diff")<CR>
+xnoremap <Plug>(VindentMotion_next_less) <Esc>:<C-U>call vindent#Motion('next',v:count1,'X',"Less")<CR>
+xnoremap <Plug>(VindentMotion_next_more) <Esc>:<C-U>call vindent#Motion('next',v:count1,'X',"More")<CR>
+xnoremap <Plug>(VindentMotion_next_same) <Esc>:<C-U>call vindent#Motion('next',v:count1,'X',"Same")<CR>
+xnoremap <Plug>(VindentMotion_prev_diff) <Esc>:<C-U>call vindent#Motion('prev',v:count1,'X',"Diff")<CR>
+xnoremap <Plug>(VindentMotion_prev_less) <Esc>:<C-U>call vindent#Motion('prev',v:count1,'X',"Less")<CR>
+xnoremap <Plug>(VindentMotion_prev_more) <Esc>:<C-U>call vindent#Motion('prev',v:count1,'X',"More")<CR>
+xnoremap <Plug>(VindentMotion_prev_same) <Esc>:<C-U>call vindent#Motion('prev',v:count1,'X',"Same")<CR>
 
 if exists("g:vindent_motion_same_prev") | exe 'noremap <silent> '.g:vindent_motion_same_prev.' <Plug>(VindentMotion_prev_same)' | endif
 if exists("g:vindent_motion_same_next") | exe 'noremap <silent> '.g:vindent_motion_same_next.' <Plug>(VindentMotion_next_same)' | endif
@@ -45,22 +45,17 @@ onoremap <Plug>(VindentObject_iI) :call vindent#Object('iI')<CR>
 onoremap <Plug>(VindentObject_ai) :call vindent#Object('ai')<CR>
 onoremap <Plug>(VindentObject_aI) :call vindent#Object('aI')<CR>
 
-if exists("g:vindent_object_ii")
-	execute 'xnoremap <silent> '.g:vindent_object_ii.' <PLug>(VindentObject_ii)'
-	execute 'onoremap <silent> '.g:vindent_object_ii.' <PLug>(VindentObject_ii)'
-endif
+if exists("g:vindent_object_ii") | exe 'xnoremap <silent> '.g:vindent_object_ii.' <Plug>(VindentObject_ii)' | exe 'onoremap <silent> '.g:vindent_object_ii.' <Plug>(VindentObject_ii)' | endif
+if exists("g:vindent_object_iI") | exe 'xnoremap <silent> '.g:vindent_object_iI.' <Plug>(VindentObject_iI)' | exe 'onoremap <silent> '.g:vindent_object_iI.' <Plug>(VindentObject_iI)' | endif
+if exists("g:vindent_object_ai") | exe 'xnoremap <silent> '.g:vindent_object_ai.' <Plug>(VindentObject_ai)' | exe 'onoremap <silent> '.g:vindent_object_ai.' <Plug>(VindentObject_ai)' | endif
+if exists("g:vindent_object_aI") | exe 'xnoremap <silent> '.g:vindent_object_aI.' <Plug>(VindentObject_aI)' | exe 'onoremap <silent> '.g:vindent_object_aI.' <Plug>(VindentObject_aI)' | endif
 
-if exists("g:vindent_object_iI")
-	execute 'xnoremap <silent> '.g:vindent_object_iI.' <PLug>(VindentObject_iI)'
-	execute 'onoremap <silent> '.g:vindent_object_iI.' <PLug>(VindentObject_iI)'
-endif
+nnoremap <Plug>(VindentBlockMotion_prev)      :<C-U>call vindent#BlockMotion("prev",0,"Diff","N",v:count1)<CR>
+nnoremap <Plug>(VindentBlockMotion_next)      :<C-U>call vindent#BlockMotion("next",0,"Diff","N",v:count1)<CR>
+onoremap <Plug>(VindentBlockMotion_prev)      :<C-U>call vindent#BlockMotion("prev",0,"Diff","O",v:count1)<CR>
+onoremap <Plug>(VindentBlockMotion_next)      :<C-U>call vindent#BlockMotion("next",0,"Diff","O",v:count1)<CR>
+xnoremap <Plug>(VindentBlockMotion_prev) <Esc>:<C-U>call vindent#BlockMotion("prev",0,"Diff","X",v:count1)<CR>
+xnoremap <Plug>(VindentBlockMotion_next) <Esc>:<C-U>call vindent#BlockMotion("next",0,"Diff","X",v:count1)<CR>
 
-if exists("g:vindent_object_ai")
-	execute 'xnoremap <silent> '.g:vindent_object_ai.' <PLug>(VindentObject_ai)'
-	execute 'onoremap <silent> '.g:vindent_object_ai.' <PLug>(VindentObject_ai)'
-endif
-
-if exists("g:vindent_object_aI")
-	execute 'xnoremap <silent> '.g:vindent_object_aI.' <PLug>(VindentObject_aI)'
-	execute 'onoremap <silent> '.g:vindent_object_aI.' <PLug>(VindentObject_aI)'
-endif
+if exists("g:vindent_blockmotion_prev") | exe 'noremap <silent> '.g:vindent_blockmotion_prev.' <Plug>(VindentBlockMotion_prev)' | endif
+if exists("g:vindent_blockmotion_next") | exe 'noremap <silent> '.g:vindent_blockmotion_next.' <Plug>(VindentBlockMotion_next)' | endif

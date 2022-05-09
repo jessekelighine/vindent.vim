@@ -22,11 +22,11 @@ endfunction
 "### Indent Comparisons #######################################################
 
 function! <SID>Same(indent,line)
-	return <SID>Get(a:line)==a:indent
+	return empty(getline(a:line)) ? 0 : <SID>Get(a:line)==a:indent
 endfunction
 
 function! <SID>NoLess(indent,line)
-	return matchstr(<SID>Get(a:line),"^".a:indent)==a:indent
+	return empty(getline(a:line)) ? 0 : matchstr(<SID>Get(a:line),"^".a:indent)==a:indent
 endfunction
 
 function! <SID>Less(indent,line)
@@ -66,24 +66,25 @@ function! <SID>RecursiveFind(direct, count, type, line=line('.'), indent=<SID>Ge
 endfunction
 
 " Vindent Motion: Go to the "prev" or "next" line with the same indentation.
-function! vindent#Motion(direct, mode, count, type)
+function! vindent#Motion(direct, count, mode, type)
 	if <SID>Skip() | return | endif
 	let l:to   = <SID>RecursiveFind(a:direct, a:count, a:type)
 	let l:move = abs(l:to - line('.')) . ( a:direct=='prev' ? 'k' : 'j' )
-	if     a:mode=='N' | exe l:to==0 ? "return"   : "norm! "    .l:move."_"
-	elseif a:mode=='X' | exe l:to==0 ? "norm! gv" : "norm! \egv".l:move."_"
-	elseif a:mode=='O' | exe l:to==0 ? "return"   : "norm! V"   .l:move."_"
+	" return l:to==0 ? "" : l:move."_"
+	if     a:mode=='N' | exec l:to==0 ? "return"   : "norm! "    .l:move."_"
+	elseif a:mode=='X' | exec l:to==0 ? "norm! gv" : "norm! \egv".l:move."_"
+	elseif a:mode=='O' | exec l:to==0 ? "return"   : "norm! V"   .l:move."_"
 	endif
 endfunction
 
 "### Text Object ##############################################################
 
 " Find the range (lines) of text with same indent level.
-function! <SID>Range(exact, line=line('.'), skip=1)
-	let l:indent = <SID>Get(a:line) | if l:indent=='' | return [0,0] | endif
-	let l:func   = a:exact ? "Diff" : "Less"
-	let l:line_s = <SID>Find('prev', l:func, a:line, l:indent, a:skip)
-	let l:line_e = <SID>Find('next', l:func, a:line, l:indent, a:skip)
+function! <SID>Range(stop_func, line=line('.'), skip=1)
+	let l:indent = <SID>Get(a:line)
+	if l:indent=='' && a:stop_func!="Diff" | return [0,0] | endif
+	let l:line_s = <SID>Find('prev', a:stop_func, a:line, l:indent, a:skip)
+	let l:line_e = <SID>Find('next', a:stop_func, a:line, l:indent, a:skip)
 	return [
 				\ l:line_s==0 ? 1         : l:line_s+1,
 				\ l:line_e==0 ? line('$') : l:line_e-1
@@ -99,10 +100,10 @@ function! <SID>NoHang(range, beginend)
 endfunction
 
 " Vindent Text Object: Select indent text objects.
-let s:nohang = { 'ii': [1, 1], 'iI': [1, 1], 'ai': [0, 1], 'aI': [0, 0] }
-let s:exact  = { 'ii': 0,      'iI': 1,      'ai': 0,      'aI': 0      }
+let s:nohang    = { 'ii': [1, 1], 'iI': [1, 1], 'ai': [0, 1], 'aI': [0, 0] }
+let s:stop_func = { 'ii': "Less", 'iI': "Diff", 'ai': "Less", 'aI': "Less" }
 function! vindent#Object(code)
-	let l:range = <SID>Range(s:exact[a:code]) | if l:range==[0,0] | return | endif
+	let l:range = <SID>Range(s:stop_func[a:code]) | if l:range==[0,0] | return | endif
 	let l:range = <SID>NoHang(l:range, s:nohang[a:code])
 	let l:move  = l:range[1] - l:range[0]
 	call cursor(l:range[0],0)
@@ -110,5 +111,29 @@ function! vindent#Object(code)
 	elseif a:code==#'iI' | exec "norm!  V" . ( l:move==0 ? '' : l:move.'j' )
 	elseif a:code==#'ai' | exec "norm! kV" . ( l:move+1 ) . 'j'
 	elseif a:code==#'aI' | exec "norm! kV" . ( l:move+2 ) . 'j'
+	endif
+endfunction
+
+"### Block Motion #############################################################
+
+function! <SID>FindBlock(direct,line,stop_func,skip)
+	let l:range = <SID>Range(a:stop_func,a:line,a:skip) | if l:range==[0,0] | return a:line | endif
+	let l:range = <SID>NoHang(l:range,[1,1])
+		let l:edge  = l:range[( a:direct=='prev' ? 0 : 1 )]
+		let l:line  = <SID>Find(a:direct,"Same",l:edge,<SID>Get(l:edge),a:skip)
+	return l:line==0 ? a:line : l:line
+endfunction
+
+" Vindent Block Motion: Move to the next block with same indentation.
+function! vindent#BlockMotion(direct,skip,stop_func,mode,count)
+	let [ l:line, l:to ] = [ line('.'), line('.') ]
+	for l:i in range(a:count)
+		let l:to = <SID>FindBlock(a:direct,l:to,a:stop_func,a:skip)
+	endfor
+	let l:move = abs(l:to-l:line) . ( a:direct=='prev' ? 'k' : 'j' )
+	" return abs(l:to-l:line)==0 ? "" : l:move."_"
+	if     a:mode=='N' | exec abs(l:to-l:line)==0 ? "return"   : "norm! "    .l:move."_"
+	elseif a:mode=='X' | exec abs(l:to-l:line)==0 ? "norm! gv" : "norm! \egv".l:move."_"
+	elseif a:mode=='O' | exec abs(l:to-l:line)==0 ? "return"   : "norm! V"   .l:move."_"
 	endif
 endfunction
