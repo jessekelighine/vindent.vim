@@ -56,24 +56,7 @@ function! <SID>Find(direct, type, line=line('.'), indent=<SID>Get(), skip=1)
 	endwhile
 endfunction
 
-"### Motion ###################################################################
-
-" Vindent Motion: Go to the "prev" or "next" line with the same indentation.
-function! vindent#Motion(direct, count, mode, type)
-	" if <SID>Skip() | return | endif
-	let [ l:line, l:to ] = [ line('.'), line('.') ]
-	for l:time in range(a:count)
-		let l:temp = <SID>Find(a:direct, a:type, l:to, <SID>Get(l:to), 1)
-		let l:to = l:temp==0 ? l:to : l:temp
-	endfor
-	let l:move = abs(l:to - l:line) . ( a:direct=='prev' ? 'k' : 'j' )
-	if     a:mode=='N' | exec l:to==0 ? "return"   : "norm! "    .l:move."_"
-	elseif a:mode=='X' | exec l:to==0 ? "norm! gv" : "norm! \egv".l:move."_"
-	elseif a:mode=='O' | exec l:to==0 ? "return"   : "norm! V"   .l:move."_"
-	endif
-endfunction
-
-"### Text Object ##############################################################
+"### Rang and Remove Hanging Empty Lines ######################################
 
 " Find the range (lines) of text with same indent level.
 function! <SID>Range(stop_func, line=line('.'), skip=1)
@@ -95,6 +78,25 @@ function! <SID>NoHang(range, beginend)
 	return l:range
 endfunction
 
+"### Motion ###################################################################
+
+" Vindent Motion: Go to the "prev" or "next" line with the same indentation.
+function! vindent#Motion(direct, count, mode, type)
+	" if <SID>Skip() | return | endif
+	let [ l:line, l:to ] = [ line('.'), line('.') ]
+	for l:time in range(a:count)
+		let l:temp = <SID>Find(a:direct, a:type, l:to, <SID>Get(l:to), 1)
+		let l:to = l:temp==0 ? l:to : l:temp
+	endfor
+	let l:move = abs(l:to - l:line) . ( a:direct=='prev' ? 'k' : 'j' )
+	if     a:mode=='N' | exec l:to==0 ? "return"   : "norm! "    .l:move."_"
+	elseif a:mode=='X' | exec l:to==0 ? "norm! gv" : "norm! \egv".l:move."_"
+	elseif a:mode=='O' | exec l:to==0 ? "return"   : "norm! V"   .l:move."_"
+	endif
+endfunction
+
+"### Text Object ##############################################################
+
 " Vindent Text Object: Select indent text objects.
 let s:nohang    = { 'ii': [1, 1], 'iI': [1, 1], 'ai': [0, 1], 'aI': [0, 0] }
 let s:stop_func = { 'ii': "Less", 'iI': "Diff", 'ai': "Less", 'aI': "Less" }
@@ -108,7 +110,6 @@ function! vindent#Object(code)
 	elseif a:code==#'ai' | exec "norm! kV" . ( l:move+1 ) . 'j'
 	elseif a:code==#'aI' | exec "norm! kV" . ( l:move+2 ) . 'j'
 	endif
-	echo l:range
 endfunction
 
 "### Block Motion #############################################################
@@ -130,8 +131,8 @@ function! vindent#BlockMotion(direct,skip,stop_func,mode,count)
 		let l:to = l:temp==0 ? l:to : l:temp
 	endfor
 	let l:move = abs(l:to-l:line) . ( a:direct=='prev' ? 'k' : 'j' )
-	if     a:mode=='N' | exec abs(l:to-l:line)==0 ? "return"   : "norm! "    .l:move."_"
-	elseif a:mode=='X' | exec abs(l:to-l:line)==0 ? "norm! gv" : "norm! \egv".l:move."_"
-	elseif a:mode=='O' | exec abs(l:to-l:line)==0 ? "return"   : "norm! V"   .l:move."_"
+	if     a:mode=='N' | exec abs(l:to-l:line)==0 ? "return"   : "norm! "  .l:move."_"
+	elseif a:mode=='X' | exec abs(l:to-l:line)==0 ? "norm! gv" : "norm! gv".l:move."_"
+	elseif a:mode=='O' | exec abs(l:to-l:line)==0 ? "return"   : "norm! V" .l:move."_"
 	endif
 endfunction
