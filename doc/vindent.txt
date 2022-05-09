@@ -381,6 +381,8 @@ issue or make a pull request at https://github.com/jessekelighine/vindent.vim.
 ==============================================================================
 6. Changelog                                               *vindent_Changelog*
 
+v2.1.1:                                                            2022-May-09
+	- Bug fix: continuous motion call in visual mode.
 v2.1.0:                                                            2022-May-09
 	- Add |vindent_Block_Motions|.
 	- Bug fix: make {count} work everywhere.
