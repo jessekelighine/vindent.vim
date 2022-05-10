@@ -3,12 +3,12 @@
 `vindent.vim` is Vim/Neovim plugin that provides three functionalities:
 
 1. Jump to previous/next line with *same*, *less*, *more* or *different* indentation. (**vindent motions**)
-2. Jump to previous/next/beginning of/end of "text block" with *same* indentation. (**vindent block motions**: 4 variations)
+2. Jump to previous/next/beginning of/end of "text block" with same indentation. (**vindent block motions**: 4 variations)
 3. Select adjacent lines with *same or more* indentation. (**vindent text object**: 4 variations)
 
 This plugin is inspired by [vim-indentwise](https://github.com/jeetsukumaran/vim-indentwise)
 and [vim-indent-object](https://github.com/michaeljsmith/vim-indent-object).
-`vindent.vim` is essentially a combination of the two plugins, but improved!
+`vindent.vim` is essentially a combination of the two plugins, but **improved**!
 Here are some of the improvements:
 
 - Motions plays nicely with prepending `{count}`s and normal commands such as `d`, `c`, and `y`! Works just like a native vim motion!
@@ -76,10 +76,10 @@ and enjoy using:
 2. **Vindent Block Motions**:
 	- Jump to previous/next text block (with the same indentation) with
 	  `[1`/`]1`, `[2`/`]2`, `[3`/`]3`, or `[4`/`]4`.
-	  ([examples](#vindent-block-motion-jump-to-prev-next-text-block))
+	  ([examples](#vindent-block-motion-jump-to-prevnext-text-block))
 	- Jump to start/end of text block with
 	  `[5`/`]5`, `[6`/`]6`, `[7`/`]7`, or `[8`/`]8`.
-	  ([examples](#vindent-block-motion-jump-to-beginning-end-of-text-block))
+	  ([examples](#vindent-block-motion-jump-to-beginningend-of-text-block))
 3. **Vindent Text Objects**: Select text with `ii` (*in indent*), `iI` (*in Indent*), `ai` (*an indent*), and `aI` (*an Indent*).
    ([examples](#vindent-text-object))
 
@@ -88,6 +88,7 @@ Feel free to customize the keybindings.
 **Note**:
 
 - If you wish not to use a certain functionality, simply leave the corresponding variable undefined.
+  (You certainly do not need all the block motion mappings...)
 - If you wish not to treat `<Tab>` as some number of `<Space>`s, leave `g:vindent_tabstop` undefined.
 
 For details please refer to the [`doc flie`](./doc/vindent.txt).
@@ -186,7 +187,7 @@ For more details please refer to the [`doc flie`](./doc/vindent.txt).
 
 This motion moves the cursor to the beginning or end of the text block
 of the same indentation.  The naming of each motion is similar to
-[the previous motion](#vindent-block-motion-jump-to-prev-next-text-block).
+[the previous motion](#vindent-block-motion-jump-to-prevnext-text-block).
 
 Here are some examples to clear things up.  Assume that the keybindings in
 [Usage](#usage) are used and consider piece of vimscript:
@@ -204,12 +205,12 @@ Here are some examples to clear things up.  Assume that the keybindings in
 10 endfunction
 ```
 
-- If cursor is on line 3, `]5` moves it to line 3. (lines 2--3 is one block; line 6 is one block)
+- If cursor is on line 3, `]5` does not move it.   (lines 2--3 is one block; line 6 is one block)
 - If cursor is on line 9, `[5` moves it to line 8. (lines 8--9 is one block)
 - If cursor is on line 6, `]6` moves it to line 9. (lines 6--9 is one block, empty lines ignored)
-- If cursor is on line 3, `[6` moves it to line 3. (lines 2--3 is one block, more-indented lines not ignored)
+- If cursor is on line 6, `[6` does not move it.   (lines 2--3 is one block, more-indented lines not ignored)
 - If cursor is on line 2, `]7` moves it to line 6. (lines 2--6 is one block, more-indented lines ignored)
-- If cursor is on line 8, `[7` moves it to line 8. (lines 8--9 is one block, empty lines not ignored)
+- If cursor is on line 8, `[7` does not move it.   (lines 8--9 is one block, empty lines not ignored)
 - If cursor is on line 2, `]8` moves it to line 9. (lines 2--9 is one big block)
 - If cursor is on line 9, `[8` moves it to line 2.
 
@@ -255,6 +256,37 @@ Here are some examples to clear things up.  Assume that the keybindings in
 - If cursor is on line 1, `vii`, `viI`, `vai`, and `vaI` all select nothing. (Since line 1 is not indented)
 
 For more details please refer to the [`doc flie`](./doc/vindent.txt).
+
+## Change Log
+
+```
+v2.2.0:                                                            2022-May-09
+	- Expand |vindent_Block_Motions|: move to beginning/end of text blocks
+	  with same indentation.
+v2.1.1:                                                            2022-May-09
+	- Bug fix: continuous motion call in visual mode.
+v2.1.0:                                                            2022-May-09
+	- Add |vindent_Block_Motions|.
+	- Bug fix: make {count} work everywhere.
+v2.0.0:                                                            2022-May-08
+	- |vindent_Motions| now can to jump to line with SAME, LESS, MORE, or
+	  DIFFERENT indentation as the current line.
+	- <Plug>s are simplified.
+	- Core implementation no longer less than 100 lines :(
+v1.3.0:                                                            2022-May-05
+	- Add |g:vindent_tabstop|.
+v1.2.0:                                                            2022-May-04
+	- |vindent_Motions| now takes {count}.
+v1.1.0:                                                            2022-May-03
+	- Add |in_Indent| object.
+v1.0.0:                                                            2022-May-03
+	- Initial version.
+```
+
+## TODO
+
+- [ ] Maybe also make [vindent text object](#vindent-text-object) customizable
+  in terms of how a text block is defined?
 
 ## Licence
 

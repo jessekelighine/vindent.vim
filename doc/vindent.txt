@@ -328,12 +328,12 @@ See |vindent_blockmotion_OO_pn| and |vindent_blockmotion_OO_s| for examples.
 			 8     echom "The sum is" l:sum
 			 9     return "Hi" . a:name
 			10 endfunction
-<		If cursor is on line 3, `]5` moves it to line 3.
+<		If cursor is on line 3, `]5` does not move it.  
 		If cursor is on line 9, `[5` moves it to line 8.
 		If cursor is on line 6, `]6` moves it to line 9.
-		If cursor is on line 3, `[6` moves it to line 3.
+		If cursor is on line 6, `[6` does not move it.  
 		If cursor is on line 2, `]7` moves it to line 6.
-		If cursor is on line 9, `[7` moves it to line 8.
+		If cursor is on line 8, `[7` does not move it.  
 		If cursor is on line 2, `]8` moves it to line 9.
 		If cursor is on line 9, `[8` moves it to line 2.
 
