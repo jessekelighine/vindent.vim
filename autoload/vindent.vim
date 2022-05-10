@@ -41,7 +41,7 @@ function! <SID>Diff(indent,line)
 	return !<SID>Same(a:indent,a:line)
 endfunction
 
-"### Find #####################################################################
+"### Helper Function ##########################################################
 
 " Find "prev" or "next" line with "a:type" indent, return line number.
 function! <SID>Find(direct, type, line=line('.'), indent=<SID>Get(), skip=1)
@@ -55,8 +55,6 @@ function! <SID>Find(direct, type, line=line('.'), indent=<SID>Get(), skip=1)
 		if function(l:type)(a:indent,l:line) | return l:line | endif
 	endwhile
 endfunction
-
-"### Rang and Remove Hanging Empty Lines ######################################
 
 " Find the range (lines) of text with same indent level.
 function! <SID>Range(stop_func, line=line('.'), skip=1)
@@ -72,10 +70,19 @@ endfunction
 
 " Exclude empty lines on either ends from "a:range".
 function! <SID>NoHang(range, beginend)
-	let l:range = a:range
+	let l:range = a:range | if l:range==[0,0] | return l:range | endif
 	while a:beginend[0] && <SID>Skip(1,l:range[0]) | let l:range[0]=l:range[0]+1 | endwhile
 	while a:beginend[1] && <SID>Skip(1,l:range[1]) | let l:range[1]=l:range[1]-1 | endwhile
 	return l:range
+endfunction
+
+" Actually move the cursor according to the inputs.
+function! <SID>MotionDo(direct, line, mode, diff)
+	let l:move = a:diff . ( a:direct=='prev' ? 'k' : 'j')
+	if     a:mode=='N' | exe a:diff==0 ? "return"   : "norm! "    .l:move."_"
+	elseif a:mode=='X' | exe a:diff==0 ? "norm! gv" : "norm! \egv".l:move."_"
+	elseif a:mode=='O' | exe a:diff==0 ? "return"   : "norm! V"   .l:move."_"
+	endif
 endfunction
 
 "### Motion ###################################################################
@@ -84,15 +91,31 @@ endfunction
 function! vindent#Motion(direct, count, mode, type)
 	" if <SID>Skip() | return | endif
 	let [ l:line, l:to ] = [ line('.'), line('.') ]
-	for l:time in range(a:count)
+	for l:time in range(a:count) " recursive
 		let l:temp = <SID>Find(a:direct, a:type, l:to, <SID>Get(l:to), 1)
-		let l:to = l:temp==0 ? l:to : l:temp
+		if l:temp==0 | break | else | let l:to = l:temp | endif
 	endfor
-	let l:move = abs(l:to - l:line) . ( a:direct=='prev' ? 'k' : 'j' )
-	if     a:mode=='N' | exec l:to==0 ? "return"   : "norm! "    .l:move."_"
-	elseif a:mode=='X' | exec l:to==0 ? "norm! gv" : "norm! \egv".l:move."_"
-	elseif a:mode=='O' | exec l:to==0 ? "return"   : "norm! V"   .l:move."_"
-	endif
+	call <SID>MotionDo(a:direct, l:line, a:mode, abs(l:line-l:to))
+endfunction
+
+" Vindent Block Motion: Move to the next block with same indentation.
+function! vindent#BlockMotion(direct, skip, stop_func, mode, count)
+	let [ l:line, l:to ] = [ line('.'), line('.') ]
+	for l:time in range(a:count) " recursive
+		let l:range = <SID>NoHang(<SID>Range(a:stop_func,l:to,a:skip),[1,1])
+		let l:edge  = l:range[( a:direct=='prev' ? 0 : 1 )]
+		let l:temp  = <SID>Find(a:direct,"Same",l:edge,<SID>Get(l:to),a:skip)
+		if l:temp==0 | break | else | let l:to = l:temp | endif
+	endfor
+	call <SID>MotionDo(a:direct, l:line, a:mode, abs(l:line-l:to))
+endfunction
+
+" Vindent Block Motion Edge: Move to the edge of same indentation block.
+function! vindent#BlockEdgeMotion(direct, skip, stop_func, mode)
+	let l:line  = line('.')
+	let l:range = <SID>NoHang(<SID>Range(a:stop_func,l:line,a:skip),[1,1])
+	let l:edge  = l:range[( a:direct=='prev' ? 0 : 1 )] | if l:edge==0 | return | endif
+	call <SID>MotionDo(a:direct, l:line, a:mode, abs(l:line-l:edge))
 endfunction
 
 "### Text Object ##############################################################
@@ -109,30 +132,5 @@ function! vindent#Object(code)
 	elseif a:code==#'iI' | exec "norm!  V" . ( l:move==0 ? '' : l:move.'j' )
 	elseif a:code==#'ai' | exec "norm! kV" . ( l:move+1 ) . 'j'
 	elseif a:code==#'aI' | exec "norm! kV" . ( l:move+2 ) . 'j'
-	endif
-endfunction
-
-"### Block Motion #############################################################
-
-" Find "prev" or "next" block of text.
-function! <SID>FindBlock(direct,line,stop_func,skip)
-	let l:range = <SID>Range(a:stop_func,a:line,a:skip) | if l:range==[0,0] | return a:line | endif
-	let l:range = <SID>NoHang(l:range,[1,1])
-	let l:edge  = l:range[( a:direct=='prev' ? 0 : 1 )]
-	let l:line  = <SID>Find(a:direct,"Same",l:edge,<SID>Get(a:line),a:skip)
-	return l:line
-endfunction
-
-" Vindent Block Motion: Move to the next block with same indentation.
-function! vindent#BlockMotion(direct,skip,stop_func,mode,count)
-	let [ l:line, l:to ] = [ line('.'), line('.') ]
-	for l:time in range(a:count)
-		let l:temp = <SID>FindBlock(a:direct,l:to,a:stop_func,a:skip)
-		let l:to = l:temp==0 ? l:to : l:temp
-	endfor
-	let l:move = abs(l:to-l:line) . ( a:direct=='prev' ? 'k' : 'j' )
-	if     a:mode=='N' | exec abs(l:to-l:line)==0 ? "return"   : "norm! "  .l:move."_"
-	elseif a:mode=='X' | exec abs(l:to-l:line)==0 ? "norm! gv" : "norm! gv".l:move."_"
-	elseif a:mode=='O' | exec abs(l:to-l:line)==0 ? "return"   : "norm! V" .l:move."_"
 	endif
 endfunction

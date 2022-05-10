@@ -74,6 +74,40 @@ if exists("g:vindent_blockmotion_XX_next") | exe 'noremap <silent> '.g:vindent_b
 if exists("g:vindent_blockmotion_OX_prev") | exe 'noremap <silent> '.g:vindent_blockmotion_OX_prev.' <Plug>(VindentBlockMotion_OX_prev)' | endif
 if exists("g:vindent_blockmotion_OX_next") | exe 'noremap <silent> '.g:vindent_blockmotion_OX_next.' <Plug>(VindentBlockMotion_OX_next)' | endif
 
+nnoremap <Plug>(VindentBlockMotion_OO_se)      :call vindent#BlockEdgeMotion("next",0,"Diff","N")<CR>
+nnoremap <Plug>(VindentBlockMotion_OO_ss)      :call vindent#BlockEdgeMotion("prev",0,"Diff","N")<CR>
+nnoremap <Plug>(VindentBlockMotion_OX_se)      :call vindent#BlockEdgeMotion("next",0,"Less","N")<CR>
+nnoremap <Plug>(VindentBlockMotion_OX_ss)      :call vindent#BlockEdgeMotion("prev",0,"Less","N")<CR>
+nnoremap <Plug>(VindentBlockMotion_XO_se)      :call vindent#BlockEdgeMotion("next",1,"Diff","N")<CR>
+nnoremap <Plug>(VindentBlockMotion_XO_ss)      :call vindent#BlockEdgeMotion("prev",1,"Diff","N")<CR>
+nnoremap <Plug>(VindentBlockMotion_XX_se)      :call vindent#BlockEdgeMotion("next",1,"Less","N")<CR>
+nnoremap <Plug>(VindentBlockMotion_XX_ss)      :call vindent#BlockEdgeMotion("prev",1,"Less","N")<CR>
+onoremap <Plug>(VindentBlockMotion_OO_se)      :call vindent#BlockEdgeMotion("next",0,"Diff","O")<CR>
+onoremap <Plug>(VindentBlockMotion_OO_ss)      :call vindent#BlockEdgeMotion("prev",0,"Diff","O")<CR>
+onoremap <Plug>(VindentBlockMotion_OX_se)      :call vindent#BlockEdgeMotion("next",0,"Less","O")<CR>
+onoremap <Plug>(VindentBlockMotion_OX_ss)      :call vindent#BlockEdgeMotion("prev",0,"Less","O")<CR>
+onoremap <Plug>(VindentBlockMotion_XO_se)      :call vindent#BlockEdgeMotion("next",1,"Diff","O")<CR>
+onoremap <Plug>(VindentBlockMotion_XO_ss)      :call vindent#BlockEdgeMotion("prev",1,"Diff","O")<CR>
+onoremap <Plug>(VindentBlockMotion_XX_se)      :call vindent#BlockEdgeMotion("next",1,"Less","O")<CR>
+onoremap <Plug>(VindentBlockMotion_XX_ss)      :call vindent#BlockEdgeMotion("prev",1,"Less","O")<CR>
+xnoremap <Plug>(VindentBlockMotion_OO_se) <Esc>:call vindent#BlockEdgeMotion("next",0,"Diff","X")<CR>
+xnoremap <Plug>(VindentBlockMotion_OO_ss) <Esc>:call vindent#BlockEdgeMotion("prev",0,"Diff","X")<CR>
+xnoremap <Plug>(VindentBlockMotion_OX_se) <Esc>:call vindent#BlockEdgeMotion("next",0,"Less","X")<CR>
+xnoremap <Plug>(VindentBlockMotion_OX_ss) <Esc>:call vindent#BlockEdgeMotion("prev",0,"Less","X")<CR>
+xnoremap <Plug>(VindentBlockMotion_XO_se) <Esc>:call vindent#BlockEdgeMotion("next",1,"Diff","X")<CR>
+xnoremap <Plug>(VindentBlockMotion_XO_ss) <Esc>:call vindent#BlockEdgeMotion("prev",1,"Diff","X")<CR>
+xnoremap <Plug>(VindentBlockMotion_XX_se) <Esc>:call vindent#BlockEdgeMotion("next",1,"Less","X")<CR>
+xnoremap <Plug>(VindentBlockMotion_XX_ss) <Esc>:call vindent#BlockEdgeMotion("prev",1,"Less","X")<CR>
+
+if exists("g:vindent_blockmotion_OO_ss") | exe 'noremap <silent> '.g:vindent_blockmotion_OO_ss.' <Plug>(VindentBlockMotion_OO_ss)' | endif
+if exists("g:vindent_blockmotion_OO_se") | exe 'noremap <silent> '.g:vindent_blockmotion_OO_se.' <Plug>(VindentBlockMotion_OO_se)' | endif
+if exists("g:vindent_blockmotion_OX_ss") | exe 'noremap <silent> '.g:vindent_blockmotion_OX_ss.' <Plug>(VindentBlockMotion_OX_ss)' | endif
+if exists("g:vindent_blockmotion_OX_se") | exe 'noremap <silent> '.g:vindent_blockmotion_OX_se.' <Plug>(VindentBlockMotion_OX_se)' | endif
+if exists("g:vindent_blockmotion_XO_ss") | exe 'noremap <silent> '.g:vindent_blockmotion_XO_ss.' <Plug>(VindentBlockMotion_XO_ss)' | endif
+if exists("g:vindent_blockmotion_XO_se") | exe 'noremap <silent> '.g:vindent_blockmotion_XO_se.' <Plug>(VindentBlockMotion_XO_se)' | endif
+if exists("g:vindent_blockmotion_XX_ss") | exe 'noremap <silent> '.g:vindent_blockmotion_XX_ss.' <Plug>(VindentBlockMotion_XX_ss)' | endif
+if exists("g:vindent_blockmotion_XX_se") | exe 'noremap <silent> '.g:vindent_blockmotion_XX_se.' <Plug>(VindentBlockMotion_XX_se)' | endif
+
 " VINDENT TEXT OBJECT: <Plug>s and mappings.
 
 xnoremap <Plug>(VindentObject_ii) :call vindent#Object('ii')<CR>
