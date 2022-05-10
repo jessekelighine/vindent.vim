@@ -124,7 +124,8 @@ endfunction
 let s:nohang    = { 'ii': [1, 1], 'iI': [1, 1], 'ai': [0, 1], 'aI': [0, 0] }
 let s:stop_func = { 'ii': "Less", 'iI': "Diff", 'ai': "Less", 'aI': "Less" }
 function! vindent#Object(code)
-	let l:range = <SID>NoHange(<SID>Range(s:stop_func[a:code]),s:nohang[a:code])
+	let l:range = <SID>NoHang(<SID>Range(s:stop_func[a:code]),s:nohang[a:code])
+	if  l:range==[1,line('$')] | return | endif
 	let l:move  = l:range[1] - l:range[0]
 	call cursor(l:range[0],0)
 	if     a:code==#'ii' | exec "norm!  V" . ( l:move==0 ? '' : l:move.'j' )
