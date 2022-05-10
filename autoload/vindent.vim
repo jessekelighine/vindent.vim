@@ -59,7 +59,7 @@ endfunction
 " Find the range (lines) of text with same indent level.
 function! <SID>Range(stop_func, line=line('.'), skip=1)
 	let l:indent = <SID>Get(a:line)
-	if l:indent=='' && a:stop_func!="Diff" | return [0,0] | endif
+	" if l:indent=='' && a:stop_func!="Diff" | return [0,0] | endif
 	let l:line_s = <SID>Find('prev', a:stop_func, a:line, l:indent, a:skip)
 	let l:line_e = <SID>Find('next', a:stop_func, a:line, l:indent, a:skip)
 	return [
@@ -70,7 +70,7 @@ endfunction
 
 " Exclude empty lines on either ends from "a:range".
 function! <SID>NoHang(range, beginend)
-	let l:range = a:range | if l:range==[0,0] | return l:range | endif
+	let l:range = a:range " | if l:range==[0,0] | return l:range | endif
 	while a:beginend[0] && <SID>Skip(1,l:range[0]) | let l:range[0]=l:range[0]+1 | endwhile
 	while a:beginend[1] && <SID>Skip(1,l:range[1]) | let l:range[1]=l:range[1]-1 | endwhile
 	return l:range
@@ -124,8 +124,7 @@ endfunction
 let s:nohang    = { 'ii': [1, 1], 'iI': [1, 1], 'ai': [0, 1], 'aI': [0, 0] }
 let s:stop_func = { 'ii': "Less", 'iI': "Diff", 'ai': "Less", 'aI': "Less" }
 function! vindent#Object(code)
-	let l:range = <SID>Range(s:stop_func[a:code]) | if l:range==[0,0] | return | endif
-	let l:range = <SID>NoHang(l:range, s:nohang[a:code])
+	let l:range = <SID>NoHange(<SID>Range(s:stop_func[a:code]),s:nohang[a:code])
 	let l:move  = l:range[1] - l:range[0]
 	call cursor(l:range[0],0)
 	if     a:code==#'ii' | exec "norm!  V" . ( l:move==0 ? '' : l:move.'j' )
