@@ -1,18 +1,20 @@
 # vindent.vim
 
-`vindent.vim` is a minimal plugin for Vim and Neovim that provides three functionalities:
+`vindent.vim` is Vim/Neovim plugin that provides three functionalities:
 
 1. Jump to previous/next line with *same*, *less*, *more* or *different* indentation. (**vindent motions**)
-2. Jump to previous/next "text block" with *same* indentation. (**vindent block motions**: 4 variations)
+2. Jump to previous/next/beginning of/end of "text block" with *same* indentation. (**vindent block motions**: 4 variations)
 3. Select adjacent lines with *same or more* indentation. (**vindent text object**: 4 variations)
 
 This plugin is inspired by [vim-indentwise](https://github.com/jeetsukumaran/vim-indentwise)
 and [vim-indent-object](https://github.com/michaeljsmith/vim-indent-object).
-`vindent.vim` is essentially a combination of the two,
-but reimplemented with less vimscript (only *200 lines*)
-and works better with `{count}`s, visual mode, and with normal commands `d` and `c`!
+`vindent.vim` is essentially a combination of the two plugins, but improved!
+Here are some of the improvements:
 
-You can also find this plugin on [vim.org](https://www.vim.org/scripts/script.php?script_id=6016).
+- Motions plays nicely with prepending `{count}`s and normal commands such as `d`, `c`, and `y`! Works just like a native vim motion!
+- Comes with even more motions! Jump to previous/next block of the same indentation!
+- More customizability! Chose if 'empty lines' or 'lines with more indentation' should be skipped when determining boundaries of a text block!
+- Reimplemented with less vimscript (about *200* lines)!
 
 ## Installation
 
@@ -29,6 +31,7 @@ git clone https://github.com/jessekelighine/vindent.vim
 `vindent.vim` comes with no default keybindings.  So after installation, put
 the following lines in your `~/.vimrc`:
 ```vim
+" vindent line-wise motions
 let g:vindent_motion_same_prev = '[='
 let g:vindent_motion_same_next = ']='
 let g:vindent_motion_less_prev = '[-'
@@ -37,19 +40,31 @@ let g:vindent_motion_more_prev = '[+'
 let g:vindent_motion_more_next = ']+'
 let g:vindent_motion_diff_prev = '[;'
 let g:vindent_motion_diff_next = '];'
+" vindent block-wise motions: find prev/next block
 let g:vindent_blockmotion_OO_prev = '[1'
 let g:vindent_blockmotion_OO_next = ']1'
-let g:vindent_blockmotion_XO_prev = '[2' " you probably don't need this...
-let g:vindent_blockmotion_XO_next = ']2' " you probably don't need this...
-let g:vindent_blockmotion_OX_prev = '[3' " you probably don't need this...
-let g:vindent_blockmotion_OX_next = ']3' " you probably don't need this...
-let g:vindent_blockmotion_XX_prev = '[4' " you probably don't need this...
-let g:vindent_blockmotion_XX_next = ']4' " you probably don't need this...
+let g:vindent_blockmotion_XO_prev = '[2'
+let g:vindent_blockmotion_XO_next = ']2'
+let g:vindent_blockmotion_OX_prev = '[3'
+let g:vindent_blockmotion_OX_next = ']3'
+let g:vindent_blockmotion_XX_prev = '[4'
+let g:vindent_blockmotion_XX_next = ']4'
+" vindent block-wise motions: find start/end of block
+let g:vindent_blockmotion_OO_ss = '[5'
+let g:vindent_blockmotion_OO_se = ']5'
+let g:vindent_blockmotion_XO_ss = '[6'
+let g:vindent_blockmotion_XO_se = ']6'
+let g:vindent_blockmotion_OX_ss = '[7'
+let g:vindent_blockmotion_OX_se = ']7'
+let g:vindent_blockmotion_XX_ss = '[8'
+let g:vindent_blockmotion_XX_se = ']8'
+" vindent text objects
 let g:vindent_object_ii = 'ii'
 let g:vindent_object_iI = 'iI'
 let g:vindent_object_ai = 'ai'
 let g:vindent_object_aI = 'aI'
-let g:vindent_tabstop   = &tabstop " let vindent know to treat 1 <Tab> as tabstop # of <Spaces>s.
+" let vindent know to treat 1 <Tab> as tabstop # of <Spaces>s.
+let g:vindent_tabstop   = &tabstop
 ```
 and enjoy using:
 
@@ -58,8 +73,13 @@ and enjoy using:
 	- Jump to previous/next with less indentation with `[-`/`]-`.
 	- Jump to previous/next with more indentation with `[+`/`]+`.
 	- Jump to previous/next with different indentation with `[;`/`];`.
-2. **Vindent Block Motions**: ([examples](#vindent-block-motion))
-	- Jump to previous/next text block with the same indentation with `[1`/`]1`.
+2. **Vindent Block Motions**:
+	- Jump to previous/next text block (with the same indentation) with
+	  `[1`/`]1`, `[2`/`]2`, `[3`/`]3`, or `[4`/`]4`.
+	  ([examples](#vindent-block-motion-jump-to-prev-next-text-block))
+	- Jump to start/end of text block with
+	  `[5`/`]5`, `[6`/`]6`, `[7`/`]7`, or `[8`/`]8`.
+	  ([examples](#vindent-block-motion-jump-to-beginning-end-of-text-block))
 3. **Vindent Text Objects**: Select text with `ii` (*in indent*), `iI` (*in Indent*), `ai` (*an indent*), and `aI` (*an Indent*).
    ([examples](#vindent-text-object))
 
@@ -110,7 +130,7 @@ used and consider the LaTeX code:
 
 For more details please refer to the [`doc flie`](./doc/vindent.txt).
 
-### Vindent Block Motion
+### Vindent Block Motion: jump to prev/next text block.
 
 This motion moves the cursor to the previous or next "text block" of the same
 indentation as the current line.  `vindent.vim` provides 4 variations of this
@@ -155,12 +175,43 @@ If the cursor is on line 10, then pressing...
 
 - `[1` moves cursor to line 4. (moves to the end of previous text block)
 
-**Note**: I believe `vindent_blockmotion_OO` is what most people want, since
-every breakage of continuous lines with same indentation are considered a
-boundary.  Also, in many cases, `[1`/`]1` can be much more useful than `[=`/`]=`.
-You might not even need `[=`/`]=`!
+**Note**: I believe `vindent_blockmotion_OO_prev/next` is what most people want,
+since every breakage of continuous lines with same indentation are considered a
+boundary.  Also, in many cases, `[1`/`]1` can be much more useful than `[=`/`]
+=`. You might not even need `[=`/`]=`!
 
 For more details please refer to the [`doc flie`](./doc/vindent.txt).
+
+### Vindent Block Motion: jump to beginning/end of text block.
+
+This motion moves the cursor to the beginning or end of the text block
+of the same indentation.  The naming of each motion is similar to
+[the previous motion](#vindent-block-motion-jump-to-prev-next-text-block).
+
+Here are some examples to clear things up.  Assume that the keybindings in
+[Usage](#usage) are used and consider piece of vimscript:
+
+```vim
+ 1 function! SumTo(number)
+ 2     let l:sum = 0
+ 3     for l:time in range(a:number)
+ 4         echom "This is the" l:time "time."
+ 5         let l:sum = l:count + l:time
+ 6     endfor
+ 7
+ 8     echom "The sum is" l:sum
+ 9     return "Hi" . a:name
+10 endfunction
+```
+
+- If cursor is on line 3, `]5` moves it to line 3. (lines 2--3 is one block; line 6 is one block)
+- If cursor is on line 9, `[5` moves it to line 8. (lines 8--9 is one block)
+- If cursor is on line 6, `]6` moves it to line 9. (lines 6--9 is one block, empty lines ignored)
+- If cursor is on line 3, `[6` moves it to line 3. (lines 2--3 is one block, more-indented lines not ignored)
+- If cursor is on line 2, `]7` moves it to line 6. (lines 2--6 is one block, more-indented lines ignored)
+- If cursor is on line 8, `[7` moves it to line 8. (lines 8--9 is one block, empty lines not ignored)
+- If cursor is on line 2, `]8` moves it to line 9. (lines 2--9 is one big block)
+- If cursor is on line 9, `[8` moves it to line 2.
 
 ### Vindent Text Object
 

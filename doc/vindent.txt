@@ -25,24 +25,38 @@ Contents                                                    *vindent_Contents*
 This plugin provides three indentation related functionalities:
 
 1. |vindent_Motions|:
-   |Motion|s that moves to previous or next line with the same, less, more, or
-   differneet indentation as the current line:
+   |Motion|s that moves to previous or next "line" with the same, less, more,
+   or differneet indentation as the current line:
+
    - |vindent_motion_same|: move to previous/next line with same      indent.
    - |vindent_motion_less|: move to previous/next line with less      indent.
    - |vindent_motion_more|: move to previous/next line with more      indent.
    - |vindent_motion_diff|: move to previous/next line with differnet indent.
 
 2. |vindent_Block_Motions|:
-   |Motion|s that moves to previous or next "block" of text with the same
-   indentation.  Four variants, all named `vindent_blockmotion_<A1><A2>`
-   where `<A1>` and `<A2>` indicates:
-   - `<A1>`: `O` or `X`: whether or not "empty lines" are considered to be
-     boundaries of a text block.
-   - `<A2>`: `O` or `X`: whether or not lines with "more" indent are
-     considered to be boundaries of a text block.
+   |Motion|s that moves by "text blocks" with the same indentation.  You
+   can (1) move to previous/next text block with same indentation or (2) move
+   to the beginning/end of the current indented text block.  Several
+   variations of these two block motions are provided:
+
+   (1) move to previous/next text block with same indentation:
+       - |vindent_blockmotion_OO_pn|
+       - |vindent_blockmotion_XO_pn|
+       - |vindent_blockmotion_OX_pn|
+       - |vindent_blockmotion_XX_pn|
+   (2) move to beginning/end of current text block with same indentation:
+       - |vindent_blockmotion_OO_s|
+       - |vindent_blockmotion_XO_s|
+       - |vindent_blockmotion_OX_s|
+       - |vindent_blockmotion_XX_s|
+
+   The `O`'s and `X`'s in their names indicates different definitions of what
+   is considered a "text block".  Please refer ro |vindent_Block_Motions|
+   for more detail explanations.
 
 3. |vindent_Text_Objects|:
-   Text |objects| to select text by indentation. Four variations:
+   Text |objects| to select text by indentation. Four variations are provided:
+
    - |in_indent|: select adjacent lines with the same or more indentation.
    - |in_Indent|: select adjacent lines with same indentation.
    - |an_indent|: select |in_indent| and one extra line with less
@@ -56,28 +70,39 @@ This plugin provides three indentation related functionalities:
 This plugin does not come with default keybindings.  You can define your own
 keybindings using the following variables:
 
-- `g:vindent_motion_same_prev`: |vindent_motion_same| to previous line
-- `g:vindent_motion_same_next`: |vindent_motion_same| to next     line
-- `g:vindent_motion_less_prev`: |vindent_motion_less| to previous line
-- `g:vindent_motion_less_next`: |vindent_motion_less| to next     line
-- `g:vindent_motion_more_prev`: |vindent_motion_more| to previous line
-- `g:vindent_motion_more_next`: |vindent_motion_more| to next     line
-- `g:vindent_motion_diff_prev`: |vindent_motion_diff| to previous line
-- `g:vindent_motion_diff_next`: |vindent_motion_diff| to next     line
-- `g:vindent_blockmotion_OO_prev`: |vindent_blockmotion_OO| to previous line
-- `g:vindent_blockmotion_OO_next`: |vindent_blockmotion_OO| to next     line
-- `g:vindent_blockmotion_XO_prev`: |vindent_blockmotion_XO| to previous line
-- `g:vindent_blockmotion_XO_next`: |vindent_blockmotion_XO| to next     line
-- `g:vindent_blockmotion_OX_prev`: |vindent_blockmotion_OX| to previous line
-- `g:vindent_blockmotion_OX_next`: |vindent_blockmotion_OX| to next     line
-- `g:vindent_blockmotion_XX_prev`: |vindent_blockmotion_XX| to previous line
-- `g:vindent_blockmotion_XX_next`: |vindent_blockmotion_XX| to next     line
-- `g:vindent_object_ii`: select to text object |in_indent|
-- `g:vindent_object_iI`: select to text object |in_Indent|
-- `g:vindent_object_ai`: select to text object |an_indent|
-- `g:vindent_object_aI`: select to text object |an_Indent|
+- `g:vindent_motion_same_prev`: |vindent_motion_same| to prev line.
+- `g:vindent_motion_same_next`: |vindent_motion_same| to next line.
+- `g:vindent_motion_less_prev`: |vindent_motion_less| to prev line.
+- `g:vindent_motion_less_next`: |vindent_motion_less| to next line.
+- `g:vindent_motion_more_prev`: |vindent_motion_more| to prev line.
+- `g:vindent_motion_more_next`: |vindent_motion_more| to next line.
+- `g:vindent_motion_diff_prev`: |vindent_motion_diff| to prev line.
+- `g:vindent_motion_diff_next`: |vindent_motion_diff| to next line.
 
-For example, I have the following definitions in my |vimrc|
+- `g:vindent_blockmotion_OO_prev`: |vindent_blockmotion_OO_pn| to prev block.
+- `g:vindent_blockmotion_OO_next`: |vindent_blockmotion_OO_pn| to next block.
+- `g:vindent_blockmotion_XO_prev`: |vindent_blockmotion_XO_pn| to prev block.
+- `g:vindent_blockmotion_XO_next`: |vindent_blockmotion_XO_pn| to next block.
+- `g:vindent_blockmotion_OX_prev`: |vindent_blockmotion_OX_pn| to prev block.
+- `g:vindent_blockmotion_OX_next`: |vindent_blockmotion_OX_pn| to next block.
+- `g:vindent_blockmotion_XX_prev`: |vindent_blockmotion_XX_pn| to prev block.
+- `g:vindent_blockmotion_XX_next`: |vindent_blockmotion_XX_pn| to next block.
+
+- `g:vindent_blockmotion_OO_ss`: |vindent_blockmotion_OO_s| to start of block.
+- `g:vindent_blockmotion_OO_se`: |vindent_blockmotion_OO_s| to end   of block.
+- `g:vindent_blockmotion_XO_ss`: |vindent_blockmotion_XO_s| to start of block.
+- `g:vindent_blockmotion_XO_se`: |vindent_blockmotion_XO_s| to end   of block.
+- `g:vindent_blockmotion_OX_ss`: |vindent_blockmotion_OX_s| to start of block.
+- `g:vindent_blockmotion_OX_se`: |vindent_blockmotion_OX_s| to end   of block.
+- `g:vindent_blockmotion_XX_ss`: |vindent_blockmotion_XX_s| to start of block.
+- `g:vindent_blockmotion_XX_se`: |vindent_blockmotion_XX_s| to end   of block.
+
+- `g:vindent_object_ii`: select to text object |in_indent|.
+- `g:vindent_object_iI`: select to text object |in_Indent|.
+- `g:vindent_object_ai`: select to text object |an_indent|.
+- `g:vindent_object_aI`: select to text object |an_Indent|.
+
+For example, put the following in your |vimrc| and you are all set:
 >
 	let g:vindent_motion_same_prev = '[='
 	let g:vindent_motion_same_next = ']='
@@ -95,6 +120,14 @@ For example, I have the following definitions in my |vimrc|
 	let g:vindent_blockmotion_OX_next = ']3'
 	let g:vindent_blockmotion_XX_prev = '[4'
 	let g:vindent_blockmotion_XX_next = ']4'
+	let g:vindent_blockmotion_OO_ss = '[5'
+	let g:vindent_blockmotion_OO_se = ']5'
+	let g:vindent_blockmotion_XO_ss = '[6'
+	let g:vindent_blockmotion_XO_se = ']6'
+	let g:vindent_blockmotion_OX_ss = '[7'
+	let g:vindent_blockmotion_OX_se = ']7'
+	let g:vindent_blockmotion_XX_ss = '[8'
+	let g:vindent_blockmotion_XX_se = ']8'
 	let g:vindent_object_ii = 'ii'
 	let g:vindent_object_iI = 'iI'
 	let g:vindent_object_ai = 'ai'
@@ -111,7 +144,7 @@ if you wish for this plugin to view a <Tab> as 8 <Space>, then set
 	let g:vindent_tabstop = &tabstop
 <
 This make the plugin assume the equivalence between 1 <Tab> and |tabstop|
-number of spaces.
+number of spaces, which makes sense visually.
 
 ==============================================================================
 3. Details                                                   *vindent_Details*
@@ -196,30 +229,29 @@ number of spaces.
 ------------------------------------------------------------------------------
 3.2 Block Motion                                       *vindent_Block_Motions*
 
-Vindent block motions are all named `vindent_blockmotion_<A1><A2>` where
-- `<A1>` indicates (by `O` or `X`) whether "empty lines" are considered to be
-  boundaries of a "text block"
+There are some subtleties in defining a text block "with same indentation".
+Namely, do we ignore empty lines in-between? Or do we not view lines with
+"more" indentation in-between as a separator for new text blocks? Surely
+different use cases calls for different definitions, so this plugin provides
+all possible definitions for the users to chose for themselves.
+
+Vindent block motions are all named `vindent_blockmotion_<A1><A2>_<A3>` where
+
+- `<A1>` indicates (by `O` for YES or `X` for NO) whether "empty lines" are
+  considered to be boundaries of a "text block".
 - `<A2>` indicates whether "lines with more indentation" are considered to be
   boundaries of a text block with same indentation.
-For example,
->
-    1 function Hi(name)
-    2     let temp = 'something use less'
-    3     return "Hi" . a:name
-    4
-    5 endfunction
-<
-If cursor is on line 2, then lines 2 and 3 are considered to be one text
-block; if cursor is on line 1 and `<A2>` is `X`, then lines 1 to 3 are
-considered to be one text block; if cursor is on line 1 and both `<A1>` and
-`<A2>` are `O`, then lines 1 to 5 are considerd to be one big block.  See
-|vindent_blockmotion_OO| for comprehensive examples.
+- `<A3>` is either `pn` (for "prev/next") or `s` (for "scope"), which simply
+  indicates the type of motion.
 
-"vindent_blockmotion_OO"			*vindent_blockmotion_OO*
-		A |motion| that moves the cursor to the previous or next
+See |vindent_blockmotion_OO_pn| and |vindent_blockmotion_OO_s| for examples.
+
+"vindent_blockmotion_OO_pn"			*vindent_blockmotion_OO_pn*
+		A |motion|. Moves the cursor to the previous or next
 		"block of text" that has the same indentation as the current
 		line where "empty lines" and lines with "more" indentation are
-		considered to be boundaries of text block.
+		considered to be boundaries of text block. This motions can
+		take {count}.
 
 		Keybinding defined by `g:vindent_blockmotion_OO_prev` and
 		`g:vindent_blockmotion_OO_next` are mapped to this motion.
@@ -230,25 +262,25 @@ considered to be one text block; if cursor is on line 1 and both `<A1>` and
 		      next block, the cursor will move to the "first" line of
 		      the next block.
 		    - Although there are four |vindent_Block_Motions|, I
-		      believe |vindent_blockmotion_OO| is what most people
+		      believe |vindent_blockmotion_OO_pn| is what most people
 		      want, since every breakage of continuous lines with same
 		      indentation are considered a boundary.
 
 		For example, consider the following text and assume that
 		the keybindings provided in |vindent_Usage| are used: >
 			 1 \begin{document}
-			 2 
+			 2
 			 3 I am the first sentence
 			 4 \begin{enumerate}
 			 5     \item
-			 6 
+			 6
 			 7     \item
 			 8         I am a sentence
 			 9     \item
 			10 \end{enumerate}
 			11     I am an incorrectly indented sentence.
 			12 I am one last sentence.
-			13 
+			13
 			14 \end{document}
 <		If the cursor is on line 1, then pressing...
 		    - `]1` 4 times move cursor to line 3, 10, 12, and 14.
@@ -260,20 +292,65 @@ considered to be one text block; if cursor is on line 1 and both `<A1>` and
 		If the cursor is on line 10, then pressing...
 		    - `[1` moves cursor to line 4.
 
-"vindent_blockmotion_XO"			*vindent_blockmotion_XO*
-		Same as |vindent_blockmotion_OO|, but emty lines are not
+"vindent_blockmotion_XO_pn"			*vindent_blockmotion_XO_pn*
+		Same as |vindent_blockmotion_OO_pn|, but emty lines are not
 		considered as boundaries of a text block.See
-		|vindent_blockmotion_OO| for examples.
+		|vindent_blockmotion_OO_pn| for examples.
 
-"vindent_blockmotion_OX"			*vindent_blockmotion_OX*
-		Same as |vindent_blockmotion_OO|, but lines with more
+"vindent_blockmotion_OX_pn"			*vindent_blockmotion_OX_pn*
+		Same as |vindent_blockmotion_OO_pn|, but lines with more
 		indentation are considered as boundaries of a text block. See
-		|vindent_blockmotion_OO| for examples.
+		|vindent_blockmotion_OO_pn| for examples.
 
-"vindent_blockmotion_XX"			*vindent_blockmotion_XX*
-		Same as |vindent_blockmotion_OO|, but empty lines and lines
+"vindent_blockmotion_XX_pn"			*vindent_blockmotion_XX_pn*
+		Same as |vindent_blockmotion_OO_pn|, but empty lines and lines
 		with more indentations are not considered as boundaries of a
-		text block. See |vindent_blockmotion_OO| for examples.
+		text block. See |vindent_blockmotion_OO_pn| for examples.
+
+"vindent_blockmotion_OO_s"			*vindent_blockmotion_XO_s*
+		A |motion|. Moves the cursor to the beginning or end of the
+		current text block where "empty lines" and "lines with more
+		indentation" are considered to be boundaries of a text block.
+		This motion does not take {count}.
+
+		Keybinding defined by `g:vindent_blockmotion_OO_ss` and
+		`g:vindent_blockmotion_OO_se` are mapped to this motion.
+
+		For example, consider the following piece of code and assume
+		that the keybindings provided in |vindent_Usage| are used: >
+			 1 function! SumTo(number)
+			 2     let l:sum = 0
+			 3     for l:time in range(a:number)
+			 4         echom "This is the" l:time "time."
+			 5         let l:sum = l:count + l:time
+			 6     endfor
+			 7
+			 8     echom "The sum is" l:sum
+			 9     return "Hi" . a:name
+			10 endfunction
+<		If cursor is on line 3, `]5` moves it to line 3.
+		If cursor is on line 9, `[5` moves it to line 8.
+		If cursor is on line 6, `]6` moves it to line 9.
+		If cursor is on line 3, `[6` moves it to line 3.
+		If cursor is on line 2, `]7` moves it to line 6.
+		If cursor is on line 9, `[7` moves it to line 8.
+		If cursor is on line 2, `]8` moves it to line 9.
+		If cursor is on line 9, `[8` moves it to line 2.
+
+"vindent_blockmotion_OX_s"			*vindent_blockmotion_OX_s*
+		Same as |vindent_blockmotion_OO_s|, but lines with more
+		indentation are considered as boundaries of a text block. See
+		|vindent_blockmotion_OO_s| for examples.
+
+"vindent_blockmotion_XO_s"			*vindent_blockmotion_XX_s*
+		Same as |vindent_blockmotion_OO_s|, but empty lines and lines
+		with more indentations are not considered as boundaries of a
+		text block. See |vindent_blockmotion_OO_s| for examples.
+
+"vindent_blockmotion_XX_s"			*vindent_blockmotion_XX_s*
+		Same as |vindent_blockmotion_OO_s|, but empty lines and lines
+		with more indentations are not considered as boundaries of a
+		text block. See |vindent_blockmotion_OO_s| for examples.
 
 ------------------------------------------------------------------------------
 3.3 Text Objects                                        *vindent_Text_Objects*
@@ -363,11 +440,7 @@ g:vindent_tabstop				*g:vindent_tabstop*
 ==============================================================================
 4. License                                                   *vindent_License*
 
-Distributed under the same terms as Vim itself. See
->
-	:help license
-<
-for details.
+Distributed under the same terms as Vim itself. See `:help license`.
 
 ==============================================================================
 5. Bugs and Contributing                       *vindent_Bugs_and_Contributing*
@@ -378,6 +451,9 @@ issue or make a pull request at https://github.com/jessekelighine/vindent.vim.
 ==============================================================================
 6. Changelog                                               *vindent_Changelog*
 
+v2.2.0:                                                            2022-May-09
+	- Expand |vindent_Block_Motions|: move to beginning/end of text blocks
+	  with same indentation.
 v2.1.1:                                                            2022-May-09
 	- Bug fix: continuous motion call in visual mode.
 v2.1.0:                                                            2022-May-09
