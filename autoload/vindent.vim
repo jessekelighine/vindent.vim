@@ -127,12 +127,13 @@ endfunction
 
 " Vindent Text Object: Select indent text objects.
 function! vindent#Object(code, skip, stop_func, count)
-	let l:line  = line('.')
-	let l:range = <SID>NoHang(<SID>Range(a:stop_func,l:line,a:skip))
-	for l:time in range(a:count-1) | let l:range[0] = <SID>Range(a:stop_func,<SID>Find("prev","Less"),a:skip)-><SID>NoHang()[0] | endfor
-	for l:time in range(a:count-1) | let l:range[1] = <SID>Range(a:stop_func,<SID>Find("next","Less"),a:skip)-><SID>NoHang()[1] | endfor
+	let l:range = <SID>NoHang(<SID>Range(a:stop_func,line("."),a:skip))
+	let Find    = { direct, num, skip -> <SID>Find(direct,"Less",num,<SID>Get(num),skip) }
+	let Range   = { stop_func, direct, num, skip -> <SID>Range(stop_func,Find(direct,num,skip),skip) }
+	for l:time in range(a:count-1) | let l:range[0] = Range(a:stop_func,"prev",l:range[0],a:skip)-><SID>NoHang()[0] | endfor
+	for l:time in range(a:count-1) | let l:range[1] = Range(a:stop_func,"next",l:range[1],a:skip)-><SID>NoHang()[1] | endfor
 	if l:range==[1,line('$')] | return | endif " hard stop
-	if a:code[0]==#'a' | let l:range[0] = {x -> x==0 ? 1         : x}( <SID>Find('prev',"Less",l:range[0],<SID>Get(l:range[0])) ) | endif
-	if a:code[1]==#'I' | let l:range[1] = {x -> x==0 ? line('$') : x}( <SID>Find('next',"Less",l:range[1],<SID>Get(l:range[1])) ) | endif
+	if a:code[0]==#'a' | let l:range[0] = { x -> x==0 ? 1         : x }( Find("prev",l:range[0],1) ) | endif
+	if a:code[1]==#'I' | let l:range[1] = { x -> x==0 ? line('$') : x }( Find("next",l:range[1],1) ) | endif
 	call <SID>DoObject(<SID>NoHang(l:range))
 endfunction

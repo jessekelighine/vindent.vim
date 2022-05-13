@@ -63,7 +63,7 @@ and enjoy using:
 	- Jump to previous/next line with less indentation with `[-`/`]-`. ([examples](#vindent-motion-line-wise))
 	- Jump to previous/next line with more indentation with `[+`/`]+`. ([examples](#vindent-motion-line-wise))
 	- Jump to previous/next line with different indentation with `[;`/`];`. ([examples](#vindent-motion-line-wise))
-	- Jump to start/end of text block with `[p`/`]p`. ([examples]($vindent-motion-block-wise))
+	- Jump to start/end of text block with `[p`/`]p`. ([examples](#vindent-motion-block-wise))
 3. **Vindent Text Objects**: Select text block with `ii` (*in indent*),`ai` (*an indent*), and `aI` (*an Indent*). ([examples](#vindent-text-object))
 
 Feel free to customize the keybindings.
@@ -72,7 +72,7 @@ Feel free to customize the keybindings.
 
 - If you wish not to use a certain functionality, simply leave the corresponding variable undefined.
 - If you wish not to treat `<Tab>` as some number of `<Space>`s, leave `g:vindent_tabstop` undefined.
-- For a motion or text object to determine a "text block" differently, see [examples](#vindent-motion)
+- For a motion or text object to define "text blocks" differently, see [examples](#vindent-motion-block-wise)
   or refer to section `vindent_Block_Definition` in the [`doc`](doc/vindent.txt) for detailed explanation.
 
 ## Explanations and Examples
@@ -91,7 +91,7 @@ examples.
 
 All vindent motions (and text objects) that operates block-wise contains a two
 character string of `O`'s and `X`'s in their names, which indicates how a "text
-block" is determined. More precisely, they are all named
+block" is defined.  More precisely, they are all named
 `vindent_motion_<A1><A2>_<A3>` or `vindent_object_<A1><A2>_<A3>` where...
 
 - `<A1>` indicates whether "empty lines" are IGNORED when finding the
