@@ -30,6 +30,7 @@ git clone https://github.com/jessekelighine/vindent.vim
 
 `vindent.vim` comes with no default keybindings.  So after installation, put
 the following lines in your `~/.vimrc`:
+
 ```vim
 " vindent line-wise motions
 let g:vindent_motion_same_prev = '[='
@@ -66,6 +67,7 @@ let g:vindent_object_aI = 'aI'
 " let vindent know to treat 1 <Tab> as tabstop # of <Spaces>s.
 let g:vindent_tabstop   = &tabstop
 ```
+
 and enjoy using:
 
 1. **Vindent Motions**: ([examples](#vindent-motion))
@@ -143,12 +145,12 @@ and `<A2>` can be either `O` or `X`:
 - `<A1>` indicates whether "empty lines" are ignored.
 - `<A2>` indicates whether "lines with *more* indentation" are ignored.
 
-| `<A1><A2>` | Are "empty lines" ignored? | Are "more-indented lines" ignored? |
-| ---        | ---                        | ---                                |
-| `OO`       | **NO**                     | **NO**                             |
-| `XO`       | **YES**                    | **NO**                             |
-| `OX`       | **NO**                     | **YES**                            |
-| `XX`       | **YES**                    | **YES**                            |
+| `<A1><A2>` | "Empty lines" ignored? | "More-indented lines" ignored? |
+| ---        | ---                    | ---                            |
+| `OO`       | NO                     | NO                             |
+| `XO`       | YES                    | NO                             |
+| `OX`       | NO                     | YES                            |
+| `XX`       | YES                    | YES                            |
 
 Here are some examples to clear things up.  Assume that the keybindings in
 [Usage](#usage) are used and consider the LaTeX code:
@@ -260,7 +262,6 @@ Here are some examples to clear things up.  Assume that the keybindings in
 - If cursor is on line 7,  then `vai` selects lines 2  to 9. (Empty lines 3 and 6 ignored; Empty line 10 not selected)
 - If cursor is on line 11, then `vaI` selects lines 1  to 14. (Empty lines 3, 6, and 10 ignored)
 - If cursor is on line 8,  then `vaI` selects lines 7  to 9.
-- If cursor is on line 1, `vii`, `viI`, `vai`, and `vaI` all select nothing. (Since line 1 is not indented)
 
 For more details please refer to the [`doc flie`](./doc/vindent.txt).
 
