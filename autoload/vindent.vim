@@ -95,11 +95,11 @@ endfunction
 "### Main Functions ###########################################################
 
 " Vindent Motion: Go to the "prev" or "next" line with the same indentation.
-function! vindent#Motion(direct, count, mode, type)
+function! vindent#Motion(direct, count, mode, type, skip=1)
 	" if <SID>Skip() | return | endif
 	let [ l:line, l:to ] = [ line('.'), line('.') ]
 	for l:time in range(a:count) " recursive
-		let l:temp = <SID>Find(a:direct, a:type, l:to, <SID>Get(l:to), 1)
+		let l:temp = <SID>Find(a:direct, a:type, l:to, <SID>Get(l:to), a:skip)
 		if l:temp==0 | break | else | let l:to = l:temp | endif
 	endfor
 	call <SID>DoMotion(a:direct, a:mode, abs(l:line-l:to))
@@ -128,10 +128,15 @@ endfunction
 " Vindent Text Object: Select indent text objects.
 function! vindent#Object(code, skip, stop_func, count)
 	let l:range = <SID>NoHang(<SID>Range(a:stop_func,line("."),a:skip))
-	let Find    = { direct, num, skip -> <SID>Find(direct,"Less",num,<SID>Get(num),skip) }
-	let Range   = { stop_func, direct, num, skip -> <SID>Range(stop_func,Find(direct,num,skip),skip) }
-	for l:time in range(a:count-1) | let l:range[0] = Range(a:stop_func,"prev",l:range[0],a:skip)-><SID>NoHang()[0] | endfor
-	for l:time in range(a:count-1) | let l:range[1] = Range(a:stop_func,"next",l:range[1],a:skip)-><SID>NoHang()[1] | endfor
+	let Find    = { direct,num,skip -> { x -> <SID>Skip(1,x) ? num : x }(<SID>Find(direct,"Less",num,<SID>Get(num),skip)) }
+	for l:time in range(a:count-1) " recursive
+		let [ l:zs, l:ze ] = [ Find("prev",l:range[0],a:skip), Find("next",l:range[1],a:skip) ]
+		if     [ l:zs, l:ze ]==l:range | break " determine which line is new line
+		elseif l:zs==l:range[0] | let l:new = l:ze
+		elseif l:ze==l:range[1] | let l:new = l:zs
+		else | let l:new = <SID>Less(<SID>Get(l:zs),l:ze) ? l:zs : l:ze | endif
+		let l:range = <SID>Range("Less", l:new, a:skip)-><SID>NoHang() " find new range
+	endfor
 	if l:range==[1,line('$')] | return | endif " hard stop
 	if a:code[0]==#'a' | let l:range[0] = { x -> x==0 ? 1         : x }( Find("prev",l:range[0],1) ) | endif
 	if a:code[1]==#'I' | let l:range[1] = { x -> x==0 ? line('$') : x }( Find("next",l:range[1],1) ) | endif

@@ -1,6 +1,6 @@
 # vindent.vim
 
-`vindent.vim` is Vim/Neovim plugin that provides three functionalities:
+`vindent.vim` is Vim/Neovim plugin that provides indentation related *motions* and *text objects*:
 
 1. **Movements**: jump to specific positions defined by indentations.
 	- Jump to previous/next line with *same*, *less*, *more*, or *different* indentation.
