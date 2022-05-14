@@ -538,6 +538,8 @@ issue or make a pull request at https://github.com/jessekelighine/vindent.vim.
 ==============================================================================
 6. Changelog                                               *vindent_Changelog*
 
+v3.0.1:                                                            2022-May-14
+	- Bug fix: fix how {count} work on text objects.
 v3.0.0:                                                            2022-May-13
 	- Expand |vindent_Text_Object|s to be customizable.
 	- |vindent_Text_Object| now takes count.

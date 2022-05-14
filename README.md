@@ -187,6 +187,8 @@ For more details please refer to the [`doc`](doc/vindent.txt), section `vindent_
 ## Change Log
 
 ```
+v3.0.1:                                                            2022-May-14
+	- Bug fix: fix how {count} work on text objects.
 v3.0.0:                                                            2022-May-13
 	- Expand |vindent_Text_Object|s to be customizable.
 	- |vindent_Text_Object| now takes count.
