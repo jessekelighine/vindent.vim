@@ -1,131 +1,220 @@
 # vindent.vim
 
-vindent.vim is a simple plugin that provides two functionalities that has to do
-with indents:
+`vindent.vim` is Vim/Neovim plugin that provides indentation related *motions* and *text objects*:
 
-1. Create a *motion* that moves cursor to the previous or next line with the same indentation as the current line.
-2. Create three *text object* that selects adjacent lines with the same indentation (with three slight variations).
+1. **Movements**: jump to specific positions defined by indentations.
+	- Jump to previous/next line with *same*, *less*, *more*, or *different* indentation.
+	- Jump to previous/next text block with *same* indentation.
+	- Jump to start/end of the current text block of same indentation.
+2. **Text Objects**: selects specific lines defined by indentations.
+	- Select a text block of *same* (or specified level of) indentation.
+	- Select text block and a previous line with less indentation.
+	- Select text block, a previous, and a next line with less indentation.
 
-## Usage
+This plugin is inspired by [vim-indentwise](https://github.com/jeetsukumaran/vim-indentwise)
+and [vim-indent-object](https://github.com/michaeljsmith/vim-indent-object).
+`vindent.vim` is essentially a combination and reimplementation of the two
+plugins, but **improved**! Here are some of the improvements and reasons why
+you should switch to `vindent.vim`:
 
-### Mappings
-
-`vindent.vim` provides the following `<Plug>`'s:
-
-1. Motion:
-	- `<Plug>(VindentMove_prev_normal)`: move to previous line with same indent in normal mode.
-	- `<Plug>(VindentMove_prev_visual)`: move to previous line with same indent in visual mode.
-	- `<Plug>(VindentMove_next_normal)`: move to next line with same indent in normal mode.
-	- `<Plug>(VindentMove_next_visual)`: move to next line with same indent in visual mode.
-2. Text Object:
-	- `<PLug>(VindentObject_X_i)`: select text object *indent-i* in visual mode.
-	- `<PLug>(VindentObject_X_a)`: select text object *indent-a* in visual mode.
-	- `<PLug>(VindentObject_X_I)`: select text object *indent-I* in visual mode.
-	- `<PLug>(VindentObject_O_i)`: use *indent-i* as text object with other commands.
-	- `<PLug>(VindentObject_O_a)`: use *indent-a* as text object with other commands.
-	- `<PLug>(VindentObject_O_I)`: use *indent-I* as text object with other commands.
-
-However, `vindent.vim` provides no default keybindings.
-I use the following keybindings:
-```vim
-" vindent.vim motion
-nnoremap <silent> [l <Plug>(VindentMove_prev_normal)
-xnoremap <silent> [l <Plug>(VindentMove_prev_visual)
-nnoremap <silent> ]l <Plug>(VindentMove_next_normal)
-xnoremap <silent> ]l <Plug>(VindentMove_next_visual)
-" vindent.vim test object
-xnoremap <silent> ii <PLug>(VindentObject_X_i)
-xnoremap <silent> ai <PLug>(VindentObject_X_a)
-xnoremap <silent> aI <PLug>(VindentObject_X_I)
-onoremap <silent> ii <PLug>(VindentObject_O_i)
-onoremap <silent> ai <PLug>(VindentObject_O_a)
-onoremap <silent> aI <PLug>(VindentObject_O_I)
-```
-Feel free to use other keybindings and put it in your `.vimrc`.
-I'll explain the functionalities with these default keybindings.
-
-### (1) Functionality 1: move to same indentation.
-
-Mapping `[l` moves the
-Consider the following LaTeX code:
-```
-1 \begin{enumerate}
-2 	\item I am item 1.
-3 	\item I am item 2.
-4 \end{enumerate}
-```
-Say the cursor is on line 1 and you press `]l`,
-the cursor will be moved to the beginning of line 4.
-The similar is true for `[l`.
-If you press `]l` when the cursor is on line 2,
-then the cursor will move to line 3.
-If no line with the same indentation is found, then the cursor does not move.
-
-This also works in visual mode, so you can select text with this motion.
-Note that this motion ignores empty lines, so if the code looks like this,
-```
-1 \begin{enumerate}
-2
-3 	\item I am item 1.
-4
-5 	\item I am item 2.
-6
-7 \end{enumerate}
-```
-the aforementioned motions still work.
-
-### (2) Functionality 2: indentation text objects.
-
-Consider the following LaTeX code:
-```
-1 \begin{enumerate}
-2 	\item
-3 		I am an intentionally very very very long
-4 		and meaningless sentence.
-5 	\item
-6 		I am another sentence.
-7 \end{enumerate}
-```
-If the cursor is on line 3 and you press `vii`, you would select the lines 3 and 4;
-if you press `vai`, you would select lines 2, 3, and 4.
-If the cursor is on line 2 and you press `vaI`, then lines 1 to 7 would be selected.
-In summary,
-
-- Object `ii` (*in indent*): select adjacent lines with the same indentation.
-- Object `ai` (*a indent*): select adjacent lines with the same indentation and one extra line with less indentation at the beginning.
-- Object `aI` (*a Indent*): select adjacent lines with the same indentation and two extra line with less indentation: one at the beginning and one at the end.
-
-Object `ai` is useful in languages like python that uses indentation to specify scopes.
-Object `aI` is useful in languages like LaTeX with many opening and closing matching pairs on the same indentation level.
-Note that this text object assumes that the indentation is consistent, e.g.,
-it would not consider 4 white spaces to be equal to a tab.
-
-Similar to the motion `[l` and `]l`, the three text objects also ignores empty lines.
-Consider the following LaTeX code:
-```
-1 \begin{enumerate}
-2
-3 	\item
-4 		I am an intentionally very very very long
-5 		and meaningless sentence.
-6
-7 		And something random here.
-8
-9 	\item
-10 		I am another sentence.
-11
-12 \end{enumerate}
-```
-If the cursor is on line 3 ad you press `vii`, lines 3 to 8 would be selected;
-if the cursor is on line 7 and you press `vai`, lines 3 to 7 would be selected.
+- Motions work nicely with prepending `{count}`s and normal commands such as
+  `d`, `c`, and `y`! Works just like a native vim motion!
+- More customizability! Chose for yourself if "empty lines" or "lines with more
+  indentation" should be skipped when determining boundaries of a text block!
+- Reimplemented with only about *250* lines of vimscript, where only about
+  *100* lines are core implementation!
 
 ## Installation
 
-Install using your favourite plugin manager, or use Vim's built-in package support:
+Install using your favourite plugin manager, or use Vim's built-in package
+support:
 ```sh
 mkdir -p ~/.vim/pack/jessekelighine/start
 cd ~/.vim/pack/jessekelighine/start
 git clone https://github.com/jessekelighine/vindent.vim
+```
+
+## Usage and Quick Start
+
+`vindent.vim` comes with no default keybindings.  Here is a quick start set of
+keybindings to put in your `.vimrc`:
+
+```vim
+let g:vindent_motion_OO_prev   = '[=' " jump to prev block of same indent.
+let g:vindent_motion_OO_next   = ']=' " jump to next block of same indent.
+let g:vindent_motion_more_prev = '[+' " jump to prev line with more indent.
+let g:vindent_motion_more_next = ']+' " jump to next line with more indent.
+let g:vindent_motion_less_prev = '[-' " jump to prev line with less indent.
+let g:vindent_motion_less_next = ']-' " jump to next line with less indent.
+let g:vindent_motion_diff_prev = '[;' " jump to prev line with different indent.
+let g:vindent_motion_diff_next = '];' " jump to next line with different indent.
+let g:vindent_motion_XX_ss     = '[p' " jump to start of the current block scope.
+let g:vindent_motion_XX_se     = ']p' " jump to end   of the current block scope.
+let g:vindent_object_XX_ii     = 'ii' " select current block.
+let g:vindent_object_XX_ai     = 'ai' " select current block + one extra line  at beginning.
+let g:vindent_object_XX_aI     = 'aI' " select current block + two extra lines at beginning and end.
+let g:vindent_tabstop = &tabstop      " let <Tab> be equivalent to tabstop number of spaces.
+```
+
+and enjoy using:
+
+1. **Vindent Motions**: 
+	- Jump to previous/next block with same indentation with `[=`/`]=`. ([examples](#vindent-motion-block-wise))
+	- Jump to previous/next line with less indentation with `[-`/`]-`. ([examples](#vindent-motion-line-wise))
+	- Jump to previous/next line with more indentation with `[+`/`]+`. ([examples](#vindent-motion-line-wise))
+	- Jump to previous/next line with different indentation with `[;`/`];`. ([examples](#vindent-motion-line-wise))
+	- Jump to start/end of text block with `[p`/`]p`. ([examples](#vindent-motion-block-wise))
+3. **Vindent Text Objects**: Select text block with `ii` (*in indent*),`ai` (*an indent*), and `aI` (*an Indent*). ([examples](#vindent-text-object))
+
+Feel free to customize the keybindings.
+
+**Note**:
+
+- If you wish not to use a certain functionality, simply leave the corresponding variable undefined.
+- If you wish not to treat `<Tab>` as some number of `<Space>`s, leave `g:vindent_tabstop` undefined.
+- For a motion or text object to define "text blocks" differently, see [examples](#vindent-motion-block-wise)
+  or refer to section `vindent_Block_Definition` in the [`doc`](doc/vindent.txt) for detailed explanation.
+
+## Explanations and Examples
+
+### Vindent Motion: line-wise
+
+These motions are very self explanatory: move to the previous or next line with
+either *same*, *less*, *more*, or *different* indentation.  These motions
+operates on *entire lines* if it is prepended with a normal command such as `d`
+or `c` or `y`.
+
+See [`doc`](doc/vindent.txt) section `vindent_Motion` for more detail and
+examples.
+
+### Vindent Motion: block-wise
+
+All vindent motions (and text objects) that operates block-wise contains a two
+character string of `O`'s and `X`'s in their names, which indicates how a "text
+block" is defined.  More precisely, they are all named
+`vindent_motion_<A1><A2>_<A3>` or `vindent_object_<A1><A2>_<A3>` where...
+
+- `<A1>` indicates whether "empty lines" are IGNORED when finding the
+  boundaries of a "text block".
+- `<A2>` indicates whether "lines with more indentation" are IGNORED when
+  finding the boundaries of a "text block".
+- `<A3>` indicates the type of motion or text object.
+
+That is,
+
+| `<A1><A2>` | "Empty lines" ignored? | "More-indented lines" ignored? |
+| ---        | ---                    | ---                            |
+| `OO`       | No                     | No                             |
+| `XO`       | Yes                    | No                             |
+| `OX`       | No                     | Yes                            |
+| `XX`       | Yes                    | Yes                            |
+
+Here are some examples to clear things up.  Assume that the keybindings in
+[Usage](#usage-and-quick-start) are used and consider the following code:
+
+```vim
+ 1 function! SumTo(number)
+ 2     let l:sum = 0
+ 3     for l:time in range(a:number)
+ 4         echom "This is the" l:time "time."
+ 5         let l:sum = l:count + l:time
+ 6     endfor
+ 7
+ 8     echom "The sum is" l:sum
+ 9     return "Hi" . a:name
+10 endfunction
+```
+
+If the cursor is on line 2, then pressing `]=` 2 times moves the cursor to line
+6 and 8.  This is because `]=` is mapped to `g:vindent_motion_OO_next`, in
+which `OO` indicates that "empty lines" and "more-indented lines" are all
+considered to be boundaries of a text block (NOT ignored).
+
+If the cursor is on line 2, then pressing `]p` moves the cursor to line 9.
+This is because `]p` is mapped to `g:vindent_motion_XX_se`, in which `XX` indicates
+that "empty lines" and "more-indented lines" are all ignored, thus line 2 to
+line 9 is considered to be one text block.
+ 
+**Note**:
+
+- I believe `g:vindent_motion_OO_prev` and `g:vindent_motion_OO_next` is what
+  most people want, since every breakage of continuous lines with same
+  indentation are considered a boundary.  But feel free to change `OO` to
+  whatever setting you find the most useful.
+- A similar statement is true for `g:vindent_motion_XX_ss` and `g:vindent_motion_XX_se`.
+- Please refer to [`doc`](doc/vindent.txt) for more details.
+
+### Vindent Text Object
+
+The text objects are:
+
+| Text Object | Mnemonics   | Description                                                                                 |
+| ---         | ---         | ---                                                                                         |
+| `ii`        | *in indent* | select text block of same indentation.                                                      |
+| `ai`        | *an indent* | select text block of same indentation and a previous line with less indentation.            |
+| `aI`        | *an Indent* | select text block of same indentation and a previous and a next line with less indentation. |
+
+Similar to [block-wise motions](#vindent-motion-block-wise), you can specify
+what is considered to be the same block by changing the `O`'s and `X`'s in the
+variable name.
+
+The text objects can take counts, which indicates how make levels up (of
+indents) should be selected.  Assume that the keybindings in
+[Usage](#usage-and-quick-start) are used and consider following code:
+
+```vim
+ 1 function! SumTo(number)
+ 2
+ 3     let l:sum = 0
+ 4     for l:time in range(a:number)
+ 5         echom "This is the" l:time "time."
+ 6         let l:sum += l:time
+ 7     endfor
+ 8
+ 9     echom "The sum is" l:sum
+10     return l:sum
+11 endfunction
+```
+
+- If the cursor is on line 3, `vii` selects lines 3--10.
+- If the cursor is on line 3, `vai` selects lines 1--10.
+- If the cursor is on line 3, `vaI` selects lines 1--11.
+- If the cursor is on line 5, `v2ii` selects lines 3--10. (one indent level up)
+- If the cursor is on line 5, `v2ai` selects lines 1--10. (one indent level up, and then search for a previous line with less indentation)
+
+For more details please refer to the [`doc`](doc/vindent.txt), section `vindent_Text_Object`.
+
+## Change Log
+
+```
+v3.0.2:                                                            2022-May-15
+	- Bug fix: {count} now respects `<A1><A2>` settings.
+v3.0.1:                                                            2022-May-14
+	- Bug fix: fix how {count} work on text objects.
+v3.0.0:                                                            2022-May-13
+	- Expand |vindent_Text_Object|s to be customizable.
+	- |vindent_Text_Object| now takes count.
+v2.2.0:                                                            2022-May-09
+	- Expand |vindent_Block_Motions|: move to beginning/end of text blocks
+	  with same indentation.
+v2.1.1:                                                            2022-May-09
+	- Bug fix: continuous motion call in visual mode.
+v2.1.0:                                                            2022-May-09
+	- Add |vindent_Block_Motions|.
+	- Bug fix: make {count} work everywhere.
+v2.0.0:                                                            2022-May-08
+	- |vindent_Motions| now can to jump to line with SAME, LESS, MORE, or
+	  DIFFERENT indentation as the current line.
+	- <Plug>s are simplified.
+	- Core implementation no longer less than 100 lines :(
+v1.3.0:                                                            2022-May-05
+	- Add |g:vindent_tabstop|.
+v1.2.0:                                                            2022-May-04
+	- |vindent_Motions| now takes {count}.
+v1.1.0:                                                            2022-May-03
+	- Add |in_Indent| object.
+v1.0.0:                                                            2022-May-03
+	- Initial version.
 ```
 
 ## Licence
