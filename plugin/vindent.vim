@@ -104,18 +104,18 @@ if exists("g:vindent_motion_XO_se") | exe 'noremap <silent> '.g:vindent_motion_X
 if exists("g:vindent_motion_XX_ss") | exe 'noremap <silent> '.g:vindent_motion_XX_ss.' <Plug>(VindentBlockMotion_XX_ss)' | endif
 if exists("g:vindent_motion_XX_se") | exe 'noremap <silent> '.g:vindent_motion_XX_se.' <Plug>(VindentBlockMotion_XX_se)' | endif
 
-onoremap <Plug>(VindentObject_OO_ii) :call                                             vindent#Object('ii',0,"Diff",v:count1)<CR>
-onoremap <Plug>(VindentObject_OX_ii) :call                                             vindent#Object('ii',0,"Less",v:count1)<CR>
-onoremap <Plug>(VindentObject_XO_ii) :call                                             vindent#Object('ii',1,"Diff",v:count1)<CR>
-onoremap <Plug>(VindentObject_XX_ii) :call                                             vindent#Object('ii',1,"Less",v:count1)<CR>
-onoremap <Plug>(VindentObject_OO_ai) :call                                             vindent#Object('ai',0,"Diff",v:count1)<CR>
-onoremap <Plug>(VindentObject_OX_ai) :call                                             vindent#Object('ai',0,"Less",v:count1)<CR>
-onoremap <Plug>(VindentObject_XO_ai) :call                                             vindent#Object('ai',1,"Diff",v:count1)<CR>
-onoremap <Plug>(VindentObject_XX_ai) :call                                             vindent#Object('ai',1,"Less",v:count1)<CR>
-onoremap <Plug>(VindentObject_OO_aI) :call                                             vindent#Object('aI',0,"Diff",v:count1)<CR>
-onoremap <Plug>(VindentObject_OX_aI) :call                                             vindent#Object('aI',0,"Less",v:count1)<CR>
-onoremap <Plug>(VindentObject_XO_aI) :call                                             vindent#Object('aI',1,"Diff",v:count1)<CR>
-onoremap <Plug>(VindentObject_XX_aI) :call                                             vindent#Object('aI',1,"Less",v:count1)<CR>
+onoremap <Plug>(VindentObject_OO_ii) :<C-U>call                                        vindent#Object('ii',0,"Diff",v:count1)<CR>
+onoremap <Plug>(VindentObject_OX_ii) :<C-U>call                                        vindent#Object('ii',0,"Less",v:count1)<CR>
+onoremap <Plug>(VindentObject_XO_ii) :<C-U>call                                        vindent#Object('ii',1,"Diff",v:count1)<CR>
+onoremap <Plug>(VindentObject_XX_ii) :<C-U>call                                        vindent#Object('ii',1,"Less",v:count1)<CR>
+onoremap <Plug>(VindentObject_OO_ai) :<C-U>call                                        vindent#Object('ai',0,"Diff",v:count1)<CR>
+onoremap <Plug>(VindentObject_OX_ai) :<C-U>call                                        vindent#Object('ai',0,"Less",v:count1)<CR>
+onoremap <Plug>(VindentObject_XO_ai) :<C-U>call                                        vindent#Object('ai',1,"Diff",v:count1)<CR>
+onoremap <Plug>(VindentObject_XX_ai) :<C-U>call                                        vindent#Object('ai',1,"Less",v:count1)<CR>
+onoremap <Plug>(VindentObject_OO_aI) :<C-U>call                                        vindent#Object('aI',0,"Diff",v:count1)<CR>
+onoremap <Plug>(VindentObject_OX_aI) :<C-U>call                                        vindent#Object('aI',0,"Less",v:count1)<CR>
+onoremap <Plug>(VindentObject_XO_aI) :<C-U>call                                        vindent#Object('aI',1,"Diff",v:count1)<CR>
+onoremap <Plug>(VindentObject_XX_aI) :<C-U>call                                        vindent#Object('aI',1,"Less",v:count1)<CR>
 xnoremap <Plug>(VindentObject_OO_ii) :<C-U>let g:vindent_temp=v:count1<CR>gv<Esc>:call vindent#Object('ii',0,"Diff",g:vindent_temp)<CR>
 xnoremap <Plug>(VindentObject_OX_ii) :<C-U>let g:vindent_temp=v:count1<CR>gv<Esc>:call vindent#Object('ii',0,"Less",g:vindent_temp)<CR>
 xnoremap <Plug>(VindentObject_XO_ii) :<C-U>let g:vindent_temp=v:count1<CR>gv<Esc>:call vindent#Object('ii',1,"Diff",g:vindent_temp)<CR>
