@@ -187,6 +187,8 @@ For more details please refer to the [`doc`](doc/vindent.txt), section `vindent_
 ## Change Log
 
 ```
+v3.0.3:                                                            2022-May-16
+	- Bug fix: `Find` and `Range` name in `vindent#Object` too generic.
 v3.0.2:                                                            2022-May-15
 	- Bug fix: {count} now respects `<A1><A2>` settings.
 v3.0.1:                                                            2022-May-14

@@ -127,11 +127,11 @@ endfunction
 " Vindent Text Object: Select indent text objects.
 function! vindent#Object(code, skip, stop_func, count)
 	let l:range = <SID>NoHang(<SID>Range(a:stop_func,line("."),a:skip))
-	let Find    = { direct,num,skip -> { x -> <SID>Skip(1,x) ? num : x }(<SID>Find(direct,"Less",num,<SID>Get(num),skip)) }
-	let Range   = { line -> <SID>Range(a:stop_func,line,a:skip) }
+	let VindentF = { direct,num,skip -> { x -> <SID>Skip(1,x) ? num : x }(<SID>Find(direct,"Less",num,<SID>Get(num),skip)) }
+	let VindentR = { line -> <SID>Range(a:stop_func,line,a:skip) }
 	for l:time in range(a:count-1) " recursive
-		let [ l:zs, l:ze ] = [ Find("prev",l:range[0],a:skip), Find("next",l:range[1],a:skip) ]
-		let l:test = [ Range(l:range[0])[0], Range(l:range[1])[1] ]
+		let [ l:zs, l:ze ] = [ VindentF("prev",l:range[0],a:skip), VindentF("next",l:range[1],a:skip) ]
+		let l:test = [ VindentR(l:range[0])[0], VindentR(l:range[1])[1] ]
 		if l:zs+1!=l:test[0] | let l:zs = l:range[0] | endif
 		if l:ze-1!=l:test[1] | let l:ze = l:range[1] | endif
 		if l:zs!=l:range[0] && l:ze!=l:range[1] && <SID>Diff(<SID>Get(l:zs),l:ze)
@@ -140,10 +140,10 @@ function! vindent#Object(code, skip, stop_func, count)
 			endif
 		endif
 		if [ l:zs, l:ze ]==l:range | break | endif
-		let l:range = [ Range(l:zs)[0], Range(l:ze)[1] ]-><SID>NoHang()
+		let l:range = [ VindentR(l:zs)[0], VindentR(l:ze)[1] ]-><SID>NoHang()
 	endfor
 	if l:range==[1,line('$')] | return | endif " hard stop
-	if a:code[0]==#'a' | let l:range[0] = { x -> x==0 ? 1         : x }( Find("prev",l:range[0],1) ) | endif
-	if a:code[1]==#'I' | let l:range[1] = { x -> x==0 ? line('$') : x }( Find("next",l:range[1],1) ) | endif
+	if a:code[0]==#'a' | let l:range[0] = { x -> x==0 ? 1         : x }( VindentF("prev",l:range[0],1) ) | endif
+	if a:code[1]==#'I' | let l:range[1] = { x -> x==0 ? line('$') : x }( VindentF("next",l:range[1],1) ) | endif
 	call <SID>DoObject(<SID>NoHang(l:range))
 endfunction
