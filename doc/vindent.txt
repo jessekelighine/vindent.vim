@@ -1,4 +1,4 @@
-*vindent.txt* Navigate and Select Text by Indentations.
+*vindent.txt* Navigate and Select Text by Indentations.                 v3.0.2
 
 
                                  VINDENT.VIM
@@ -265,9 +265,9 @@ number of spaces, which makes sense visually.
 
 
 "vindent_motion_OO"				*vindent_motion_OO*
-		A |motion|. Moves the cursor to the previous or next block
-		that has the same indentation as the current line where "empty
-		lines" and "more-indented lines" are considered to be
+		A |motion|. Moves the cursor to the previous or next text
+		block that has the same indentation as the current line where
+		"empty lines" and "more-indented lines" are considered to be
 		boundaries of text block. This motions can take {count}.
 
 		Here are some quirks and remarks:
@@ -275,10 +275,7 @@ number of spaces, which makes sense visually.
 		      the "last" line of the previous block; when jumping to
 		      next block, the cursor will move to the "first" line of
 		      the next block.
-		    - Although there are four |vindent_Block_Motions|, I
-		      believe |vindent_blockmotion_OO_pn| is what most people
-		      want, since every breakage of continuous lines with same
-		      indentation are considered a boundary.
+		    - See |vindent_motion_same| for more remarks on motions.
 
 		For example, consider the following text and assume that
 		the keybindings provided in |vindent_Usage| are used: >
@@ -323,7 +320,7 @@ number of spaces, which makes sense visually.
 
 
 "vindent_motion_OO_scope"			*vindent_motion_XO_scope*
-		A |motion|. Moves the cursor to the beginning or end of the
+		A |motion|. Moves the cursor to the start or end of the
 		current text block where "empty lines" and "more-indented
 		lines" are considered to be boundaries of a text block. This
 		motion does NOT take {count}.
@@ -352,6 +349,8 @@ number of spaces, which makes sense visually.
 		If cursor is on line 2, `]8` moves it to line 9.
 		If cursor is on line 9, `[8` moves it to line 2.
 
+		See |vindent_motion_same| for remarks on motions.
+
 "vindent_motion_OX_scope"			*vindent_motion_OX_scope*
 		Same as |vindent_motion_OO_scope|, but lines with more
 		indentation are considered as boundaries of a text block. See
@@ -376,7 +375,7 @@ number of spaces, which makes sense visually.
 		to be boundaries of a text block.  This object selects text by
 		entire lines, like |V|.  This object can take {count}, which
 		indicates how much indent levels to go up when defining the
-		block, see examples below.
+		block.  See examples below for how {count} works.
 
 		Keybinding defined by `g:vindent_object_OO_ii` is mapped to
 		this text object.
@@ -384,11 +383,11 @@ number of spaces, which makes sense visually.
 		Here are some quirks about objects in |vindent_Text_Object|:
 		    - The objects assume indentations are consistent (<Tab> or
 		      <Space> exclusively), unless |g:vindent_tabstop| is set.
-		    - The objects do not select |empty| lines at the beginning
-		      or the end.
+		    - The objects do not select |empty| lines at the start
+		      or the end of the text block.
 		    - The objects select nothing if the entire document is
 		      determined to be the same text block. (This
-		      characteristic is hard coded in.)
+		      behaviour is hard coded.)
 
 		For example, consider the following piece of vimscript: >
 			 1 function! SumTo(number)
@@ -403,7 +402,8 @@ number of spaces, which makes sense visually.
 			10     return l:sum
 			11 endfunction
 <		The following describes what lines the objects select given
-		the cursor position:
+		the cursor position (notation: `Object`: `Cursor Position` -->
+		`Lines Selected`):
 		- |vindent_object_OO_ii|: line 5 --> selects lines [5,6].
 		- |vindent_object_OO_ii|: line 4 --> selects lines [3,4].
 		- |vindent_object_XO_ii|: line 7 --> selects lines [7,10].
@@ -486,17 +486,18 @@ g:vindent_tabstop				*g:vindent_tabstop*
 There are some subtleties in defining a text block "with same indentation".
 Namely, do we ignore empty lines in-between? Do we not view lines with "more"
 indentation in-between as a separator for new blocks? Surely different use
-cases calls for different definitions, so this plugin provides all possible
+cases call for different definitions, so this plugin provides all possible
 definitions for all block motions.
 
 All |vindent_Motion|s or |vindent_Text_Object|s that operates block-wise are
-all named `vindent_motion_<A1><A2>_<A3>` or `vindent_object_<A1><A2>_<A3>`
+named `vindent_motion_<A1><A2>_<A3>` or `vindent_object_<A1><A2>_<A3>`
 where...
-    - `<A1>` indicates (by `O` for NO or `X` for YES) whether "empty lines"
+    - `<A1>` indicates (`O` for NO or `X` for YES) whether "empty lines"
       are IGNORED when finding the boundaries of a "text block".
     - `<A2>` indicates whether "lines with more indentation" are IGNORED when
       finding the boundaries of a "text block".
     - `<A3>` indicates the type of motion or text object.
+That is,
 >
  | <A1><A2> | "Empty lines" ignored? | "More-indented lines" ignored? |
  | -------- | ---------------------- | ------------------------------ |

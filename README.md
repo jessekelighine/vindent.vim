@@ -58,7 +58,7 @@ let g:vindent_tabstop = &tabstop      " let <Tab> be equivalent to tabstop numbe
 
 and enjoy using:
 
-1. **Vindent Motions**: 
+1. **Vindent Motions**:
 	- Jump to previous/next block with same indentation with `[=`/`]=`. ([examples](#vindent-motion-block-wise))
 	- Jump to previous/next line with less indentation with `[-`/`]-`. ([examples](#vindent-motion-line-wise))
 	- Jump to previous/next line with more indentation with `[+`/`]+`. ([examples](#vindent-motion-line-wise))
@@ -83,6 +83,27 @@ These motions are very self explanatory: move to the previous or next line with
 either *same*, *less*, *more*, or *different* indentation.  These motions
 operates on *entire lines* if it is prepended with a normal command such as `d`
 or `c` or `y`.
+
+For example, assume that the keybindings in [Usage](#usage-and-quick-start) are
+used and consider the following python code:
+
+```python
+ 1 def SumTo():
+ 2     print("Hello, what do you want to sum?")
+ 3     count = int(input("integer:"))
+ 4
+ 5     total = 0
+ 6     for i in range(count+1):
+ 7         total += i
+ 8
+ 9     print(f"This is your total: {total}")
+10     return(total)
+```
+
+- If cursor is on line 3, `[-` moves it to line 1.
+- If cursor is on line 7, `2[-` moves it to line 1.
+- If cursor is on line 10, `[+` moves it to line 7.
+- If cursor is on line 1, `2]+` moves it to line 7.
 
 See [`doc`](doc/vindent.txt) section `vindent_Motion` for more detail and
 examples.
@@ -134,7 +155,7 @@ If the cursor is on line 2, then pressing `]p` moves the cursor to line 9.
 This is because `]p` is mapped to `g:vindent_motion_XX_se`, in which `XX` indicates
 that "empty lines" and "more-indented lines" are all ignored, thus line 2 to
 line 9 is considered to be one text block.
- 
+
 **Note**:
 
 - I believe `g:vindent_motion_OO_prev` and `g:vindent_motion_OO_next` is what
@@ -181,6 +202,15 @@ indents) should be selected.  Assume that the keybindings in
 - If the cursor is on line 3, `vaI` selects lines 1--11.
 - If the cursor is on line 5, `v2ii` selects lines 3--10. (one indent level up)
 - If the cursor is on line 5, `v2ai` selects lines 1--10. (one indent level up, and then search for a previous line with less indentation)
+
+**Tip**: If you have many indentation levels, it is not easy to know the count
+need to select a certain indentation level.  What I do is to set `tab` in
+`listchar` (see `:h listchar`) to `┊\ `, which looks like the following when
+`set list` (see `:h 'list'`) is used:
+
+![text object tip](object_tip.png)
+
+With this you can quickly count the lines and use `{count}` to text objects effectively.
 
 For more details please refer to the [`doc`](doc/vindent.txt), section `vindent_Text_Object`.
 
