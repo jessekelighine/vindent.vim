@@ -53,7 +53,6 @@ let g:vindent_motion_XX_se     = ']p' " jump to end   of the current block scope
 let g:vindent_object_XX_ii     = 'ii' " select current block.
 let g:vindent_object_XX_ai     = 'ai' " select current block + one extra line  at beginning.
 let g:vindent_object_XX_aI     = 'aI' " select current block + two extra lines at beginning and end.
-let g:vindent_tabstop = &tabstop      " let <Tab> be equivalent to tabstop number of spaces.
 ```
 
 and enjoy using:
@@ -71,7 +70,6 @@ Feel free to customize the keybindings.
 **Note**:
 
 - If you wish not to use a certain functionality, simply leave the corresponding variable undefined.
-- If you wish not to treat `<Tab>` as some number of `<Space>`s, leave `g:vindent_tabstop` undefined.
 - For a motion or text object to define "text blocks" differently, see [examples](#vindent-motion-block-wise)
   or refer to section `vindent_Block_Definition` in the [`doc`](doc/vindent.txt) for detailed explanation.
 
@@ -203,20 +201,26 @@ indents) should be selected.  Assume that the keybindings in
 - If the cursor is on line 5, `v2ii` selects lines 3--10. (one indent level up)
 - If the cursor is on line 5, `v2ai` selects lines 1--10. (one indent level up, and then search for a previous line with less indentation)
 
-**Tip**: If you have many indentation levels, it is not easy to know the count
-need to select a certain indentation level.  What I do is to set `tab` in
-`listchar` (see `:h listchar`) to `┊\ `, which looks like the following when
-`set list` (see `:h 'list'`) is used:
-
-![text object tip](object_tip.png)
-
-With this you can quickly count the lines and use `{count}` to text objects effectively.
-
 For more details please refer to the [`doc`](doc/vindent.txt), section `vindent_Text_Object`.
 
 ## Change Log
 
 ```
+v4.0.0:                                                            2022-May-20
+	- Reimplement how indentation is compared and handled: Previously use
+	  a custom function to handle the determining of a line's indentation
+	  level, now use Vim's native function `indent()`.  This change has 2
+	  benefits:
+	    1. It automatically assumes equivalence between a <Tab> and
+	       |tabstop| number of <Space>s.  This is more flexible since Vim
+	       can infer filetype specific |tabstop| setting automatically.
+	    2. It returns a number representing the indent level.  This makes
+	       comparing indent level much faster.
+	  As a result, |g:vindent_tabstop| is now obsolete and the user can no
+	  longer choose whether <Tab>s and <Space>s should be considered
+	  differently.
+	- No longer refuse to select the entire document.
+	- Restructure `autoload` to be more concise.
 v3.0.3:                                                            2022-May-16
 	- Bug fix: `Find` and `Range` name in `vindent#Object` too generic.
 v3.0.2:                                                            2022-May-15

@@ -1,4 +1,4 @@
-*vindent.txt* Navigate and Select Text by Indentations.                 v3.0.2
+*vindent.txt* Navigate and Select Text by Indentations.                 v4.0.0
 
 
                                  VINDENT.VIM
@@ -185,18 +185,6 @@ USE
 |motion|s and |object|s.  E.g., `5]=` jumps to the next 5 blocks; `y]=` yanks
 to the next 5 blocks if you have `]=` mapped to jump to the next block, etc.
 
-TABSTOP
-
-By default, this plugin does not assume equivalence between <Tab> and
-<Space>s by values of |tabstop|, |softtabstop|, or |shiftwidth|.  However,
-if you wish for this plugin to view a <Tab> as 8 <Space>, then set
-|g:vindent_tabstop| to 8.  For example, I have the following in my |vimrc|:
->
-	let g:vindent_tabstop = &tabstop
-<
-This make the plugin assume the equivalence between 1 <Tab> and |tabstop|
-number of spaces, which makes sense visually.
-
 ==============================================================================
 3. Details                                                   *vindent_Details*
 
@@ -213,11 +201,6 @@ number of spaces, which makes sense visually.
 		`g:vindent_motion_same_next` are mapped to this motion.
 
 		Here are some quirks about |vindent_Motion|:
-		    - The motions assume that the indentations are consistent,
-		      unless |g:vindent_tabstop| is set. For example, on a
-		      line indented with 1 tab, |same_indent_prev| would not
-		      move the cursor to a line indented with 8 spaces, unless
-		      |g:vindent_tabstop| is set to 8.
 		    - If no line with the same indentation is found, the
 		      cursor does not move.
 		    - If being used as a text object, these motions operate on
@@ -381,13 +364,8 @@ number of spaces, which makes sense visually.
 		this text object.
 
 		Here are some quirks about objects in |vindent_Text_Object|:
-		    - The objects assume indentations are consistent (<Tab> or
-		      <Space> exclusively), unless |g:vindent_tabstop| is set.
 		    - The objects do not select |empty| lines at the start
 		      or the end of the text block.
-		    - The objects select nothing if the entire document is
-		      determined to be the same text block. (This
-		      behaviour is hard coded.)
 
 		For example, consider the following piece of vimscript: >
 			 1 function! SumTo(number)
@@ -472,9 +450,13 @@ number of spaces, which makes sense visually.
 3.3 Miscellaneous                                      *vindent_Miscellaneous*
 
 g:vindent_tabstop				*g:vindent_tabstop*
-		Number of <Space>s assumed to be equivalent to 1 <Tab>.
-		By default, |g:vindent_tabstop| is not defined and this plugin
-		does not assume equivalence between <Tab> and <Space>s.
+		Note: Obsolete for v4.0.0 and above.  For newer versions, a
+		<Tab> is always assumed to be |tabstop| number of <Space>s.
+
+		For v3.0.3 and below: Number of <Space>s assumed to be
+		equivalent to 1 <Tab>. By default, |g:vindent_tabstop| is not
+		defined and this plugin does not assume equivalence between
+		<Tab> and <Space>s.
 
 		In most cases, you should probably set this variable to
 		|&tabstop| if you wish to use this functionality, so that the
@@ -539,6 +521,21 @@ issue or make a pull request at https://github.com/jessekelighine/vindent.vim.
 ==============================================================================
 6. Changelog                                               *vindent_Changelog*
 
+v4.0.0:                                                            2022-May-20
+	- Reimplement how indentation is compared and handled: Previously use
+	  a custom function to handle the determining of a line's indentation
+	  level, now use Vim's native function `indent()`.  This change has 2
+	  benefits:
+	    1. It automatically assumes equivalence between a <Tab> and
+	       |tabstop| number of <Space>s.  This is more flexible since Vim
+	       can infer filetype specific |tabstop| setting automatically.
+	    2. It returns a number representing the indent level.  This makes
+	       comparing indent level much faster.
+	  As a result, |g:vindent_tabstop| is now obsolete and the user can no
+	  longer choose whether <Tab>s and <Space>s should be considered
+	  differently.
+	- No longer refuse to select the entire document.
+	- Restructure `autoload` to be more concise.
 v3.0.3:                                                            2022-May-16
 	- Bug fix: `Find` and `Range` name in `vindent#Object` too generic.
 v3.0.2:                                                            2022-May-15
