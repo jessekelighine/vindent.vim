@@ -2,6 +2,14 @@
 
 if exists("g:loaded_vindent") | finish | endif | let g:loaded_vindent=1
 
+" Toggle vindent motion error behaviour.
+if !exists("g:vindent_noisy") | let g:vindent_noisy = 0 | endif
+command -nargs=0 -bang VindentNoisy :call <SID>VindentNoisy(<bang>1)
+function! <SID>VindentNoisy(change)
+	if a:change | let g:vindent_noisy = !g:vindent_noisy | endif
+	echom " Vindent is now " . ( g:vindent_noisy ? "NOISY" : "SILENT" ) . "."
+endfunction
+
 nnoremap <Plug>(VindentMotion_next_diff) :<C-U>call                                        vindent#Motion('next',v:count1,'N',"Diff")<CR>
 nnoremap <Plug>(VindentMotion_next_less) :<C-U>call                                        vindent#Motion('next',v:count1,'N',"Less")<CR>
 nnoremap <Plug>(VindentMotion_next_more) :<C-U>call                                        vindent#Motion('next',v:count1,'N',"More")<CR>

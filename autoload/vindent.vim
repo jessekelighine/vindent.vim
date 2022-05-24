@@ -66,6 +66,7 @@ function! vindent#Motion(direct, count, mode, stop_func, skip=1)
 		let l:temp = <SID>Find(a:direct,a:stop_func,l:to,indent(l:to),a:skip)
 		if l:temp==0 | break | else | let l:to = l:temp | endif
 	endfor
+	if g:vindent_noisy && l:line==l:to | throw "Motion Not Applicable" | endif
 	call <SID>DoMotion(a:direct, a:mode, abs(l:line-l:to))
 endfunction
 
@@ -77,6 +78,7 @@ function! vindent#BlockMotion(direct, skip, stop_func, mode, count)
 		let l:temp = <SID>Find(a:direct,"Same",l:edge,indent(l:to),a:skip)
 		if l:temp==0 | break | else | let l:to = l:temp | endif
 	endfor
+	if g:vindent_noisy && l:line==l:to | throw "Motion Not Applicable" | endif
 	call <SID>DoMotion(a:direct, a:mode, abs(l:line-l:to))
 endfunction
 
@@ -89,10 +91,10 @@ endfunction
 
 " Vindent Text Object: Select indent text objects.
 function! vindent#Object(code, skip, stop_func, count)
-	let VindentF = { direct,ln,skip -> { x -> s:empty(x) ? ln : x }(<SID>Find(direct,"Less",ln,indent(ln),skip)) }
+	let VindentF = { direct,line,skip -> { x -> x==0 ? line : x }(<SID>Find(direct,"Less",line,indent(line),skip)) }
 	let VindentR = { line -> <SID>Range(a:stop_func,line,a:skip) }
 	let l:range  = VindentR(line("."))-><SID>NoHang()
-	for l:time in range(a:count-1) " recursive
+	for l:time in range(a:count-1) " recursive==
 		let [ l:zs, l:ze ] = [ VindentF("prev",l:range[0],a:skip), VindentF("next",l:range[1],a:skip) ]
 		let l:test = [ VindentR(l:range[0])[0], VindentR(l:range[1])[1] ]
 		if l:zs+1!=l:test[0] | let l:zs = l:range[0] | endif
@@ -105,7 +107,7 @@ function! vindent#Object(code, skip, stop_func, count)
 		if [l:zs,l:ze]==l:range || [l:zs,l:ze]==[1,line("$")] | break | endif
 		let l:range = [ VindentR(l:zs)[0], VindentR(l:ze)[1] ]-><SID>NoHang()
 	endfor
-	if a:code[0]==#"a" | let l:range[0] = { x -> x==0 ? 1         : x }( VindentF("prev",l:range[0],1) ) | endif
-	if a:code[1]==#"I" | let l:range[1] = { x -> x==0 ? line("$") : x }( VindentF("next",l:range[1],1) ) | endif
+	if a:code[0]==#"a" | let l:range[0] = VindentF("prev",l:range[0],1) | endif
+	if a:code[1]==#"I" | let l:range[1] = VindentF("next",l:range[1],1) | endif
 	call <SID>DoObject(<SID>NoHang(l:range))
 endfunction

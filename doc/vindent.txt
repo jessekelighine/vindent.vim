@@ -1,4 +1,4 @@
-*vindent.txt* Navigate and Select Text by Indentations.                 v4.0.0
+*vindent.txt* Navigate and Select Text by Indentations.                 v4.1.0
 
 
                                  VINDENT.VIM
@@ -184,6 +184,11 @@ USE
 |vindent_Motion|s and |vindent_Text_Object|s work as if they are native vim
 |motion|s and |object|s.  E.g., `5]=` jumps to the next 5 blocks; `y]=` yanks
 to the next 5 blocks if you have `]=` mapped to jump to the next block, etc.
+
+You can choose if a |vindent_Motion| throws an error when the cursor does not
+move after calling the motion, e.g., when there is no lines of same
+indentation to be found.  This is especially useful when recording a macro.
+See |:VindentNoisy| for more details.
 
 ==============================================================================
 3. Details                                                   *vindent_Details*
@@ -449,6 +454,27 @@ to the next 5 blocks if you have `]=` mapped to jump to the next block, etc.
 ------------------------------------------------------------------------------
 3.3 Miscellaneous                                      *vindent_Miscellaneous*
 
+						*:VindentNoisy!*
+:VindentNoisy[!]				*:VindentNoisy* 
+g:vindent_noisy					*g:vindent_noisy*
+		Whether a |vindent_Motion| throws an error when the motion
+		does not move the cursor (noisy or silent).  By default,
+		|g:vindent_noisy| is set to 0.  You can toggle
+		|g:vindent_noisy| by the command |:VindentNoisy|.  The command
+		|:VindentNoisy!| shows the state of |g:vindent_noisy|.
+
+		This setting is useful when |recording| a macro.  If a
+		|vindent_Motion| does not throw an arrow when the cursor
+		doesn't move, the macro given {count} would continue to replay
+		{count} times regardless of whether the cursor is moving to a
+		new position, causing unintended outcomes; if an error is
+		thrown, then the macro would stop automatically, similar to
+		the behaviour of ending a macro with `j` or `k`.
+
+		Errors are noisy and annoying.  So a tip is to not change the
+		default of |g:vindent_noisy|, but only use |:VindentNoisy| to
+		toggle it before and after replaying a |recording|.
+
 g:vindent_tabstop				*g:vindent_tabstop*
 		Note: Obsolete for v4.0.0 and above.  For newer versions, a
 		<Tab> is always assumed to be |tabstop| number of <Space>s.
@@ -521,6 +547,9 @@ issue or make a pull request at https://github.com/jessekelighine/vindent.vim.
 ==============================================================================
 6. Changelog                                               *vindent_Changelog*
 
+v4.1.0:                                                            2022-May-23
+	- Add |g:vindent_noisy| option and |:VindentNoisy| command.
+	  (See: Github bug #3)
 v4.0.0:                                                            2022-May-20
 	- Reimplement how indentation is compared and handled: Previously use
 	  a custom function to handle the determining of a line's indentation

@@ -206,6 +206,9 @@ For more details please refer to the [`doc`](doc/vindent.txt), section `vindent_
 ## Change Log
 
 ```
+v4.1.0:                                                            2022-May-23
+	- Add |g:vindent_noisy| option and |:VindentNoisy| command.
+	  (See: Github bug #3)
 v4.0.0:                                                            2022-May-20
 	- Reimplement how indentation is compared and handled: Previously use
 	  a custom function to handle the determining of a line's indentation
