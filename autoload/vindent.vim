@@ -31,7 +31,7 @@ function! <SID>Range(stop_func, line, skip)
 	let l:indent = indent(a:line)
 	let l:line_s = { x -> x==0 ? 1         : x+1 }(<SID>Find("prev", a:stop_func, a:line, l:indent, a:skip))
 	let l:line_e = { x -> x==0 ? line("$") : x-1 }(<SID>Find("next", a:stop_func, a:line, l:indent, a:skip))
-	return [ l:line_s, l:line_e]
+	return [ l:line_s, l:line_e ]
 endfunction
 
 " Exclude empty lines on either ends from "a:range".
@@ -94,14 +94,14 @@ function! vindent#Object(code, skip, stop_func, count)
 	let VindentF = { direct,line,skip -> { x -> x==0 ? line : x }(<SID>Find(direct,"Less",line,indent(line),skip)) }
 	let VindentR = { line -> <SID>Range(a:stop_func,line,a:skip) }
 	let l:range  = VindentR(line("."))-><SID>NoHang()
-	for l:time in range(a:count-1) " recursive==
+	for l:time in range(a:count-1) " recursive
 		let [ l:zs, l:ze ] = [ VindentF("prev",l:range[0],a:skip), VindentF("next",l:range[1],a:skip) ]
 		let l:test = [ VindentR(l:range[0])[0], VindentR(l:range[1])[1] ]
 		if l:zs+1!=l:test[0] | let l:zs = l:range[0] | endif
 		if l:ze-1!=l:test[1] | let l:ze = l:range[1] | endif
-		if l:zs!=l:range[0] && l:ze!=l:range[1] && s:compare["Diff"](indent(l:zs),l:ze)
-			if s:compare["More"](indent(l:zs),l:ze) | let l:zs = l:range[0]
-			else                                    | let l:ze = l:range[1]
+		if l:zs!=l:range[0] && l:ze!=l:range[1]
+			if     s:compare["More"](indent(l:zs),l:ze) | let l:zs = l:range[0]
+			elseif s:compare["Less"](indent(l:zs),l:ze) | let l:ze = l:range[1]
 			endif
 		endif
 		if [l:zs,l:ze]==l:range || [l:zs,l:ze]==[1,line("$")] | break | endif

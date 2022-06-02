@@ -465,14 +465,14 @@ g:vindent_noisy					*g:vindent_noisy*
 
 		This setting is useful when |recording| a macro.  If a
 		|vindent_Motion| does not throw an arrow when the cursor
-		doesn't move, the macro given {count} would continue to replay
+		doesn't move, a macro given {count} would continue to replay
 		{count} times regardless of whether the cursor is moving to a
 		new position, causing unintended outcomes; if an error is
 		thrown, then the macro would stop automatically, similar to
 		the behaviour of ending a macro with `j` or `k`.
 
 		Errors are noisy and annoying.  So a tip is to not change the
-		default of |g:vindent_noisy|, but only use |:VindentNoisy| to
+		default of |g:vindent_noisy|, but use |:VindentNoisy| to
 		toggle it before and after replaying a |recording|.
 
 g:vindent_tabstop				*g:vindent_tabstop*
@@ -603,4 +603,4 @@ This plugin is created by Jesse Chen.  Find me on GitHub at
 https://github.com/jessekelighine.
 
 ==============================================================================
-vim:tw=78:ts=8:noet:ft=help:norl:
+vim:tw=78:ts=8:noet:ft=help:norl:nornu:nonu
