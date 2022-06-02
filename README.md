@@ -206,6 +206,8 @@ For more details please refer to the [`doc`](doc/vindent.txt), section `vindent_
 ## Change Log
 
 ```
+v4.1.1:                                                            2022-Jun-02
+	- Make mappings recursive in `plugin/vindent.vim`.
 v4.1.0:                                                            2022-May-23
 	- Add |g:vindent_noisy| option and |:VindentNoisy| command.
 	  (See: Github bug #3)
