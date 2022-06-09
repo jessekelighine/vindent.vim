@@ -1,49 +1,46 @@
 " autoload/vindent.vim
 
-"### Helper Functions #########################################################
-
-" Test if line is empty.
+" Test if line is empty, valid.
 let s:empty = { line -> empty(getline(line)) }
+let s:valid = { line -> line>=1 && line<=line("$") }
 
 " Compare indentation levels.
 let s:compare = {
-			\ "Same":   { indent,line -> s:empty(line) ? 0 : indent==indent(line) },
-			\ "NoLess": { indent,line -> s:empty(line) ? 0 : indent<=indent(line) },
-			\ "Less":   { indent,line -> !s:compare["NoLess"](indent,line) },
-			\ "More":   { indent,line -> !s:compare["Same"](indent,line) && s:compare["NoLess"](indent,line) },
-			\ "Diff":   { indent,line -> !s:compare["Same"](indent,line) },
+			\ "Same": { line,base -> s:empty(base) ? ( s:empty(line) ? 1 : 0 ) : ( s:empty(line) ? 0 : indent(line)==indent(base) ) },
+			\ "NoLe": { line,base -> s:empty(base) ? 1 : ( s:empty(line) ? 0 : indent(line)>=indent(base) ) },
+			\ "Less": { line,base -> !s:compare["NoLe"](line,base) },
+			\ "More": { line,base -> !s:compare["Same"](line,base) && s:compare["NoLe"](line,base) },
+			\ "Diff": { line,base -> !s:compare["Same"](line,base) },
 			\ }
 
-" Find "prev" or "next" line with "a:stop_func" indent, return line number.
-function! <SID>Find(direct, stop_func, line, indent, skip)
-	let l:line = a:line
-	let l:inc  = a:direct=="prev" ? -1 : 1
-	while 1
-		let l:line += l:inc
-		if l:line<1 || l:line>line("$")            | return 0      | endif
-		if ( a:skip ? s:empty(l:line) : 0 )        | continue      | endif
-		if s:compare[a:stop_func](a:indent,l:line) | return l:line | endif
+" Remove hanging blank lines.
+let s:nohang = {
+			\ "prev": { line -> nextnonblank(line) },
+			\ "next": { line -> prevnonblank(line) },
+			\ }
+
+" Find prev/next line until criteria "func" is met.
+function! <SID>find_til(direct, func, skip, line, base=a:line)
+	let [ l:line, l:inc ] = [ a:line, ( a:direct=="prev" ? -1 : 1 ) ]
+	while 1 | let l:line += l:inc
+		if !s:valid(l:line)                 | return a:line | endif
+		if a:skip && s:empty(l:line)        | continue      | endif
+		if s:compare[a:func](l:line,a:base) | return l:line | endif
 	endwhile
 endfunction
 
-" Find the range (lines) of text with same indent level.
-function! <SID>Range(stop_func, line, skip)
-	let l:indent = indent(a:line)
-	let l:line_s = { x -> x==0 ? 1         : x+1 }(<SID>Find("prev", a:stop_func, a:line, l:indent, a:skip))
-	let l:line_e = { x -> x==0 ? line("$") : x-1 }(<SID>Find("next", a:stop_func, a:line, l:indent, a:skip))
-	return [ l:line_s, l:line_e ]
-endfunction
-
-" Exclude empty lines on either ends from "a:range".
-function! <SID>NoHang(range)
-	let l:range = a:range
-	while s:empty(l:range[0]) | let l:range[0]=l:range[0]+1 | endwhile
-	while s:empty(l:range[1]) | let l:range[1]=l:range[1]-1 | endwhile
-	return l:range
+" Find prev/next line until criteria "func" is NOT met.
+function! <SID>find_til_not(direct, func, skip, line, base=a:line)
+	let [ l:line, l:inc ] = [ a:line, ( a:direct=="prev" ? -1 : 1 ) ]
+	while 1 | let l:line += l:inc
+		if !s:valid(l:line)                  | return l:line-l:inc | endif
+		if a:skip && s:empty(l:line)         | continue            | endif
+		if !s:compare[a:func](l:line,a:base) | return l:line-l:inc | endif
+	endwhile
 endfunction
 
 " Actually move the cursor according to inputs. (motion)
-function! <SID>DoMotion(direct, mode, diff)
+function! <SID>do_motion(direct, mode, diff)
 	let l:move = a:diff . ( a:direct=="prev" ? "k" : "j")
 	if     a:mode=="N" | exe a:diff==0 ? "return"   : "norm! "    .l:move."_"
 	elseif a:mode=="X" | exe a:diff==0 ? "norm! gv" : "norm! \egv".l:move."_"
@@ -52,62 +49,60 @@ function! <SID>DoMotion(direct, mode, diff)
 endfunction
 
 " Actually mov ethe cursor according to inputs. (text object)
-function! <SID>DoObject(range)
+function! <SID>do_object(range)
 	call cursor(a:range[0],0)
 	exec { x -> "norm! V" . ( x==0 ? "" : x."j" ) }( a:range[1] - a:range[0] )
 endfunction
 
-"### Main Functions ###########################################################
-
 " Vindent Motion: Go to the "prev" or "next" line with the same indentation.
-function! vindent#Motion(direct, count, mode, stop_func, skip=1)
+function! vindent#Motion(direct, skip, func, mode, count)
 	let [ l:line, l:to ] = [ line("."), line(".") ]
-	for l:time in range(a:count) " recursive
-		let l:temp = <SID>Find(a:direct,a:stop_func,l:to,indent(l:to),a:skip)
-		if l:temp==0 | break | else | let l:to = l:temp | endif
+	for l:time in range(a:count)
+		let l:to = <SID>find_til(a:direct, a:func, a:skip, l:to)
 	endfor
 	if g:vindent_noisy && l:line==l:to | throw "Motion Not Applicable" | endif
-	call <SID>DoMotion(a:direct, a:mode, abs(l:line-l:to))
+	call <SID>do_motion(a:direct, a:mode, abs(l:line-l:to))
 endfunction
 
 " Vindent Block Motion: Move to the next block with same indentation.
-function! vindent#BlockMotion(direct, skip, stop_func, mode, count)
+function! vindent#BlockMotion(direct, skip, func, mode, count)
 	let [ l:line, l:to ] = [ line("."), line(".") ]
-	for l:time in range(a:count) " recursive
-		let l:edge = <SID>NoHang(<SID>Range(a:stop_func,l:to,a:skip))[( a:direct=="prev" ? 0 : 1 )]
-		let l:temp = <SID>Find(a:direct,"Same",l:edge,indent(l:to),a:skip)
-		if l:temp==0 | break | else | let l:to = l:temp | endif
+	for l:ltime in range(a:count)
+		let l:edge = <SID>find_til_not(a:direct,a:func,a:skip,l:to)
+		let l:to   = <SID>find_til(a:direct,"Same",a:skip,l:edge,l:to)
 	endfor
 	if g:vindent_noisy && l:line==l:to | throw "Motion Not Applicable" | endif
-	call <SID>DoMotion(a:direct, a:mode, abs(l:line-l:to))
+	call <SID>do_motion(a:direct, a:mode, abs(l:line-l:to))
 endfunction
 
 " Vindent Block Motion Edge: Move to the edge of same indentation block.
-function! vindent#BlockEdgeMotion(direct, skip, stop_func, mode)
+function! vindent#BlockEdgeMotion(direct, skip, func, mode)
 	let l:line = line(".")
-	let l:edge = <SID>NoHang(<SID>Range(a:stop_func,l:line,a:skip))[( a:direct=="prev" ? 0 : 1 )]
-	call <SID>DoMotion(a:direct, a:mode, abs(l:line-l:edge))
+	let l:edge = s:nohang[a:direct](<SID>find_til_not(a:direct,a:func,a:skip,l:line))
+	call <SID>do_motion(a:direct, a:mode, abs(l:line-l:edge))
 endfunction
 
 " Vindent Text Object: Select indent text objects.
-function! vindent#Object(code, skip, stop_func, count)
-	let VindentF = { direct,line,skip -> { x -> x==0 ? line : x }(<SID>Find(direct,"Less",line,indent(line),skip)) }
-	let VindentR = { line -> <SID>Range(a:stop_func,line,a:skip) }
-	let l:range  = VindentR(line("."))-><SID>NoHang()
-	for l:time in range(a:count-1) " recursive
-		let [ l:zs, l:ze ] = [ VindentF("prev",l:range[0],a:skip), VindentF("next",l:range[1],a:skip) ]
-		let l:test = [ VindentR(l:range[0])[0], VindentR(l:range[1])[1] ]
-		if l:zs+1!=l:test[0] | let l:zs = l:range[0] | endif
-		if l:ze-1!=l:test[1] | let l:ze = l:range[1] | endif
-		if l:zs!=l:range[0] && l:ze!=l:range[1]
-			if     s:compare["More"](indent(l:zs),l:ze) | let l:zs = l:range[0]
-			elseif s:compare["Less"](indent(l:zs),l:ze) | let l:ze = l:range[1]
+function! vindent#Object(skip, func, code, count)
+	let l:get_range = { "full": { line1,line2 -> [
+				\ <SID>find_til_not("prev",a:func,a:skip,line1),
+				\ <SID>find_til_not("next",a:func,a:skip,line2)] } }
+	let l:line = line(".")
+	let l:full_range = l:get_range["full"](l:line,l:line)
+	let l:range = [ s:nohang["prev"](l:full_range[0]), s:nohang["next"](l:full_range[1]) ]
+	for l:time in range(a:count-1)
+		let l:test = [
+					\ { x,y -> s:compare["Less"](x,y) && s:valid(x) && !s:empty(x) ? x : y }( l:full_range[0]-1,l:range[0] ),
+					\ { x,y -> s:compare["Less"](x,y) && s:valid(x) && !s:empty(x) ? x : y }( l:full_range[1]+1,l:range[1] )]
+		if l:test[0]!=l:range[0] && l:test[1]!=l:range[1]
+			if     s:compare["More"](l:test[0],l:test[1]) | let l:test[1]=l:range[1]
+			elseif s:compare["Less"](l:test[0],l:test[1]) | let l:test[0]=l:range[0]
 			endif
 		endif
-		if [l:zs,l:ze]==l:range || [l:zs,l:ze]==[1,line("$")] | break | endif
-		let l:range = [ VindentR(l:zs)[0], VindentR(l:ze)[1] ]-><SID>NoHang()
+		let l:full_range = l:get_range["full"](l:test[0],l:test[1])
+		let l:range = [ s:nohang["prev"](l:full_range[0]), s:nohang["next"](l:full_range[1]) ]
 	endfor
-	if a:code[0]==#"a" | let l:range[0] = VindentF("prev",l:range[0],1) | endif
-	if a:code[1]==#"I" | let l:range[1] = VindentF("next",l:range[1],1) | endif
-	call <SID>DoObject(<SID>NoHang(l:range))
+	if a:code[0]==#"a" | let l:range[0]=<SID>find_til("prev","Less",1,l:range[0]) | endif
+	if a:code[1]==#"I" | let l:range[1]=<SID>find_til("next","Less",1,l:range[1]) | endif
+	call <SID>do_object(l:range)
 endfunction

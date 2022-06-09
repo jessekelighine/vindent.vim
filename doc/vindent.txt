@@ -1,4 +1,4 @@
-*vindent.txt* Navigate and Select Text by Indentations.                 v4.1.0
+*vindent.txt* Navigate and Select Text by Indentations.                 v4.2.0
 
 
                                  VINDENT.VIM
@@ -547,6 +547,10 @@ issue or make a pull request at https://github.com/jessekelighine/vindent.vim.
 ==============================================================================
 6. Changelog                                               *vindent_Changelog*
 
+v4.2.0:                                                            2022-Jun-09
+	- Reimplement `autoload/vindent.vim`: change how lines are compared by
+	  viewing empty lines as its own indent level.  This makes some edge
+	  cases of |vindent_object| behave properly.
 v4.1.1:                                                            2022-Jun-02
 	- Make mappings recursive in `plugin/vindent.vim`.
 v4.1.0:                                                            2022-May-23
