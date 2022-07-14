@@ -205,58 +205,7 @@ For more details please refer to the [`doc`](doc/vindent.txt), section `vindent_
 
 ## Change Log
 
-```
-v4.1.1:                                                            2022-Jun-02
-	- Make mappings recursive in `plugin/vindent.vim`.
-v4.1.0:                                                            2022-May-23
-	- Add |g:vindent_noisy| option and |:VindentNoisy| command.
-	  (See: Github bug #3)
-v4.0.0:                                                            2022-May-20
-	- Reimplement how indentation is compared and handled: Previously use
-	  a custom function to handle the determining of a line's indentation
-	  level, now use Vim's native function `indent()`.  This change has 2
-	  benefits:
-	    1. It automatically assumes equivalence between a <Tab> and
-	       |tabstop| number of <Space>s.  This is more flexible since Vim
-	       can infer filetype specific |tabstop| setting automatically.
-	    2. It returns a number representing the indent level.  This makes
-	       comparing indent level much faster.
-	  As a result, |g:vindent_tabstop| is now obsolete and the user can no
-	  longer choose whether <Tab>s and <Space>s should be considered
-	  differently.
-	- No longer refuse to select the entire document.
-	- Restructure `autoload` to be more concise.
-v3.0.3:                                                            2022-May-16
-	- Bug fix: `Find` and `Range` name in `vindent#Object` too generic.
-v3.0.2:                                                            2022-May-15
-	- Bug fix: {count} now respects `<A1><A2>` settings.
-v3.0.1:                                                            2022-May-14
-	- Bug fix: fix how {count} work on text objects.
-v3.0.0:                                                            2022-May-13
-	- Expand |vindent_Text_Object|s to be customizable.
-	- |vindent_Text_Object| now takes count.
-v2.2.0:                                                            2022-May-09
-	- Expand |vindent_Block_Motions|: move to beginning/end of text blocks
-	  with same indentation.
-v2.1.1:                                                            2022-May-09
-	- Bug fix: continuous motion call in visual mode.
-v2.1.0:                                                            2022-May-09
-	- Add |vindent_Block_Motions|.
-	- Bug fix: make {count} work everywhere.
-v2.0.0:                                                            2022-May-08
-	- |vindent_Motions| now can to jump to line with SAME, LESS, MORE, or
-	  DIFFERENT indentation as the current line.
-	- <Plug>s are simplified.
-	- Core implementation no longer less than 100 lines :(
-v1.3.0:                                                            2022-May-05
-	- Add |g:vindent_tabstop|.
-v1.2.0:                                                            2022-May-04
-	- |vindent_Motions| now takes {count}.
-v1.1.0:                                                            2022-May-03
-	- Add |in_Indent| object.
-v1.0.0:                                                            2022-May-03
-	- Initial version.
-```
+See [`doc`](doc/vindent.tex) section `6. Changelog` for details.
 
 ## Licence
 
