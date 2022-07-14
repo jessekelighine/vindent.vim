@@ -205,7 +205,7 @@ For more details please refer to the [`doc`](doc/vindent.txt), section `vindent_
 
 ## Change Log
 
-See [`doc`](doc/vindent.tex) section `6. Changelog` for details.
+See [`doc`](doc/vindent.txt) section `6. Changelog` for details.
 
 ## Licence
 
