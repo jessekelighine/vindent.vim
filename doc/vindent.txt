@@ -1,4 +1,4 @@
-*vindent.txt* Navigate and Select Text by Indentations.                 v4.2.0
+*vindent.txt* Navigate and Select Text by Indentations.
 
 
                                  VINDENT.VIM
@@ -189,6 +189,10 @@ You can choose if a |vindent_Motion| throws an error when the cursor does not
 move after calling the motion, e.g., when there is no lines of same
 indentation to be found.  This is especially useful when recording a macro.
 See |:VindentNoisy| for more details.
+
+You can also choose if you would like the motions to be added to the
+|jumplist|.  This is useful when you navigate precisely with indentations in a
+large file.  See |:VindentJumps| for more details.
 
 ==============================================================================
 3. Details                                                   *vindent_Details*
@@ -454,8 +458,21 @@ See |:VindentNoisy| for more details.
 ------------------------------------------------------------------------------
 3.3 Miscellaneous                                      *vindent_Miscellaneous*
 
+						*:VindentJumps!*
+:VindentJumps[!]				*:VindentJumps*
+g:vindent_jumps					*g:vindent_noisy*
+		Whether a |vindent_Motion| is added to the |jumplist|.  By
+		default, |g:vindent_jumps| is set to 0, i.e., the motions are
+		not added to the jumplist.  You can toggle |g:vindent_jumps|
+		with command |:VindentJumps|.  The command |:VindentJumps!|
+		shows the state of |g:vindent_jumps|.
+
+		Since it is unlikely that you would change this setting often,
+		it is advised that you simply set |g:vindent_jumps| in your 
+		vimrc.
+
 						*:VindentNoisy!*
-:VindentNoisy[!]				*:VindentNoisy* 
+:VindentNoisy[!]				*:VindentNoisy*
 g:vindent_noisy					*g:vindent_noisy*
 		Whether a |vindent_Motion| throws an error when the motion
 		does not move the cursor (noisy or silent).  By default,
@@ -547,6 +564,9 @@ issue or make a pull request at https://github.com/jessekelighine/vindent.vim.
 ==============================================================================
 6. Changelog                                               *vindent_Changelog*
 
+v4.3.0:                                                            2022-Aug-29
+	- Added |g:vindent_jumps| option and |:VindentJumps| command.
+	- Fix typo.
 v4.2.0:                                                            2022-Jun-09
 	- Reimplement `autoload/vindent.vim`: change how lines are compared by
 	  viewing empty lines as its own indent level.  This makes some edge

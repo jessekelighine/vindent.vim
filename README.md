@@ -8,8 +8,8 @@
 	- Jump to start/end of the current text block of same indentation.
 2. **Text Objects**: selects specific lines defined by indentations.
 	- Select a text block of *same* (or specified level of) indentation.
-	- Select text block and a previous line with less indentation.
-	- Select text block, a previous, and a next line with less indentation.
+	- Select text block and a previous line with less indentation. (useful with Python function definitions)
+	- Select text block, a previous, and a next line with less indentation. (useful with Lua function definitions)
 
 This plugin is inspired by [vim-indentwise](https://github.com/jeetsukumaran/vim-indentwise)
 and [vim-indent-object](https://github.com/michaeljsmith/vim-indent-object).
@@ -18,9 +18,9 @@ plugins, but **improved**! Here are some of the improvements and reasons why
 you should switch to `vindent.vim`:
 
 - Motions work nicely with prepending `{count}`s and normal commands such as
-  `d`, `c`, and `y`! Works just like a native vim motion!
-- More customizability! Chose for yourself if "empty lines" or "lines with more
-  indentation" should be skipped when determining boundaries of a text block!
+  `d`, `c`, and `y`. Works just like a native vim motion!
+- More customizability! Chose for yourself if "*empty lines*" or "*lines with more
+  indentation*" should be considered as text-block boundaries.
 - Reimplemented with only about *250* lines of vimscript, where only about
   *100* lines are core implementation!
 
@@ -36,8 +36,8 @@ git clone https://github.com/jessekelighine/vindent.vim
 
 ## Usage and Quick Start
 
-`vindent.vim` comes with no default keybindings.  Here is a quick start set of
-keybindings to put in your `.vimrc`:
+`vindent.vim` comes with no default keybindings.
+Here is a recommended set of keybindings to put in your `.vimrc`:
 
 ```vim
 let g:vindent_motion_OO_prev   = '[=' " jump to prev block of same indent.
@@ -55,7 +55,7 @@ let g:vindent_object_XX_ai     = 'ai' " select current block + one extra line  a
 let g:vindent_object_XX_aI     = 'aI' " select current block + two extra lines at beginning and end.
 ```
 
-and enjoy using:
+And with the keybindings, enjoy using:
 
 1. **Vindent Motions**:
 	- Jump to previous/next block with same indentation with `[=`/`]=`. ([examples](#vindent-motion-block-wise))
@@ -63,7 +63,7 @@ and enjoy using:
 	- Jump to previous/next line with more indentation with `[+`/`]+`. ([examples](#vindent-motion-line-wise))
 	- Jump to previous/next line with different indentation with `[;`/`];`. ([examples](#vindent-motion-line-wise))
 	- Jump to start/end of text block with `[p`/`]p`. ([examples](#vindent-motion-block-wise))
-3. **Vindent Text Objects**: Select text block with `ii` (*in indent*),`ai` (*an indent*), and `aI` (*an Indent*). ([examples](#vindent-text-object))
+2. **Vindent Text Objects**: Select text block with `ii` (*in indent*),`ai` (*an indent*), and `aI` (*an Indent*). ([examples](#vindent-text-object))
 
 Feel free to customize the keybindings.
 

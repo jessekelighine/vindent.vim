@@ -2,12 +2,20 @@
 
 if exists("g:loaded_vindent") | finish | endif | let s:save_cpo=&cpo | set cpo&vim
 
+" Toggle cindent jumps behaviour.
+if !exists("g:vindent_jumps") | let g:vindent_jumps = 0 | endif
+command -nargs=0 -bang VindentJumps :call <SID>VindentJumps(<bang>1)
+function! <SID>VindentJumps(change)
+	if a:change | let g:vindent_jumps = !g:vindent_jumps | endif
+	echom " Vindent motions ".( g:vindent_jumps ? "ON" : "OFF" )." jumplist."
+endfunction
+
 " Toggle vindent motion error behaviour.
 if !exists("g:vindent_noisy") | let g:vindent_noisy = 0 | endif
 command -nargs=0 -bang VindentNoisy :call <SID>VindentNoisy(<bang>1)
 function! <SID>VindentNoisy(change)
 	if a:change | let g:vindent_noisy = !g:vindent_noisy | endif
-	echom " Vindent is now " . ( g:vindent_noisy ? "NOISY" : "SILENT" ) . "."
+	echom " Vindent is " . ( g:vindent_noisy ? "NOISY" : "SILENT" ) . "."
 endfunction
 
 nnoremap <Plug>(VindentMotion_next_diff) :<C-U>call                                        vindent#Motion("next",1,"Diff","N",v:count1)<CR>

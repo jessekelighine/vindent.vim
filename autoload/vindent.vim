@@ -42,13 +42,13 @@ endfunction
 " Actually move the cursor according to inputs. (motion)
 function! <SID>do_motion(direct, mode, diff)
 	let l:move = a:diff . ( a:direct=="prev" ? "k" : "j")
-	if     a:mode=="N" | exe a:diff==0 ? "return"   : "norm! "    .l:move."_"
-	elseif a:mode=="X" | exe a:diff==0 ? "norm! gv" : "norm! \egv".l:move."_"
-	elseif a:mode=="O" | exe a:diff==0 ? "return"   : "norm! V"   .l:move."_"
+	if     a:mode=="N" | exe a:diff==0 ? "return"   : "norm! "  .( g:vindent_jumps ? "m'"   : ""   ).l:move."_"
+	elseif a:mode=="X" | exe a:diff==0 ? "norm! gv" : "norm! \e".( g:vindent_jumps ? "m'gv" : "gv" ).l:move."_"
+	elseif a:mode=="O" | exe a:diff==0 ? "return"   : "norm! "  .( g:vindent_jumps ? "m'V"  : "V"  ).l:move."_"
 	endif
 endfunction
 
-" Actually mov ethe cursor according to inputs. (text object)
+" Actually move the cursor according to inputs. (text object)
 function! <SID>do_object(range)
 	call cursor(a:range[0],0)
 	exec { x -> "norm! V" . ( x==0 ? "" : x."j" ) }( a:range[1] - a:range[0] )
@@ -67,7 +67,7 @@ endfunction
 " Vindent Block Motion: Move to the next block with same indentation.
 function! vindent#BlockMotion(direct, skip, func, mode, count)
 	let [ l:line, l:to ] = [ line("."), line(".") ]
-	for l:ltime in range(a:count)
+	for l:time in range(a:count)
 		let l:edge = <SID>find_til_not(a:direct,a:func,a:skip,l:to)
 		let l:to   = <SID>find_til(a:direct,"Same",a:skip,l:edge,l:to)
 	endfor
