@@ -41,10 +41,10 @@ endfunction
 
 " Actually move the cursor according to inputs. (motion)
 function! <SID>do_motion(direct, mode, diff)
-	let l:move = a:diff . ( a:direct=="prev" ? "k" : "j")
-	if     a:mode=="N" | exe a:diff==0 ? "return"   : "norm! "  .( g:vindent_jumps ? "m'"   : ""   ).l:move."_"
-	elseif a:mode=="X" | exe a:diff==0 ? "norm! gv" : "norm! \e".( g:vindent_jumps ? "m'gv" : "gv" ).l:move."_"
-	elseif a:mode=="O" | exe a:diff==0 ? "return"   : "norm! "  .( g:vindent_jumps ? "m'V"  : "V"  ).l:move."_"
+	let l:move = a:diff . ( a:direct=="prev" ? "k" : "j" )
+	if     a:mode=="N" | exe a:diff==0 ? "norm! _"  : "norm! "  .( g:vindent_jumps ? "m'" : "" ).""  .l:move."_"
+	elseif a:mode=="X" | exe a:diff==0 ? "norm! gv" : "norm! \e".( g:vindent_jumps ? "m'" : "" )."gv".l:move."_"
+	elseif a:mode=="O" | exe a:diff==0 ? "norm! V"  : "norm! "  .( g:vindent_jumps ? "m'" : "" )."V" .l:move."_"
 	endif
 endfunction
 
@@ -88,19 +88,19 @@ function! vindent#Object(skip, func, code, count)
 				\ <SID>find_til_not("prev",a:func,a:skip,line1),
 				\ <SID>find_til_not("next",a:func,a:skip,line2)] } }
 	let l:line = line(".")
-	let l:full_range = l:get_range["full"](l:line,l:line)
-	let l:range = [ s:nohang["prev"](l:full_range[0]), s:nohang["next"](l:full_range[1]) ]
+	let l:full_range = l:get_range.full(l:line,l:line)
+	let l:range = [ s:nohang.prev(l:full_range[0]), s:nohang.next(l:full_range[1]) ]
 	for l:time in range(a:count-1)
 		let l:test = [
-					\ { x,y -> s:compare["Less"](x,y) && s:valid(x) && !s:empty(x) ? x : y }( l:full_range[0]-1,l:range[0] ),
-					\ { x,y -> s:compare["Less"](x,y) && s:valid(x) && !s:empty(x) ? x : y }( l:full_range[1]+1,l:range[1] )]
+					\ { x,y -> s:compare.Less(x,y) && s:valid(x) && !s:empty(x) ? x : y }( l:full_range[0]-1,l:range[0] ),
+					\ { x,y -> s:compare.Less(x,y) && s:valid(x) && !s:empty(x) ? x : y }( l:full_range[1]+1,l:range[1] )]
 		if l:test[0]!=l:range[0] && l:test[1]!=l:range[1]
-			if     s:compare["More"](l:test[0],l:test[1]) | let l:test[1]=l:range[1]
-			elseif s:compare["Less"](l:test[0],l:test[1]) | let l:test[0]=l:range[0]
+			if     s:compare.More(l:test[0],l:test[1]) | let l:test[1]=l:range[1]
+			elseif s:compare.Less(l:test[0],l:test[1]) | let l:test[0]=l:range[0]
 			endif
 		endif
-		let l:full_range = l:get_range["full"](l:test[0],l:test[1])
-		let l:range = [ s:nohang["prev"](l:full_range[0]), s:nohang["next"](l:full_range[1]) ]
+		let l:full_range = l:get_range.full(l:test[0],l:test[1])
+		let l:range = [ s:nohang.prev(l:full_range[0]), s:nohang.next(l:full_range[1]) ]
 	endfor
 	if a:code[0]==#"a" | let l:range[0]=<SID>find_til("prev","Less",1,l:range[0]) | endif
 	if a:code[1]==#"I" | let l:range[1]=<SID>find_til("next","Less",1,l:range[1]) | endif

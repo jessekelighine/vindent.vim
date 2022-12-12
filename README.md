@@ -2,7 +2,7 @@
 
 `vindent.vim` is Vim/Neovim plugin that provides indentation related *motions* and *text objects*:
 
-1. **Movements**: jump to specific positions defined by indentations.
+1. **Motions**: jump to specific positions defined by indentations.
 	- Jump to previous/next line with *same*, *less*, *more*, or *different* indentation.
 	- Jump to previous/next text block with *same* indentation.
 	- Jump to start/end of the current text block of same indentation.
@@ -53,9 +53,10 @@ let g:vindent_motion_XX_se     = ']p' " jump to end   of the current block scope
 let g:vindent_object_XX_ii     = 'ii' " select current block.
 let g:vindent_object_XX_ai     = 'ai' " select current block + one extra line  at beginning.
 let g:vindent_object_XX_aI     = 'aI' " select current block + two extra lines at beginning and end.
+let g:vindent_jumps            = 1    " make vindent motion count as a |jump-motion| (works with |jumplist|).
 ```
 
-And with the keybindings, enjoy using:
+With these keybindings, you can now...
 
 1. **Vindent Motions**:
 	- Jump to previous/next block with same indentation with `[=`/`]=`. ([examples](#vindent-motion-block-wise))
@@ -63,15 +64,11 @@ And with the keybindings, enjoy using:
 	- Jump to previous/next line with more indentation with `[+`/`]+`. ([examples](#vindent-motion-line-wise))
 	- Jump to previous/next line with different indentation with `[;`/`];`. ([examples](#vindent-motion-line-wise))
 	- Jump to start/end of text block with `[p`/`]p`. ([examples](#vindent-motion-block-wise))
-2. **Vindent Text Objects**: Select text block with `ii` (*in indent*),`ai` (*an indent*), and `aI` (*an Indent*). ([examples](#vindent-text-object))
+2. **Vindent Text Objects**:
+   Select text block with `ii` (*in indent*),`ai` (*an indent*), and `aI` (*an Indent*). ([examples](#vindent-text-object))
 
-Feel free to customize the keybindings.
-
-**Note**:
-
-- If you wish not to use a certain functionality, simply leave the corresponding variable undefined.
-- For a motion or text object to define "text blocks" differently, see [examples](#vindent-motion-block-wise)
-  or refer to section `vindent_Block_Definition` in the [`doc`](doc/vindent.txt) for detailed explanation.
+Feel free to customize the keybindings. If you wish not to use a certain
+functionality, simply leave the corresponding variable undefined.
 
 ## Explanations and Examples
 
@@ -108,10 +105,11 @@ examples.
 
 ### Vindent Motion: block-wise
 
-All vindent motions (and text objects) that operates block-wise contains a two
-character string of `O`'s and `X`'s in their names, which indicates how a "text
-block" is defined.  More precisely, they are all named
-`vindent_motion_<A1><A2>_<A3>` or `vindent_object_<A1><A2>_<A3>` where...
+These motions move the cursor to the previous or next text block with the same
+indentation. All vindent motions and objects that operates block-wise contains
+a two character string of `O`'s and `X`'s in their names. This string indicates
+how the motion or object defines a "text block".  More precisely, they
+are all named `vindent_motion_<A1><A2>_<A3>` or `vindent_object_<A1><A2>_<A3>` where...
 
 - `<A1>` indicates whether "empty lines" are IGNORED when finding the
   boundaries of a "text block".

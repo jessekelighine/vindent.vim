@@ -12,8 +12,8 @@ Contents                                                    *vindent_Contents*
     3. Details .............................. |vindent_Details|
         3.1 Motion .......................... |vindent_Motion|
         3.2 Text Object ..................... |vindent_Text_Object|
-	3.3 Miscellaneous ................... |vindent_Miscellaneous|
-	3.4 Block Definition ................ |vindent_Block_Definition|
+        3.3 Miscellaneous ................... |vindent_Miscellaneous|
+        3.4 Block Definition ................ |vindent_Block_Definition|
     4. License .............................. |vindent_License|
     5. Bugs and Contributing ................ |vindent_Bugs_and_Contributing|
     6. Changelog ............................ |vindent_Changelog|
@@ -458,6 +458,13 @@ large file.  See |:VindentJumps| for more details.
 ------------------------------------------------------------------------------
 3.3 Miscellaneous                                      *vindent_Miscellaneous*
 
+						*:VindentHighlight!*
+:VindentHighlight[!]				*:VindentHighlight*
+		Highlights the indentation level of the current line.
+		This function only works when 'list' is set and both "tabs"
+		and "spaces" are visible.  The command |:VindentHighlight!|
+		clears the highlighting.
+
 						*:VindentJumps!*
 :VindentJumps[!]				*:VindentJumps*
 g:vindent_jumps					*g:vindent_noisy*
@@ -564,6 +571,9 @@ issue or make a pull request at https://github.com/jessekelighine/vindent.vim.
 ==============================================================================
 6. Changelog                                               *vindent_Changelog*
 
+v4.4.0:                                                            2022-Dec-12
+	- Add |:VindentHighlight| command.
+	- Fix typo.
 v4.3.0:                                                            2022-Aug-29
 	- Added |g:vindent_jumps| option and |:VindentJumps| command.
 	- Fix typo.
