@@ -23,13 +23,16 @@ if !exists("g:vindent_indent_color")  | let g:vindent_indent_color  = 'ctermfg=r
 if !exists("g:vindent_indent_nolist") | let g:vindent_indent_nolist = 0             | endif
 command -nargs=0 -bang VindentHighlight :call <SID>VindentHighlight(<bang>0)
 function! <SID>VindentHighlight(clear=0)
-	set list
-	let l:num = indent(line('.')) / &tabstop
-	let l:pat = '/^\('.repeat(' ',&tabstop).'\|\t\)\{'.l:num.'}\zs\s\ze/'
-	exe 'match VindentIndentLevel ' . l:pat
-	exe 'highlight VindentIndentLevel '. g:vindent_indent_color
-	exe !a:clear ? 'syntax enable VindentIndentLevel' : 'match'
-	exe a:clear && g:vindent_indent_nolist ? 'set nolist' : ''
+	if !a:clear
+		set list
+		let l:num = indent(line('.')) / &tabstop
+		let l:pat = '/^\('.repeat(' ',&tabstop).'\|\t\)\{'.l:num.'}\zs\s\ze/'
+		exe 'highlight VindentIndentLevel '. g:vindent_indent_color
+		exe 'match VindentIndentLevel ' . l:pat
+	else
+		exe 'match'
+		exe g:vindent_indent_nolist ? 'set nolist' : ''
+	endif
 endfunction
 
 nnoremap <Plug>(VindentMotion_next_diff) :<C-U>call                                        vindent#Motion('next',1,'Diff','N',v:count1)<CR>

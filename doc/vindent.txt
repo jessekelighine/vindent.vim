@@ -571,6 +571,8 @@ issue or make a pull request at https://github.com/jessekelighine/vindent.vim.
 ==============================================================================
 6. Changelog                                               *vindent_Changelog*
 
+v4.4.1:                                                            2023-Jan-10
+	- Fix |:VindentHighlight| bug.
 v4.4.0:                                                            2022-Dec-12
 	- Add |:VindentHighlight| command.
 	- Fix typo.
