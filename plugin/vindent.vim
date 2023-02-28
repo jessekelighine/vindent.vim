@@ -19,19 +19,21 @@ function! <SID>VindentNoisy(change)
 endfunction
 
 " Command: Highlight the indentation level.
-if !exists("g:vindent_indent_color")  | let g:vindent_indent_color  = 'ctermfg=red' | endif
-if !exists("g:vindent_indent_nolist") | let g:vindent_indent_nolist = 0             | endif
+if !exists("g:vindent_color") | let g:vindent_color = 'ctermfg=red' | endif
 command -nargs=0 -bang VindentHighlight :call <SID>VindentHighlight(<bang>0)
-function! <SID>VindentHighlight(clear=0)
-	if !a:clear
-		set list
-		let l:num = indent(line('.')) / &tabstop
-		let l:pat = '/^\('.repeat(' ',&tabstop).'\|\t\)\{'.l:num.'}\zs\s\ze/'
-		exe 'highlight VindentIndentLevel '. g:vindent_indent_color
-		exe 'match VindentIndentLevel ' . l:pat
+function! <SID>VindentHighlight(clear=0) abort
+	if a:clear
+		if !exists("b:vindent_list_save") | return | endif
+		match
+		execu 'set ' . ( b:vindent_list_save ? '' : 'no' ) . 'list'
+		unlet b:vindent_list_save
 	else
-		exe 'match'
-		exe g:vindent_indent_nolist ? 'set nolist' : ''
+		if !exists("b:vindent_list_save") | let b:vindent_list_save = &list | endif
+		set list
+		let l:number  = indent(line('.')) / &tabstop
+		let l:pattern = '/^\('.repeat(' ',&tabstop).'\|\t\)\{'.l:number.'}\zs\s\ze/'
+		exe 'highlight VindentIndentLevel '. g:vindent_color
+		exe 'match VindentIndentLevel ' . l:pattern
 	endif
 endfunction
 
