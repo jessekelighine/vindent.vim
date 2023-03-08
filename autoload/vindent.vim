@@ -90,7 +90,7 @@ function! vindent#Object(skip, func, code, count)
 	let l:line = line(".")
 	let l:full_range = l:get_range.full(l:line,l:line)
 	let l:range = [ s:nohang.prev(l:full_range[0]), s:nohang.next(l:full_range[1]) ]
-	for l:time in range(a:count-1)
+	for l:time in range( a:count - ( g:vindent_count ? 1 : 0 ) )
 		let l:test = [
 					\ { x,y -> s:compare.Less(x,y) && s:valid(x) && !s:empty(x) ? x : y }( l:full_range[0]-1,l:range[0] ),
 					\ { x,y -> s:compare.Less(x,y) && s:valid(x) && !s:empty(x) ? x : y }( l:full_range[1]+1,l:range[1] )]

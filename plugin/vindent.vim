@@ -2,6 +2,9 @@
 
 if exists("g:loaded_vindent") | finish | endif | let s:save_cpo=&cpo | set cpo&vim
 
+" Setting: Default vindent count to start from 1.
+if !exists("g:vindent_count") | let g:vindent_count = 1 | endif
+
 " Command: Toggle vindent jumps behaviour.
 if !exists("g:vindent_jumps") | let g:vindent_jumps = 0 | endif
 command -nargs=0 -bang VindentJumps :call <SID>VindentJumps(<bang>1)
@@ -139,30 +142,30 @@ if exists("g:vindent_motion_XO_se") | exe "map <silent> ".g:vindent_motion_XO_se
 if exists("g:vindent_motion_XX_ss") | exe "map <silent> ".g:vindent_motion_XX_ss." <Plug>(VindentBlockMotion_XX_ss)" | endif
 if exists("g:vindent_motion_XX_se") | exe "map <silent> ".g:vindent_motion_XX_se." <Plug>(VindentBlockMotion_XX_se)" | endif
 
-onoremap <Plug>(VindentObject_OO_aI) :<C-U>call                                        vindent#Object(0,'Same','aI',v:count1)<CR>
-onoremap <Plug>(VindentObject_OO_ai) :<C-U>call                                        vindent#Object(0,'Same','ai',v:count1)<CR>
-onoremap <Plug>(VindentObject_OO_ii) :<C-U>call                                        vindent#Object(0,'Same','ii',v:count1)<CR>
-onoremap <Plug>(VindentObject_OX_aI) :<C-U>call                                        vindent#Object(0,'NoLe','aI',v:count1)<CR>
-onoremap <Plug>(VindentObject_OX_ai) :<C-U>call                                        vindent#Object(0,'NoLe','ai',v:count1)<CR>
-onoremap <Plug>(VindentObject_OX_ii) :<C-U>call                                        vindent#Object(0,'NoLe','ii',v:count1)<CR>
-onoremap <Plug>(VindentObject_XO_aI) :<C-U>call                                        vindent#Object(1,'Same','aI',v:count1)<CR>
-onoremap <Plug>(VindentObject_XO_ai) :<C-U>call                                        vindent#Object(1,'Same','ai',v:count1)<CR>
-onoremap <Plug>(VindentObject_XO_ii) :<C-U>call                                        vindent#Object(1,'Same','ii',v:count1)<CR>
-onoremap <Plug>(VindentObject_XX_aI) :<C-U>call                                        vindent#Object(1,'NoLe','aI',v:count1)<CR>
-onoremap <Plug>(VindentObject_XX_ai) :<C-U>call                                        vindent#Object(1,'NoLe','ai',v:count1)<CR>
-onoremap <Plug>(VindentObject_XX_ii) :<C-U>call                                        vindent#Object(1,'NoLe','ii',v:count1)<CR>
-xnoremap <Plug>(VindentObject_OO_aI) :<C-U>let g:vindent_temp=v:count1<CR>gv<Esc>:call vindent#Object(0,'Same','aI',g:vindent_temp)<CR>
-xnoremap <Plug>(VindentObject_OO_ai) :<C-U>let g:vindent_temp=v:count1<CR>gv<Esc>:call vindent#Object(0,'Same','ai',g:vindent_temp)<CR>
-xnoremap <Plug>(VindentObject_OO_ii) :<C-U>let g:vindent_temp=v:count1<CR>gv<Esc>:call vindent#Object(0,'Same','ii',g:vindent_temp)<CR>
-xnoremap <Plug>(VindentObject_OX_aI) :<C-U>let g:vindent_temp=v:count1<CR>gv<Esc>:call vindent#Object(0,'NoLe','aI',g:vindent_temp)<CR>
-xnoremap <Plug>(VindentObject_OX_ai) :<C-U>let g:vindent_temp=v:count1<CR>gv<Esc>:call vindent#Object(0,'NoLe','ai',g:vindent_temp)<CR>
-xnoremap <Plug>(VindentObject_OX_ii) :<C-U>let g:vindent_temp=v:count1<CR>gv<Esc>:call vindent#Object(0,'NoLe','ii',g:vindent_temp)<CR>
-xnoremap <Plug>(VindentObject_XO_aI) :<C-U>let g:vindent_temp=v:count1<CR>gv<Esc>:call vindent#Object(1,'Same','aI',g:vindent_temp)<CR>
-xnoremap <Plug>(VindentObject_XO_ai) :<C-U>let g:vindent_temp=v:count1<CR>gv<Esc>:call vindent#Object(1,'Same','ai',g:vindent_temp)<CR>
-xnoremap <Plug>(VindentObject_XO_ii) :<C-U>let g:vindent_temp=v:count1<CR>gv<Esc>:call vindent#Object(1,'Same','ii',g:vindent_temp)<CR>
-xnoremap <Plug>(VindentObject_XX_aI) :<C-U>let g:vindent_temp=v:count1<CR>gv<Esc>:call vindent#Object(1,'NoLe','aI',g:vindent_temp)<CR>
-xnoremap <Plug>(VindentObject_XX_ai) :<C-U>let g:vindent_temp=v:count1<CR>gv<Esc>:call vindent#Object(1,'NoLe','ai',g:vindent_temp)<CR>
-xnoremap <Plug>(VindentObject_XX_ii) :<C-U>let g:vindent_temp=v:count1<CR>gv<Esc>:call vindent#Object(1,'NoLe','ii',g:vindent_temp)<CR>
+exe "onoremap <Plug>(VindentObject_OO_aI) :<C-U>call                                       vindent#Object(0,'Same','aI',v:count".( g:vindent_count ? "1" : "" ).")<CR>"
+exe "onoremap <Plug>(VindentObject_OO_ai) :<C-U>call                                       vindent#Object(0,'Same','ai',v:count".( g:vindent_count ? "1" : "" ).")<CR>"
+exe "onoremap <Plug>(VindentObject_OO_ii) :<C-U>call                                       vindent#Object(0,'Same','ii',v:count".( g:vindent_count ? "1" : "" ).")<CR>"
+exe "onoremap <Plug>(VindentObject_OX_aI) :<C-U>call                                       vindent#Object(0,'NoLe','aI',v:count".( g:vindent_count ? "1" : "" ).")<CR>"
+exe "onoremap <Plug>(VindentObject_OX_ai) :<C-U>call                                       vindent#Object(0,'NoLe','ai',v:count".( g:vindent_count ? "1" : "" ).")<CR>"
+exe "onoremap <Plug>(VindentObject_OX_ii) :<C-U>call                                       vindent#Object(0,'NoLe','ii',v:count".( g:vindent_count ? "1" : "" ).")<CR>"
+exe "onoremap <Plug>(VindentObject_XO_aI) :<C-U>call                                       vindent#Object(1,'Same','aI',v:count".( g:vindent_count ? "1" : "" ).")<CR>"
+exe "onoremap <Plug>(VindentObject_XO_ai) :<C-U>call                                       vindent#Object(1,'Same','ai',v:count".( g:vindent_count ? "1" : "" ).")<CR>"
+exe "onoremap <Plug>(VindentObject_XO_ii) :<C-U>call                                       vindent#Object(1,'Same','ii',v:count".( g:vindent_count ? "1" : "" ).")<CR>"
+exe "onoremap <Plug>(VindentObject_XX_aI) :<C-U>call                                       vindent#Object(1,'NoLe','aI',v:count".( g:vindent_count ? "1" : "" ).")<CR>"
+exe "onoremap <Plug>(VindentObject_XX_ai) :<C-U>call                                       vindent#Object(1,'NoLe','ai',v:count".( g:vindent_count ? "1" : "" ).")<CR>"
+exe "onoremap <Plug>(VindentObject_XX_ii) :<C-U>call                                       vindent#Object(1,'NoLe','ii',v:count".( g:vindent_count ? "1" : "" ).")<CR>"
+exe "xnoremap <Plug>(VindentObject_OO_aI) :<C-U>let g:vindent_temp=v:count".( g:vindent_count ? "1" : "" )."<CR>gv<Esc>:call vindent#Object(0,'Same','aI',g:vindent_temp)<CR>"
+exe "xnoremap <Plug>(VindentObject_OO_ai) :<C-U>let g:vindent_temp=v:count".( g:vindent_count ? "1" : "" )."<CR>gv<Esc>:call vindent#Object(0,'Same','ai',g:vindent_temp)<CR>"
+exe "xnoremap <Plug>(VindentObject_OO_ii) :<C-U>let g:vindent_temp=v:count".( g:vindent_count ? "1" : "" )."<CR>gv<Esc>:call vindent#Object(0,'Same','ii',g:vindent_temp)<CR>"
+exe "xnoremap <Plug>(VindentObject_OX_aI) :<C-U>let g:vindent_temp=v:count".( g:vindent_count ? "1" : "" )."<CR>gv<Esc>:call vindent#Object(0,'NoLe','aI',g:vindent_temp)<CR>"
+exe "xnoremap <Plug>(VindentObject_OX_ai) :<C-U>let g:vindent_temp=v:count".( g:vindent_count ? "1" : "" )."<CR>gv<Esc>:call vindent#Object(0,'NoLe','ai',g:vindent_temp)<CR>"
+exe "xnoremap <Plug>(VindentObject_OX_ii) :<C-U>let g:vindent_temp=v:count".( g:vindent_count ? "1" : "" )."<CR>gv<Esc>:call vindent#Object(0,'NoLe','ii',g:vindent_temp)<CR>"
+exe "xnoremap <Plug>(VindentObject_XO_aI) :<C-U>let g:vindent_temp=v:count".( g:vindent_count ? "1" : "" )."<CR>gv<Esc>:call vindent#Object(1,'Same','aI',g:vindent_temp)<CR>"
+exe "xnoremap <Plug>(VindentObject_XO_ai) :<C-U>let g:vindent_temp=v:count".( g:vindent_count ? "1" : "" )."<CR>gv<Esc>:call vindent#Object(1,'Same','ai',g:vindent_temp)<CR>"
+exe "xnoremap <Plug>(VindentObject_XO_ii) :<C-U>let g:vindent_temp=v:count".( g:vindent_count ? "1" : "" )."<CR>gv<Esc>:call vindent#Object(1,'Same','ii',g:vindent_temp)<CR>"
+exe "xnoremap <Plug>(VindentObject_XX_aI) :<C-U>let g:vindent_temp=v:count".( g:vindent_count ? "1" : "" )."<CR>gv<Esc>:call vindent#Object(1,'NoLe','aI',g:vindent_temp)<CR>"
+exe "xnoremap <Plug>(VindentObject_XX_ai) :<C-U>let g:vindent_temp=v:count".( g:vindent_count ? "1" : "" )."<CR>gv<Esc>:call vindent#Object(1,'NoLe','ai',g:vindent_temp)<CR>"
+exe "xnoremap <Plug>(VindentObject_XX_ii) :<C-U>let g:vindent_temp=v:count".( g:vindent_count ? "1" : "" )."<CR>gv<Esc>:call vindent#Object(1,'NoLe','ii',g:vindent_temp)<CR>"
 
 if exists("g:vindent_object_OO_ii") | exe "xmap <silent> ".g:vindent_object_OO_ii." <Plug>(VindentObject_OO_ii)" | exe "omap <silent> ".g:vindent_object_OO_ii." <Plug>(VindentObject_OO_ii)" | endif
 if exists("g:vindent_object_OX_ii") | exe "xmap <silent> ".g:vindent_object_OX_ii." <Plug>(VindentObject_OX_ii)" | exe "omap <silent> ".g:vindent_object_OX_ii." <Plug>(VindentObject_OX_ii)" | endif

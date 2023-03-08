@@ -16,8 +16,7 @@ Contents                                                    *vindent_Contents*
         3.4 Block Definition ................ |vindent_Block_Definition|
     4. License .............................. |vindent_License|
     5. Bugs and Contributing ................ |vindent_Bugs_and_Contributing|
-    6. Changelog ............................ |vindent_Changelog|
-    7. Credits .............................. |vindent_Credits|
+    6. Credits .............................. |vindent_Credits|
 
 ==============================================================================
 1. Introduction                                         *vindent_Introduction*
@@ -402,6 +401,23 @@ large file.  See |:VindentJumps| for more details.
 		- `2` |vindent_object_XX_ai|: line 5 --> selects lines [1,10].
 		- `2` |vindent_object_XX_aI|: line 6 --> selects lines [1,11].
 
+		The {count} can be handled differently by setting
+		|g:vindent_count|.  In the above exmaples, |g:vindent_count|
+		is set to 1 (default).  If |g:vindent_count| is set to 0,
+		then
+		- |vindent_object_OO_ii|: line 5 --> selects lines [5,6].
+		- |vindent_object_OO_ii|: line 4 --> selects lines [3,4].
+		- |vindent_object_XO_ii|: line 7 --> selects lines [7,10].
+		- |vindent_object_OX_ii|: line 3 --> selects lines [3,7].
+		- |vindent_object_XX_ii|: line 3 --> selects lines [3,10].
+		- |vindent_object_XX_ai|: line 3 --> selects lines [1,10].
+		- |vindent_object_XX_aI|: line 3 --> selects lines [1,11].
+		- `1` |vindent_object_OO_ii|: line 5 --> selects lines [3,7].
+		- `1` |vindent_object_XX_ai|: line 5 --> selects lines [1,10].
+		- `1` |vindent_object_XX_aI|: line 6 --> selects lines [1,11].
+		In short, if |g:vindent_count| is set to 0, then {count}
+		is handled as if it is {count}+1 in the default setting.
+
 "vindent_object_XO_ii"				*vindent_object_XO_ii*
 		Same as |vindent_object_OO_ii|, but "empty lines" are ignored
 		when determining the boundaries of a text block.  See
@@ -467,7 +483,7 @@ large file.  See |:VindentJumps| for more details.
 
 						*:VindentJumps!*
 :VindentJumps[!]				*:VindentJumps*
-g:vindent_jumps					*g:vindent_noisy*
+g:vindent_jumps					*g:vindent_jumps*
 		Whether a |vindent_Motion| is added to the |jumplist|.  By
 		default, |g:vindent_jumps| is set to 0, i.e., the motions are
 		not added to the jumplist.  You can toggle |g:vindent_jumps|
@@ -498,6 +514,11 @@ g:vindent_noisy					*g:vindent_noisy*
 		Errors are noisy and annoying.  So a tip is to not change the
 		default of |g:vindent_noisy|, but use |:VindentNoisy| to
 		toggle it before and after replaying a |recording|.
+
+g:vindent_count					*g:vindent_count*
+		How |vindent_Text_Object| handles {count}.  This variables can
+		be set to either 0 or 1.  See example in |vindent_object_OO_ii|
+		for explanation. By default, |g:vindent_count| is set to 1.
 
 g:vindent_tabstop				*g:vindent_tabstop*
 		Note: Obsolete for v4.0.0 and above.  For newer versions, a
@@ -569,78 +590,10 @@ If you find one or would like to contribute to this plugin, please create an
 issue or make a pull request at https://github.com/jessekelighine/vindent.vim.
 
 ==============================================================================
-6. Changelog                                               *vindent_Changelog*
+6. Credits                                                   *vindent_Credits*
 
-v4.4.2:                                                            2023-Feb-28
-	- Make |:VindentHighlight| remember last 'list' setting.
-v4.4.1:                                                            2023-Jan-10
-	- Fix |:VindentHighlight| bug.
-v4.4.0:                                                            2022-Dec-12
-	- Add |:VindentHighlight| command.
-	- Fix typo.
-v4.3.0:                                                            2022-Aug-29
-	- Added |g:vindent_jumps| option and |:VindentJumps| command.
-	- Fix typo.
-v4.2.0:                                                            2022-Jun-09
-	- Reimplement `autoload/vindent.vim`: change how lines are compared by
-	  viewing empty lines as its own indent level.  This makes some edge
-	  cases of |vindent_object| behave properly.
-v4.1.1:                                                            2022-Jun-02
-	- Make mappings recursive in `plugin/vindent.vim`.
-v4.1.0:                                                            2022-May-23
-	- Add |g:vindent_noisy| option and |:VindentNoisy| command.
-	  (See: Github bug #3)
-v4.0.0:                                                            2022-May-20
-	- Reimplement how indentation is compared and handled: Previously use
-	  a custom function to handle the determining of a line's indentation
-	  level, now use Vim's native function `indent()`.  This change has 2
-	  benefits:
-	    1. It automatically assumes equivalence between a <Tab> and
-	       |tabstop| number of <Space>s.  This is more flexible since Vim
-	       can infer filetype specific |tabstop| setting automatically.
-	    2. It returns a number representing the indent level.  This makes
-	       comparing indent level much faster.
-	  As a result, |g:vindent_tabstop| is now obsolete and the user can no
-	  longer choose whether <Tab>s and <Space>s should be considered
-	  differently.
-	- No longer refuse to select the entire document.
-	- Restructure `autoload` to be more concise.
-v3.0.3:                                                            2022-May-16
-	- Bug fix: `Find` and `Range` name in `vindent#Object` too generic.
-v3.0.2:                                                            2022-May-15
-	- Bug fix: {count} now respects `<A1><A2>` settings.
-v3.0.1:                                                            2022-May-14
-	- Bug fix: fix how {count} work on text objects.
-v3.0.0:                                                            2022-May-13
-	- Expand |vindent_Text_Object|s to be customizable.
-	- |vindent_Text_Object| now takes count.
-v2.2.0:                                                            2022-May-09
-	- Expand |vindent_Block_Motions|: move to beginning/end of text blocks
-	  with same indentation.
-v2.1.1:                                                            2022-May-09
-	- Bug fix: continuous motion call in visual mode.
-v2.1.0:                                                            2022-May-09
-	- Add |vindent_Block_Motions|.
-	- Bug fix: make {count} work everywhere.
-v2.0.0:                                                            2022-May-08
-	- |vindent_Motions| now can to jump to line with SAME, LESS, MORE, or
-	  DIFFERENT indentation as the current line.
-	- <Plug>s are simplified.
-	- Core implementation no longer less than 100 lines :(
-v1.3.0:                                                            2022-May-05
-	- Add |g:vindent_tabstop|.
-v1.2.0:                                                            2022-May-04
-	- |vindent_Motions| now takes {count}.
-v1.1.0:                                                            2022-May-03
-	- Add |in_Indent| object.
-v1.0.0:                                                            2022-May-03
-	- Initial version.
-
-==============================================================================
-7. Credits                                                   *vindent_Credits*
-
-This plugin is created by Jesse Chen.  Find me on GitHub at
-https://github.com/jessekelighine.
+This plugin is created by Jesse Chen.
+Find me on GitHub at https://github.com/jessekelighine.
 
 ==============================================================================
 vim:tw=78:ts=8:noet:ft=help:norl:nornu:nonu

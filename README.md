@@ -37,7 +37,7 @@ git clone https://github.com/jessekelighine/vindent.vim
 ## Usage and Quick Start
 
 `vindent.vim` comes with no default keybindings.
-Here is a recommended set of keybindings to put in your `.vimrc`:
+Here is a recommended set of keybindings to put in your `.vimrc`/`init.vim`:
 
 ```vim
 let g:vindent_motion_OO_prev   = '[=' " jump to prev block of same indent.
@@ -166,7 +166,7 @@ line 9 is considered to be one text block.
 The text objects are:
 
 | Text Object | Mnemonics   | Description                                                                                 |
-| ---         | ---         | ---                                                                                         |
+|-------------|-------------|---------------------------------------------------------------------------------------------|
 | `ii`        | *in indent* | select text block of same indentation.                                                      |
 | `ai`        | *an indent* | select text block of same indentation and a previous line with less indentation.            |
 | `aI`        | *an Indent* | select text block of same indentation and a previous and a next line with less indentation. |
@@ -198,6 +198,13 @@ indents) should be selected.  Assume that the keybindings in
 - If the cursor is on line 3, `vaI` selects lines 1--11.
 - If the cursor is on line 5, `v2ii` selects lines 3--10. (one indent level up)
 - If the cursor is on line 5, `v2ai` selects lines 1--10. (one indent level up, and then search for a previous line with less indentation)
+
+If you think pressing `2` for "one indent level up" is not very intuitive,
+you can put `let g:vindent_count = 0` in you `.vimrc`/`init.vim`.
+This setting would change how `{count}`'s are handled as such:
+
+- If the cursor is on line 5, `v1ii` selects lines 3--10. (one indent level up)
+- If the cursor is on line 5, `v1ai` selects lines 1--10. (one indent level up, and then search for a previous line with less indentation)
 
 For more details please refer to the [`doc`](doc/vindent.txt), section `vindent_Text_Object`.
 
