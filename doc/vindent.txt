@@ -347,7 +347,7 @@ large file.  See |:VindentJumps| for more details.
 		indentation are considered as boundaries of a text block. See
 		|vindent_motion_OO_scope| for examples.
 
-"vindent_motion_XO_scope"			*vindent_motion_XX_scope*
+"vindent_motion_XO_scope"			*vindent_motion_XO_scope*
 		Same as |vindent_motion_OO_scope|, but empty lines and lines
 		with more indentations are not considered as boundaries of a
 		text block. See |vindent_motion_OO_scope| for examples.
