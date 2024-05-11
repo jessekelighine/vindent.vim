@@ -4,13 +4,13 @@
 let s:empty = { line -> empty(getline(line)) }
 let s:valid = { line -> line>=1 && line<=line("$") }
 
-" Compare indentation levels.
+" Compare numbers.
 let s:compare = {
-			\ "Same": { line,base -> s:empty(base) ? ( s:empty(line) ? 1 : 0 ) : ( s:empty(line) ? 0 : indent(line)==indent(base) ) },
-			\ "NoLe": { line,base -> s:empty(base) ? 1 : ( s:empty(line) ? 0 : indent(line)>=indent(base) ) },
-			\ "Less": { line,base -> !s:compare["NoLe"](line,base) },
-			\ "More": { line,base -> !s:compare["Same"](line,base) && s:compare["NoLe"](line,base) },
-			\ "Diff": { line,base -> !s:compare["Same"](line,base) },
+			\ "Same": { a,b -> a==b },
+			\ "NoLe": { a,b -> a>=b },
+			\ "Less": { a,b -> !s:compare["NoLe"](a,b) },
+			\ "More": { a,b -> !s:compare["Same"](a,b) && s:compare["NoLe"](a,b) },
+			\ "Diff": { a,b -> !s:compare["Same"](a,b) },
 			\ }
 
 " Remove hanging blank lines.
@@ -19,23 +19,34 @@ let s:nohang = {
 			\ "next": { line -> prevnonblank(line) },
 			\ }
 
+" Get indent of line, or use indent of next non-empty line if line is empty.
+function! <SID>get_indent(line)
+	let l:line = a:line
+	while s:valid(l:line) && s:empty(l:line)
+		let l:line += 1
+	endwhile
+	return s:valid(l:line) ? indent(l:line) : 0
+endfunction
+
 " Find prev/next line until criteria "func" is met.
 function! <SID>find_til(direct, func, skip, line, base=a:line)
+	let l:base_indent = <SID>get_indent(a:base)
 	let [ l:line, l:inc ] = [ a:line, ( a:direct=="prev" ? -1 : 1 ) ]
 	while 1 | let l:line += l:inc
-		if !s:valid(l:line)                 | return a:line | endif
-		if a:skip && s:empty(l:line)        | continue      | endif
-		if s:compare[a:func](l:line,a:base) | return l:line | endif
+		if !s:valid(l:line)                                | return a:line | endif
+		if a:skip && s:empty(l:line)                       | continue      | endif
+		if s:compare[a:func](indent(l:line),l:base_indent) | return l:line | endif
 	endwhile
 endfunction
 
 " Find prev/next line until criteria "func" is NOT met.
 function! <SID>find_til_not(direct, func, skip, line, base=a:line)
+	let l:base_indent = <SID>get_indent(a:base)
 	let [ l:line, l:inc ] = [ a:line, ( a:direct=="prev" ? -1 : 1 ) ]
 	while 1 | let l:line += l:inc
-		if !s:valid(l:line)                  | return l:line-l:inc | endif
-		if a:skip && s:empty(l:line)         | continue            | endif
-		if !s:compare[a:func](l:line,a:base) | return l:line-l:inc | endif
+		if !s:valid(l:line)                                 | return l:line-l:inc | endif
+		if a:skip && s:empty(l:line)                        | continue            | endif
+		if !s:compare[a:func](indent(l:line),l:base_indent) | return l:line-l:inc | endif
 	endwhile
 endfunction
 
@@ -92,11 +103,11 @@ function! vindent#Object(skip, func, code, count)
 	let l:range = [ s:nohang.prev(l:full_range[0]), s:nohang.next(l:full_range[1]) ]
 	for l:time in range( a:count - ( g:vindent_count ? 1 : 0 ) )
 		let l:test = [
-					\ { x,y -> s:compare.Less(x,y) && s:valid(x) && !s:empty(x) ? x : y }( l:full_range[0]-1,l:range[0] ),
-					\ { x,y -> s:compare.Less(x,y) && s:valid(x) && !s:empty(x) ? x : y }( l:full_range[1]+1,l:range[1] )]
+					\ { x,y -> s:compare.Less(indent(x),indent(y)) && s:valid(x) && !s:empty(x) ? x : y }( l:full_range[0]-1,l:range[0] ),
+					\ { x,y -> s:compare.Less(indent(x),indent(y)) && s:valid(x) && !s:empty(x) ? x : y }( l:full_range[1]+1,l:range[1] )]
 		if l:test[0]!=l:range[0] && l:test[1]!=l:range[1]
-			if     s:compare.More(l:test[0],l:test[1]) | let l:test[1]=l:range[1]
-			elseif s:compare.Less(l:test[0],l:test[1]) | let l:test[0]=l:range[0]
+			if     s:compare.More(indent(l:test[0]),indent(l:test[1])) | let l:test[1]=l:range[1]
+			elseif s:compare.Less(indent(l:test[0]),indent(l:test[1])) | let l:test[0]=l:range[0]
 			endif
 		endif
 		let l:full_range = l:get_range.full(l:test[0],l:test[1])
