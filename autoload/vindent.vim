@@ -42,16 +42,17 @@ endfunction
 " Actually move the cursor according to inputs. (motion)
 function! <SID>do_motion(direct, mode, diff)
 	let l:move = a:diff . ( a:direct=="prev" ? "k" : "j" )
-	if     a:mode=="N" | exe { u -> a:diff==0 ? "norm! lh".u : "norm! "  .( g:vindent_jumps ? "m'" : "" ).""  .l:move.u }( g:vindent_begin ? "_" : "" )
-	elseif a:mode=="X" | exe { u -> a:diff==0 ? "norm! gv"   : "norm! \e".( g:vindent_jumps ? "m'" : "" )."gv".l:move.u }( g:vindent_begin ? "_" : "" )
-	elseif a:mode=="O" | exe { u -> a:diff==0 ? "norm! V"    : "norm! "  .( g:vindent_jumps ? "m'" : "" )."V" .l:move.u }( g:vindent_begin ? "_" : "" )
+	let l:marker = g:vindent_jumps ? "m'" : ""
+	if     a:mode=="N" | exe { u -> a:diff==0 ? "norm! lh" .. u : "norm! "   .. l:marker .. ""   .. l:move .. u }( g:vindent_begin ? "_" : "" )
+	elseif a:mode=="X" | exe { u -> a:diff==0 ? "norm! gv"      : "norm! \e" .. l:marker .. "gv" .. l:move .. u }( g:vindent_begin ? "_" : "" )
+	elseif a:mode=="O" | exe { u -> a:diff==0 ? "norm! V"       : "norm! "   .. l:marker .. "V"  .. l:move .. u }( g:vindent_begin ? "_" : "" )
 	endif
 endfunction
 
 " Actually move the cursor according to inputs. (text object)
 function! <SID>do_object(range)
 	call cursor(a:range[0],0)
-	exec { x -> "norm! V" . ( x==0 ? "" : x."j" ) }( a:range[1] - a:range[0] )
+	exec { x -> "norm! V" .. ( x==0 ? "" : x .. "j" ) }( a:range[1] - a:range[0] )
 endfunction
 
 " Vindent Motion: Go to the "prev" or "next" line with the same indentation.
