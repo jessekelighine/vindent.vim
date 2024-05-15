@@ -5,6 +5,14 @@ if exists("g:loaded_vindent") | finish | endif | let s:save_cpo=&cpo | set cpo&v
 " Setting: Default vindent count to start from 1.
 if !exists("g:vindent_count") | let g:vindent_count = 1 | endif
 
+" Command: Toggle whether vindent tries to infer indentation on empty lines.
+if !exists("g:vindent_infer") | let g:vindent_infer = 0 | endif
+command -nargs=0 -bang VindentInfer :call <SID>VindentInfer(<bang>1)
+function! <SID>VindentInfer(change)
+	if a:change | let g:vindent_infer = !g:vindent_infer | endif
+	echom " Vindent now " .. ( g:vindent_infer ? "DOES" : "DOES NOT" ) .. " try to infer indentation of empty lines."
+endfunction
+
 " Command: Toggle vindent motion move to beginning of line behaviour
 if !exists("g:vindent_begin") | let g:vindent_begin = 1 | endif
 command -nargs=0 -bang VindentBegin :call <SID>VindentBegin(<bang>1)

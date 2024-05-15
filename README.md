@@ -232,6 +232,7 @@ Here are some gobal settings:
 | `g:vindent_count` | `0` or `1` (default: `1`) | see the end of section [Vindent Text Objects](#vindent-text-object)    |                           |
 | `g:vindent_jumps` | `0` or `1` (default: `0`) | whether a vindent motion is added to the jumplist                      | `:VindentJumps`           |
 | `g:vindent_noisy` | `0` or `1` (default: `0`) | whether vindent motion throws an error if the cursor does not move     | `:VindentNoisy`           |
+| `g:vindent_infer` | `0` or `1` (default: `0`) | whether `vindent.vim` tries to infer indentation of empty lines        | `:VindentInfer`           |
 
 Simply set the variables with the keybindings as shown in [Usage](#usage-and-quick-start).
 You can use the corresponding command listed above to toggle the settings on the fly.
