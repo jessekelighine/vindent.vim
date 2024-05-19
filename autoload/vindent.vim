@@ -28,7 +28,8 @@ function! <SID>get_indent(line, infer=g:vindent_infer)
 	if !s:valid(l:line_prev)  | return -1 | endif
 	if !s:valid(l:line_next)  | return indent(l:line_prev)==0 ? -1 : indent(l:line_prev) | endif
 	if indent(l:line_prev)==0 | return indent(l:line_next)==0 ? -1 : indent(l:line_next) | endif
-	return indent(l:line_prev) > indent(l:line_next) ? indent(l:line_prev) : indent(l:line_next)
+	if indent(l:line_next)==0 | return indent(l:line_prev) | endif
+	return indent(l:line_next) >= indent(l:line_prev) ? indent(l:line_next) : indent(l:line_prev) 
 endfunction
 
 " Find prev/next line until criteria "func" is met.
