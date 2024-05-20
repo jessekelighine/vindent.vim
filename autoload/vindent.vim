@@ -21,6 +21,7 @@ let s:nohang = {
 
 " Get indentation of line.
 let s:indent = { line -> s:empty(line) ? -1 : indent(line) }
+let s:is_block_ending = { line -> getline(line) =~# '^\s*\(' .. join(g:vindent_block_ending, '\|') .. '\)'}
 function! <SID>get_indent(line, infer=g:vindent_infer)
 	if !a:infer || !s:empty(a:line) | return s:indent(a:line) | endif
 	let l:line_prev = prevnonblank(a:line)
@@ -29,7 +30,11 @@ function! <SID>get_indent(line, infer=g:vindent_infer)
 	if !s:valid(l:line_next)  | return indent(l:line_prev)==0 ? -1 : indent(l:line_prev) | endif
 	if indent(l:line_prev)==0 | return indent(l:line_next)==0 ? -1 : indent(l:line_next) | endif
 	if indent(l:line_next)==0 | return indent(l:line_prev) | endif
-	return indent(l:line_next)
+	if !exists("g:vindent_block_ending")
+		return indent(l:line_prev) > indent(l:line_next) ? indent(l:line_prev) : indent(l:line_next)
+	else
+		return s:is_block_ending(l:line_next) ? indent(l:line_prev) : indent(l:line_next)
+	endif
 endfunction
 
 " Find prev/next line until criteria "func" is met.
