@@ -26,14 +26,19 @@ function! <SID>get_indent(line, infer=g:vindent_infer)
 	if !a:infer || !s:empty(a:line) | return s:indent(a:line) | endif
 	let l:line_prev = prevnonblank(a:line)
 	let l:line_next = nextnonblank(a:line)
-	if !s:valid(l:line_prev)  | return -1 | endif
-	if !s:valid(l:line_next)  | return indent(l:line_prev)==0 ? -1 : indent(l:line_prev) | endif
-	if indent(l:line_prev)==0 | return indent(l:line_next)==0 ? -1 : indent(l:line_next) | endif
-	if indent(l:line_next)==0 | return indent(l:line_prev) | endif
 	if !exists("g:vindent_block_ending")
-		return indent(l:line_prev) > indent(l:line_next) ? indent(l:line_prev) : indent(l:line_next)
+		let l:indent_prev = s:valid(l:line_prev) ? indent(l:line_prev) : 0
+		let l:indent_next = s:valid(l:line_next) ? indent(l:line_next) : 0
+		let l:indent = max([l:indent_prev, l:indent_next])
+		return l:indent==0 ? -1 : l:indent
 	else
-		return s:is_block_ending(l:line_next) ? indent(l:line_prev) : indent(l:line_next)
+		if !s:valid(l:line_next) | return -1 | endif
+		if s:is_block_ending(l:line_next)
+			if !s:valid(l:line_prev) | return indent(l:line_next) | endif
+			return max([indent(l:line_next), min([indent(l:line_next)+shiftwidth(), indent(l:line_prev)])])
+		else
+			return indent(l:line_next)==0 ? -1 : indent(l:line_next)
+		endif
 	endif
 endfunction
 
