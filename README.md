@@ -24,10 +24,10 @@ you should switch to `vindent.vim`:
 - Reimplemented with only about *250* lines of vimscript, where only about
   *100* lines are core implementation!
 
-> **NOTE**:
-> There is a Lua version of this plugin now: [`vindent.nvim`](https://github.com/jessekelighine/vindent.nvim).
-> These two plugins are practically the same,
-> do pick the one that suits your scripting-language preferences.
+> [!NOTE]
+> A Lua version of this plugin is now available: [`vindent.nvim`](https://github.com/jessekelighine/vindent.nvim).
+> Both plugins are nearly identical,
+> so choose the one that best matches your preferred scripting language.
 
 ## Installation
 
